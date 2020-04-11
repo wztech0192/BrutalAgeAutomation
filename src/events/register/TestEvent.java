@@ -115,7 +115,7 @@ public class TestEvent {
                         int maxTroop = 0;
                         if(game.account != null) {
                              maxTroop = (game.account.getBuildingLvl("portal") < 6 ? 4000 : 10000) *
-                                    (game.account.getBuildingLvl("stronghold") < 6 ? 2 : 3);
+                                    (game.account.getBuildingLvl("stronghold") < 6 ? 2: 3);
 
                              if(troops > -1){
                                  game.account.setTroops(troops);

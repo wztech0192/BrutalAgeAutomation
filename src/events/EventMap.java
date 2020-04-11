@@ -73,7 +73,7 @@ public class EventMap {
         TalentEvents.register(_map);
         BuildingEvents.register(_map);
         WorldMapEvents.register(_map);
-
+        OtherEvents.register(_map);
     }
 
     public static HashMap<String, Event> getMap() {
