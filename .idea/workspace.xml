@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="BrutalAgeFarm" />
+    </artifacts-to-build>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/store/MatchPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/EventMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/EventMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/LogProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/LogProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/common/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/common/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/CityWork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/CityWork.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/Initiate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/Initiate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WorldMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/ClanEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ClanEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/GameInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameInstance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Account.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/AccountGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/AccountGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/BuildHammer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/BuildHammer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/FeatureToggler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/FeatureToggler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/Metadata.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Metadata.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/FilePath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/FilePath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Logger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/MyDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/MyDebugger.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaFXApplication" />
+        <option value="Interface" />
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/src" />
+  </component>
+  <component name="ProjectId" id="1WXi3AFxo4sS7wGrTMnYfTOKtOk" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="brutalagefarm" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="findjar.last.used.dir" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.17626321" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="events" />
+      <recent name="" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\src\resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="events.handler" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources\res" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources\res\tessdata" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources\image" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Production">
+    <configuration name="Debug" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="BrutalAgeFarm" />
+      <option name="PROGRAM_PARAMETERS" value="debug" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Production" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="BrutalAgeFarm" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Debug" />
+      <item itemvalue="Application.Production" />
+    </list>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="" />
+      <created>1579302138146</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1579302138146</updated>
+      <workItem from="1579302141439" duration="10479000" />
+      <workItem from="1579460904938" duration="16000" />
+      <workItem from="1580681025109" duration="9884000" />
+      <workItem from="1580769975933" duration="16062000" />
+      <workItem from="1580838307003" duration="9960000" />
+      <workItem from="1580863802563" duration="4865000" />
+      <workItem from="1580952342858" duration="3742000" />
+      <workItem from="1581011193786" duration="16684000" />
+      <workItem from="1581130623694" duration="2129000" />
+      <workItem from="1582406735331" duration="7556000" />
+      <workItem from="1582656729806" duration="223000" />
+      <workItem from="1583092939948" duration="7872000" />
+      <workItem from="1583255572530" duration="10000" />
+      <workItem from="1583548535493" duration="8070000" />
+      <workItem from="1583608590063" duration="10570000" />
+      <workItem from="1583635099499" duration="11915000" />
+      <workItem from="1583698246727" duration="10083000" />
+      <workItem from="1583796629976" duration="12180000" />
+      <workItem from="1583878793969" duration="5790000" />
+      <workItem from="1583962129849" duration="25927000" />
+      <workItem from="1584042481960" duration="28408000" />
+      <workItem from="1584151739582" duration="11926000" />
+      <workItem from="1584210896985" duration="40136000" />
+      <workItem from="1584293816663" duration="7858000" />
+      <workItem from="1584400788811" duration="29627000" />
+      <workItem from="1584510137445" duration="293000" />
+      <workItem from="1584570606322" duration="13546000" />
+      <workItem from="1584653630460" duration="21979000" />
+      <workItem from="1584740722459" duration="17055000" />
+      <workItem from="1584812570577" duration="27043000" />
+      <workItem from="1584902738451" duration="39139000" />
+      <workItem from="1584946249282" duration="1182000" />
+      <workItem from="1584979032329" duration="3115000" />
+      <workItem from="1585104171227" duration="2057000" />
+    </task>
+    <task id="LOCAL-00001" summary="changes">
+      <created>1585185880759</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1585185880760</updated>
+    </task>
+    <task id="LOCAL-00002" summary="changes">
+      <created>1585195500263</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1585195500263</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fix bugs">
+      <created>1585260307939</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1585260307939</updated>
+    </task>
+    <task id="LOCAL-00004" summary="big changes">
+      <created>1585468027934</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1585468027934</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add multi instance">
+      <created>1585516538302</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1585516538302</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="changes" />
+    <MESSAGE value="fix bugs" />
+    <MESSAGE value="big changes" />
+    <MESSAGE value="add multi instance" />
+    <option name="LAST_COMMIT_MESSAGE" value="add multi instance" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="552" y="177" key="#Project_Structure" timestamp="1581915489599">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="177" key="#Project_Structure/0.0.1920.1040@0.0.1920.1040" timestamp="1581915489599" />
+    <state x="713" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1585468264510">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="713" y="321" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1585468264510" />
+    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser" timestamp="1585677814859">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1585677814859" />
+    <state x="696" y="302" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1581916177762">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="696" y="302" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1581916177762" />
+    <state x="765" y="212" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1581916126190">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="765" y="212" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1581916126190" />
+    <state x="756" y="403" width="407" height="242" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1585432167723">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="756" y="403" width="407" height="242" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1585432167723" />
+    <state x="608" y="83" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1585516533672">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="608" y="83" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1585516533672" />
+    <state width="451" height="466" key="DebuggerActiveHint" timestamp="1585631765575">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="451" height="466" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1585631765575" />
+    <state x="727" y="388" key="FileChooserDialogImpl" timestamp="1581916119586">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="727" y="388" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1581916119586" />
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom" timestamp="1586050205834">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586050205834" />
+    <state width="1876" height="236" key="GridCell.Tab.0.center" timestamp="1586050205834">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="236" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586050205834" />
+    <state width="1876" height="236" key="GridCell.Tab.0.left" timestamp="1586050205834">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="236" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586050205834" />
+    <state width="1876" height="236" key="GridCell.Tab.0.right" timestamp="1586050205834">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="236" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586050205834" />
+    <state width="938" height="270" key="GridCell.Tab.1.bottom" timestamp="1585691515589">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="938" height="270" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1585691515589" />
+    <state width="938" height="270" key="GridCell.Tab.1.center" timestamp="1585691515589">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="938" height="270" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1585691515589" />
+    <state width="938" height="270" key="GridCell.Tab.1.left" timestamp="1585691515589">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="938" height="270" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1585691515589" />
+    <state width="938" height="270" key="GridCell.Tab.1.right" timestamp="1585691515589">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="938" height="270" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1585691515589" />
+    <state x="446" y="93" key="SettingsEditor" timestamp="1585113934267">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="446" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1585113934267" />
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2" timestamp="1585468033571">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1585468033571" />
+    <state width="960" height="520" key="XDebugger.FullValuePopup" timestamp="1581913162358">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="960" height="520" key="XDebugger.FullValuePopup/0.0.1920.1040@0.0.1920.1040" timestamp="1581913162358" />
+    <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1585703667037">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585703667037" />
+    <state x="106" y="100" width="1720" height="840" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1585703667037">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="106" y="100" width="1720" height="840" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585703667037" />
+    <state x="661" y="342" key="com.intellij.ide.util.TipDialog" timestamp="1582345705897">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="661" y="342" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582345705897" />
+    <state x="664" y="412" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1581825692532">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="664" y="412" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1920.1040@0.0.1920.1040" timestamp="1581825692532" />
+    <state x="775" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1585181549764">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="775" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1585181549764" />
+    <state x="0" y="0" width="1639" height="749" key="dock-window-1" timestamp="1585636534264">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="0" y="0" width="1639" height="749" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1585636534264" />
+    <state x="1052" y="236" width="736" height="804" key="find.popup" timestamp="1586282868190">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1052" y="236" width="736" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1586282868190" />
+    <state x="629" y="229" width="672" height="678" key="search.everywhere.popup" timestamp="1585116043449">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="629" y="229" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1585116043449" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$MAVEN_REPOSITORY$/com/android/tools/ddms/ddmlib/25.3.0/ddmlib-25.3.0.jar!/com/android/ddmlib/RawImage.class</url>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

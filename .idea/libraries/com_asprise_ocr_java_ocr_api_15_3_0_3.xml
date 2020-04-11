@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="com.asprise.ocr:java-ocr-api:15.3.0.3" type="repository">
+    <properties maven-id="com.asprise.ocr:java-ocr-api:15.3.0.3" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/asprise/ocr/java-ocr-api/15.3.0.3/java-ocr-api-15.3.0.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

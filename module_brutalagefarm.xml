@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_brutalagefarm" default="compile.module.brutalagefarm">
+  <dirname property="module.brutalagefarm.basedir" file="${ant.file.module_brutalagefarm}"/>
+  
+  <property name="module.jdk.home.brutalagefarm" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.brutalagefarm" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.brutalagefarm" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.brutalagefarm" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="brutalagefarm.output.dir" value="${module.brutalagefarm.basedir}/out/production/BrutalAgeFarm"/>
+  <property name="brutalagefarm.testoutput.dir" value="${module.brutalagefarm.basedir}/out/test/BrutalAgeFarm"/>
+  
+  <path id="brutalagefarm.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="brutalagefarm.module.production.classpath">
+    <path refid="${module.jdk.classpath.brutalagefarm}"/>
+    <path refid="library.com.github.cliftonlabs:json-simple:3.1.1.classpath"/>
+    <path refid="library.com.neovisionaries:nv-websocket-client:2.9.classpath"/>
+  </path>
+  
+  <path id="brutalagefarm.runtime.production.module.classpath">
+    <pathelement location="${brutalagefarm.output.dir}"/>
+    <path refid="library.com.github.cliftonlabs:json-simple:3.1.1.classpath"/>
+    <path refid="library.com.neovisionaries:nv-websocket-client:2.9.classpath"/>
+  </path>
+  
+  <path id="brutalagefarm.module.classpath">
+    <path refid="${module.jdk.classpath.brutalagefarm}"/>
+    <pathelement location="${brutalagefarm.output.dir}"/>
+    <path refid="library.com.github.cliftonlabs:json-simple:3.1.1.classpath"/>
+    <path refid="library.com.neovisionaries:nv-websocket-client:2.9.classpath"/>
+  </path>
+  
+  <path id="brutalagefarm.runtime.module.classpath">
+    <pathelement location="${brutalagefarm.testoutput.dir}"/>
+    <pathelement location="${brutalagefarm.output.dir}"/>
+    <path refid="library.com.github.cliftonlabs:json-simple:3.1.1.classpath"/>
+    <path refid="library.com.neovisionaries:nv-websocket-client:2.9.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.brutalagefarm">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.brutalagefarm">
+    <patternset refid="excluded.from.module.brutalagefarm"/>
+  </patternset>
+  
+  <path id="brutalagefarm.module.sourcepath">
+    <dirset dir="${module.brutalagefarm.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.brutalagefarm" depends="compile.module.brutalagefarm.production,compile.module.brutalagefarm.tests" description="Compile module BrutalAgeFarm"/>
+  
+  <target name="compile.module.brutalagefarm.production" depends="register.custom.compilers" description="Compile module BrutalAgeFarm; production classes">
+    <mkdir dir="${brutalagefarm.output.dir}"/>
+    <javac2 destdir="${brutalagefarm.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.brutalagefarm}/javac">
+      <compilerarg line="${compiler.args.brutalagefarm}"/>
+      <bootclasspath refid="brutalagefarm.module.bootclasspath"/>
+      <classpath refid="brutalagefarm.module.production.classpath"/>
+      <src refid="brutalagefarm.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.brutalagefarm"/>
+    </javac2>
+    
+    <copy todir="${brutalagefarm.output.dir}">
+      <fileset dir="${module.brutalagefarm.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.brutalagefarm.tests" depends="register.custom.compilers,compile.module.brutalagefarm.production" description="compile module BrutalAgeFarm; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.brutalagefarm" description="cleanup module">
+    <delete dir="${brutalagefarm.output.dir}"/>
+    <delete dir="${brutalagefarm.testoutput.dir}"/>
+  </target>
+</project>

@@ -1,0 +1,17 @@
+top_left
+get_all_mail
+open_my_item
+levelup_dialog
+
+get_quest_gift
+
+template_close
+
+
+login_test_2
+login_test
+
+tutorial_dialog
+
+
+make:neverPopup, 97, 854
