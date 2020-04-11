@@ -6,10 +6,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="add multi instance">
+    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/EventMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/EventMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,7 +179,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585516538302</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="add multi instance">
+      <created>1586640921040</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1586640921041</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,10 +274,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="756" y="403" width="407" height="242" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1585432167723" />
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1586640885937">
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1586640919722">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586640885937" />
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586640919722" />
     <state width="451" height="466" key="DebuggerActiveHint" timestamp="1585631765575">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -317,10 +322,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="446" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1586640907213" />
-    <state x="558" y="251" key="Vcs.Push.Dialog.v2" timestamp="1585468033571">
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2" timestamp="1586640922879">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1585468033571" />
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1586640922879" />
     <state width="960" height="520" key="XDebugger.FullValuePopup" timestamp="1581913162358">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
