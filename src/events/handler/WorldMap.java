@@ -183,7 +183,7 @@ public class WorldMap {
 
     public static void firePosMode(GameInstance game) throws Exception {
 
-        game.dispatch.delay(1);
+        game.dispatch.staticDelay(2);
         for(int redo = 0; redo <= 15; redo++){
             if(game.log.isInCity){
                 game.dispatch("bottom_left");
@@ -195,6 +195,10 @@ public class WorldMap {
                 break;
             }
         }
+
+        game.dispatch.delay(2);
+        game.dispatch.changeHorde(Integer.parseInt((String)game.posTarget.get("horde")));
+        game.dispatch.delay(1);
 
         int buiX = Integer.parseInt((String)game.posTarget.get("buiX"));
         int buiY = Integer.parseInt((String)game.posTarget.get("buiY"));

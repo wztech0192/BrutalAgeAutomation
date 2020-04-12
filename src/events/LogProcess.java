@@ -187,15 +187,21 @@ public class LogProcess {
     }
 
     private void handlePosModeStart() {
-        if (serverID != Integer.parseInt((String) game.posTarget.get("server"))) {
-            if (game.status.isServerChanged()) {
-                System.out.println("Wrong Server, next account...");
-                game.startEvent(GameStatus.initiate, "Oops, went to the wrong server.. lucky for them");
-            } else {
-                System.out.println("Start change server...");
-                game.startEvent(GameStatus.change_server, "change_server");
+        if(!game.posTarget.containsKey("temp")) {
+            if (serverID != Integer.parseInt((String) game.posTarget.get("server"))) {
+                if (game.status.isServerChanged()) {
+                    System.out.println("Wrong Server, next account...");
+                    game.startEvent(GameStatus.initiate, "Oops, went to the wrong server.. lucky for them");
+                } else {
+                    System.out.println("Start change server...");
+                    game.startEvent(GameStatus.change_server, "change_server");
+                }
+            } else if(game.posTarget.containsKey("exist")){
+                game.startEvent(GameStatus.world_map, "positioning");
+            }else{
+                game.startEvent(GameStatus.when_start, "configuring");
             }
-        } else {
+        }else{
             game.startEvent(GameStatus.when_start, "configuring");
         }
     }

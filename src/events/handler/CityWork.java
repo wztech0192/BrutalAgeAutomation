@@ -269,8 +269,6 @@ public class CityWork {
 
             game.dispatch.delay(2);
 
-            game.dispatch.changeHorde(Integer.parseInt((String)game.posTarget.get("horde")));
-
             game.posTarget.put("stronghold", true);
             for(int i=0; i<2; i++) {
                 buildingAction(game, "stronghold", "upgrade_building_buy");
@@ -286,9 +284,23 @@ public class CityWork {
             for(int i=0; i<2; i++) {
                 buildingAction(game, "warehouse", "upgrade_building_buy");
             }
-            game.dispatch("get_quest_gift");
+            game.dispatch("get_quest_gift_single");
+            game.dispatch.staticDelay(0.5);
+            game.dispatch("get_quest_gift_single");
+            game.dispatch.staticDelay(0.5);
+            game.dispatch("get_quest_gift_single");
+            game.dispatch.staticDelay(0.5);
 
-        game.startEvent(GameStatus.world_map, "positioning");
+            if(game.posTarget.containsKey("temp")){
+
+                game.store.metadata.getSavedPosAcc().add((String)game.posTarget.get("temp"));
+                game.store.marshellMetadata();
+                game.store.updatePosSavedAcc();
+
+                game.startEvent(GameStatus.initiate, "positioning");
+            }else{
+                game.startEvent(GameStatus.world_map, "positioning");
+            }
 
     }
 }

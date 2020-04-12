@@ -4,7 +4,6 @@
     <root id="root">
       <element id="file-copy" path="$PROJECT_DIR$/run.bat" />
       <element id="directory" name="bin">
-        <element id="module-output" name="BrutalAgeFarm" />
         <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/android/tools/ddms/ddmlib/25.3.0/ddmlib-25.3.0.jar" path-in-jar="/" />
         <element id="extracted-dir" path="$PROJECT_DIR$/opencv/build/java/opencv-349.jar" path-in-jar="/" />
         <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/neovisionaries/nv-websocket-client/2.9/nv-websocket-client-2.9.jar" path-in-jar="/" />
@@ -34,6 +33,7 @@
         <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/sourceforge/lept4j/lept4j/1.2.3/lept4j-1.2.3.jar" path-in-jar="/" />
         <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" path-in-jar="/" />
         <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.20/slf4j-api-1.7.20.jar" path-in-jar="/" />
+        <element id="module-output" name="BrutalAgeFarm" />
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/AdbWinApi.dll" />
       <element id="file-copy" path="$PROJECT_DIR$/AdbWinUsbApi.dll" />

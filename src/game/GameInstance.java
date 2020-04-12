@@ -1,5 +1,6 @@
 package game;
 
+import com.android.ddmlib.AdbCommandRejectedException;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import dispatcher.EventDispatcher;
 import events.LogProcess;
@@ -102,6 +103,9 @@ public class GameInstance {
                     }
                 }
             }
+            catch(AdbCommandRejectedException e){
+                Logger.log("Emulator Stopped!!");
+            }
             catch(Exception e){
                 if(store.isForceStop){
                     Logger.log("Force stopped, start new round!");
@@ -127,7 +131,7 @@ public class GameInstance {
     }
 
     public void startPosModeEvent(String finishStatus) throws Exception {
-        if(posTarget != null && !finishStatus.equalsIgnoreCase("")) {
+        if(posTarget != null && !finishStatus.equalsIgnoreCase("") && !posTarget.containsKey("temp")) {
             posTarget.put("status", finishStatus);
             store.sendDataBack("update", posTarget);
         }

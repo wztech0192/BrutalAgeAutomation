@@ -41,7 +41,7 @@ public class Initiate {
         game.dispatch.stopGame();
 
         int waitTime = 0;
-        while (game.store.positionQueue.isEmpty()) {
+        while (game.store.positionQueue.isEmpty() && game.store.metadata.getSavedPosAcc().size() >= game.store.metadata.getMaxPosAcc()) {
             if(game.store.isClose) return;
 
             System.out.println("waiting for new event....");
@@ -55,20 +55,36 @@ public class Initiate {
 
 
         game.status.setServerChanged(false);
-        JsonObject target = game.store.positionQueue.poll();
-
-        if(target != null)
-            target.put("status","initiate");
-        game.store.sendDataBack("update", target);
-
-        if(target != null)
-            Logger.log("Start positiong: " + target.get("telX") + "," + target.get("telY") + " | " + target.get("buiX") + "," + target.get("buiY"));
 
         game.dispatch.delay(1);
 
-        game.posTarget = target;
+        JsonObject target = game.store.positionQueue.poll();
 
-        game.dispatch.changeAccount(game.store.createNewID(), false);
+        if(target != null) {
+            target.put("status", "initiate");
+            game.store.sendDataBack("update", target);
+            Logger.log("Start positiong: " + target.get("telX") + "," + target.get("telY") + " | " + target.get("buiX") + "," + target.get("buiY"));
+            game.posTarget = target;
+
+            if(game.store.metadata.getSavedPosAcc().isEmpty()){
+                Logger.log("Create new account");
+                game.dispatch.changeAccount( game.store.createNewID() ,false);
+            }else{
+                Logger.log("Get existing account");
+                game.dispatch.changeAccount( game.store.metadata.getSavedPosAcc().poll() ,false);
+                game.posTarget.put("exist", true);
+            }
+
+            game.store.marshellMetadata();
+            game.store.updatePosSavedAcc();
+        }else{
+            Logger.log("Create temp account for pos mode!!!!");
+            game.posTarget = new JsonObject();
+            String newID = game.store.createNewID();
+            game.posTarget.put("temp", newID);
+
+            game.dispatch.changeAccount(newID,false);
+        }
 
         //  game.statusUpdateListener.onUpdate(game.account);
 

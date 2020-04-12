@@ -54,6 +54,11 @@ public class GetGiftEvents {
                 );
 
 
+        Event.builder(_map, "get_quest_gift_single")
+                .setDelay(1.25)
+                .setLoc(28, 1103);
+
+
         Event.builder(_map, "get_quest_gift")
                 .setTargetName("reward:btn_reward")
                 .setDelay(1.25)

@@ -91,7 +91,7 @@ public class EventDispatcher implements IShellOutputReceiver {
 
     public void swipeServer(int diff) throws Exception {
 
-        int _diff = diff * ((diff <= 2) ? 20 : 40);
+        int _diff = diff * ((diff <= 2) ? 30 : 40);
 
         int swipe = 840 - _diff;
         if (swipe < 300)

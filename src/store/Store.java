@@ -89,6 +89,12 @@ public class Store extends WebSocketAdapter {
     }
 
 
+    public void updatePosSavedAcc(){
+        JsonObject json = new JsonObject();
+        json.put("max",metadata.getMaxPosAcc());
+        json.put("current", metadata.getSavedPosAcc().size());
+        sendDataBack("acc", json);
+    }
 
     public void createRemoteWS() {
         try {
@@ -96,8 +102,8 @@ public class Store extends WebSocketAdapter {
             ws = new WebSocketFactory().setConnectionTimeout(10000).createSocket(SERVER).addListener(this)
                     .addExtension(WebSocketExtension.PERMESSAGE_DEFLATE).connect();
             JsonObject json = new JsonObject();
-            json.put("max",0);
-            json.put("current", 0);
+            json.put("max",metadata.getMaxPosAcc());
+            json.put("current", metadata.getSavedPosAcc().size());
             sendDataBack("receiver", json);
             System.out.println("Connect to server...");
         } catch (WebSocketException | IOException e) {

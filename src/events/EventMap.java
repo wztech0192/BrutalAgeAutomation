@@ -27,10 +27,11 @@ public class EventMap {
                                 .setListener(((event, game) -> {
                                     game.log.isInCity = !game.log.btnName.contains("btn_next_op");
                                     Logger.log("Now in city: "+game.log.isInCity);
-
                                     if(game.log.btnName.contains("btn_rank")){
                                         game.dispatch("top_left");
-                                        game.dispatch("top_left");
+                                        if(game.account != null) {
+                                            game.dispatch("top_left");
+                                        }
                                     }
                                     else if(game.log.btnName.contains("dummy")) {
                                         game.dispatch("top_left");

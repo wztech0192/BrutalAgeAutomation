@@ -4,7 +4,8 @@ import util.FilePath;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 @XmlRootElement(name = "Metadata")
@@ -14,7 +15,8 @@ public class Metadata {
     private FeatureToggler featureToggler;
     private int delay = 600;
     private TreeMap<String, Integer> gatherPriorities;
-
+    private LinkedList<String> SavedPosAcc = new LinkedList<>();
+    private int maxPosAcc = 5;
     public Metadata(){
         featureToggler = new FeatureToggler();
     }
@@ -26,6 +28,23 @@ public class Metadata {
             featureToggler = new FeatureToggler();
         }
         return featureToggler;
+    }
+
+    public LinkedList<String> getSavedPosAcc() {
+        return SavedPosAcc;
+    }
+
+    public int getMaxPosAcc() {
+        return maxPosAcc;
+    }
+
+    public void setMaxPosAcc(int maxPosAcc) {
+        this.maxPosAcc = maxPosAcc;
+    }
+
+    @XmlElement
+    public void setSavedPosAcc(LinkedList<String> savedPosAcc) {
+        SavedPosAcc = savedPosAcc;
     }
 
     @XmlElement

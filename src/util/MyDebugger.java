@@ -46,7 +46,7 @@ public class MyDebugger {
                     else {
                         switch (cmd) {
                             case "test":
-                                game.dispatch.mapzoom();
+                                game.dispatch.enterText("\t٩(◕‿◕)۶");
                                 break;
                             case "ls":
                                 EventMap.printAll();
