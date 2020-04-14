@@ -1,12 +1,18 @@
 package store;
 
+import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 import com.neovisionaries.ws.client.*;
+import dispatcher.EventDispatcher;
 import org.apache.commons.io.FileUtils;
 import util.FilePath;
+import util.Global;
+import util.Logger;
+
+import javax.swing.*;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +32,14 @@ public class Store extends WebSocketAdapter {
     public boolean isForceStop;
     public boolean isClose;
     public String tag;
+    private AndroidDebugBridge bridge;
 
-    public Store(String tag){
+    public Store(String tag, AndroidDebugBridge bridge){
         this.tag = tag;
+        this.bridge = bridge;
         unmarshellMetadata();
     }
+
 
 
     public Store(IDevice device) {
@@ -47,6 +56,9 @@ public class Store extends WebSocketAdapter {
     public boolean isPositionMode(){
         return positionQueue != null;
     }
+
+
+
 
     public void unmarshellMetadata(){
         try {
@@ -101,10 +113,11 @@ public class Store extends WebSocketAdapter {
             positionQueue = new LinkedList<>();
             ws = new WebSocketFactory().setConnectionTimeout(10000).createSocket(SERVER).addListener(this)
                     .addExtension(WebSocketExtension.PERMESSAGE_DEFLATE).connect();
-            JsonObject json = new JsonObject();
-            json.put("max",metadata.getMaxPosAcc());
-            json.put("current", metadata.getSavedPosAcc().size());
-            sendDataBack("receiver", json);
+            JsonObject payload = new JsonObject();
+            payload.put("max",metadata.getMaxPosAcc());
+            payload.put("current", metadata.getSavedPosAcc().size());
+            payload.put("executorID", Global.config.getOwnerName()+"-"+metadata.getNox());
+            sendDataBack("receiver", payload);
             System.out.println("Connect to server...");
         } catch (WebSocketException | IOException e) {
             e.printStackTrace();
@@ -256,6 +269,41 @@ public class Store extends WebSocketAdapter {
         isClose = true;
         if(ws != null)
             ws.sendClose();
+    }
+
+    public boolean restartEmulator() {
+        EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getNox()+" -quit", null);
+        try {
+            Thread.sleep(2000);
+
+            EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getNox(), null);
+            Thread.sleep(25000);
+
+            return true;
+           /* while (true) {
+                Logger.log("Trying to connected to " + ip + "...attempt " + redo);
+                EventDispatcher.exec("adb connect " + ip, s -> false);
+                if (bridge.hasInitialDeviceList()) {
+                    for (IDevice tempDevice : bridge.getDevices()) {
+                        if (tempDevice.getName().contains(ip)) {
+                            Logger.log("Connected!");
+                            device = tempDevice;
+                            return true;
+                        }
+                    }
+                }
+                redo++;
+                if (redo > 3) {
+                    Logger.log("No device find");
+                    return false;
+                }
+                Thread.sleep(3000);
+            }*/
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }
 

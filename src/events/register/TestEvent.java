@@ -51,10 +51,16 @@ public class TestEvent {
                 .setDelay(1.5)
                 .setLoc(108, 359);
 
-        Event.builder(_map, "later_update")
+        Event.builder(_map, "starting_check0")
                 .setDelay(3)
                 .setLoc(173, 875);
+        Event.builder(_map, "starting_check1")
+                .setDelay(3)
+                .setLoc(75, 813);
 
+        Event.builder(_map, "starting_check2")
+                .setDelay(3)
+                .setLoc(356, 887);
 
         Event.builder(_map, "template_close")
                 .setTemplateName("close_btn.png")
@@ -75,7 +81,7 @@ public class TestEvent {
 
         Event.builder(_map, "login_test_2")
                 .setDelay(1.5)
-                .setLoc(360, 134)
+                .setLoc(510, 110)
                 .setListener(
                         (event, game) -> game.log.btnName.equalsIgnoreCase(":fullHitzone") ? null : event
                 );

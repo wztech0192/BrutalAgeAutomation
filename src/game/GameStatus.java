@@ -13,15 +13,16 @@ public enum GameStatus {
 
     public static long getTimeout(GameStatus game) {
         switch(game){
-            case initiate:
             case starting:
+                return 2;
+            case initiate:
             case tutorial:
             case change_server:
             case when_start:
-                return 10;
+                return 5;
             case city_work:
             case world_map:
-                return 30;
+                return 20;
         }
         return 10;
     }

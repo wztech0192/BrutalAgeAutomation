@@ -96,6 +96,7 @@ public class ClanEvents {
                     game.dispatch.staticDelay(1);
                     game.dispatch("top_left");
                     game.dispatch("top_left");
+                    game.dispatch("top_left");
                     return null;
                 }));
 

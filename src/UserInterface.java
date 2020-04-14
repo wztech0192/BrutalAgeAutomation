@@ -4,8 +4,10 @@ import game.GameInstance;
 import jdk.nashorn.internal.scripts.JD;
 import store.Account;
 import store.BuildHammer;
+import store.Config;
 import store.Store;
 import util.FilePath;
+import util.Global;
 import util.Logger;
 
 import javax.swing.*;
@@ -18,9 +20,12 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class UserInterface extends JPanel  {
 
@@ -33,8 +38,12 @@ public class UserInterface extends JPanel  {
     private JFrame owner;
     private JButton activeOrCloseBTN;
     private String tag;
+    private boolean isPosMode = Global.OnlyPosMode;
 
-    public UserInterface(JFrame owner, boolean debug, AndroidDebugBridge bridge, String tag) {
+    private ArrayList<String> noxInstances;
+
+    public UserInterface(JFrame owner, boolean debug, AndroidDebugBridge bridge, String tag, ArrayList<String> noxInstances) {
+        this.noxInstances = noxInstances;
         this.tag = tag;
         this.owner = owner;
         this.debug = debug;
@@ -42,100 +51,140 @@ public class UserInterface extends JPanel  {
         this.setLayout(new BorderLayout());
 
         activeOrCloseBTN = new JButton("Active");
-        activeOrCloseBTN.setPreferredSize(new Dimension(600, 600));
+        activeOrCloseBTN.setPreferredSize(new Dimension(200, 50));
 
         this.add(activeOrCloseBTN, BorderLayout.CENTER);
 
         activeOrCloseBTN.addActionListener(e->{
-            if(activeOrCloseBTN.getText().equalsIgnoreCase("Active")){
-                this.removeAll();
-                if(active()) {
-                    this.add(activeOrCloseBTN, BorderLayout.NORTH);
-                    activeOrCloseBTN.setText("Close");
-                    activeOrCloseBTN.setPreferredSize(null);
-                }
-            }else{
-               closeInstance();
+            switch(activeOrCloseBTN.getText()){
+                case "Active":
+                    activeOrCloseBTN.setText("Loading.........");
+                    owner.repaint();
+                    active();
+                    break;
+                case "Close":
+                    closeInstance();
+                    owner.pack();
+                    owner.repaint();
+                default:
             }
-            owner.pack();
-            owner.repaint();
         });
     }
 
-    private boolean active(){
-        if(connectToDevice()) {
-            gameInstance = new GameInstance(store, debug);
+    private void active(){
+        new Thread(()->{
+            if(connectToDevice()) {
+                this.removeAll();
+                gameInstance = new GameInstance(store, debug);
                 System.out.println("active interface");
                 this.add(createFarmPanel(), BorderLayout.CENTER);
+                this.add(activeOrCloseBTN, BorderLayout.NORTH);
+                activeOrCloseBTN.setText("Close");
+                activeOrCloseBTN.setPreferredSize(null);
+                if(debug)
+                    gameInstance.start();
 
-            if(debug)
-                gameInstance.start();
-            return true;
-        }
-        return false;
-    }
+                owner.pack();
+                owner.repaint();
+            }
+        }).start();
+    };
 
     private boolean connectToDevice() {
         try {
-            store = new Store(tag);
-            final JTextField ip = new JTextField(store.metadata.getIp());
-            JFileChooser chooser = new JFileChooser();
-            chooser.setControlButtonsAreShown(false);
-            chooser.setCurrentDirectory(new File( store.metadata.getAccountPath()));
-        //    chooser.setFileHidingEnabled(false);
-            chooser.setDialogTitle("Choose Account Directory");
-            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            store = new Store(tag, bridge);
+
+            final JComboBox<String> noxSelect = new JComboBox<>(noxInstances.toArray(new String[0]));
+            noxSelect.setSelectedItem(  this.store.metadata.getNox());
+
 
             JPanel myPanel = new JPanel(new BorderLayout());
-            JPanel ipPanel = new JPanel(new GridLayout(1, 1));
-            JPanel chooserPanel = new JPanel();
-
-            ipPanel.add(ip);
-            ipPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Emulator IP"));
-
-            chooserPanel.add(chooser);
-            chooserPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Account Directory Path"));
-
             myPanel.setLayout(new BorderLayout());
-            myPanel.add(ipPanel, BorderLayout.NORTH);
-            myPanel.add(chooserPanel, BorderLayout.CENTER);
 
-            do {
-                int result = JOptionPane.showConfirmDialog(myPanel, myPanel,
-                        "Setup", JOptionPane.OK_CANCEL_OPTION);
-
-                if (result != JOptionPane.OK_OPTION) {
-                    closeInstance();
-                    return false;
-                }
-
-                EventDispatcher.exec("adb connect " + ip.getText(), s -> false);
-                EventDispatcher.execADBIP( ip.getText(), "logcat -c", s -> false);
-                Logger.log("Account path: "+chooser.getCurrentDirectory().getAbsolutePath()+"\\");
-                Thread.sleep(1000);
-
-            } while (!bridge.hasInitialDeviceList() || bridge.getDevices().length <= 0);
-
-            for(IDevice tempDevice:bridge.getDevices()){
-                if(tempDevice.getName().contains(ip.getText())){
-                    device = tempDevice;
-                }
+            JPanel emulatorPanel = new JPanel(new GridLayout(1, 1));
+            emulatorPanel.add(noxSelect);
+            emulatorPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Emulator"));
+            JFileChooser chooser = null;
+            if(!Global.OnlyPosMode) {
+                JPanel chooserPanel = new JPanel();
+                chooser = new JFileChooser();
+                chooser.setControlButtonsAreShown(false);
+                chooser.setCurrentDirectory(new File(store.metadata.getAccountPath()));
+                chooser.setDialogTitle("Choose Account Directory");
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                chooserPanel.add(chooser);
+                chooserPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Account Directory Path"));
+                myPanel.add(chooserPanel, BorderLayout.CENTER);
             }
 
-            if(device == null){
+            myPanel.add(emulatorPanel, BorderLayout.NORTH);
+
+            int result = JOptionPane.showConfirmDialog(myPanel, myPanel,
+                    "Setup", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result != JOptionPane.OK_OPTION) {
+                closeInstance();
+                return false;
+            }
+
+            String selectedNox = (String) noxSelect.getSelectedItem();
+            EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+selectedNox, null);
+
+
+            int redo = 0;
+            String port = Global.getNoxPort(selectedNox);
+
+            if(port.equalsIgnoreCase("")){
                 JOptionPane.showMessageDialog(null, "Device not found! Retry");
                 closeInstance();
                 return false;
             }
 
-            this.store.metadata.setAccountPath(chooser.getCurrentDirectory().getAbsolutePath()+"\\");
-            this.store.metadata.setIp(ip.getText());
-            this.store.marshellMetadata();
-                System.out.println("push event");
-                EventDispatcher.execADBIP(store.metadata.getIp(), "push \""+FilePath.EVENTS_PATH+"\" /sdcard/" , s->{
-                    Logger.log(s);
+            String ip = "127.0.0.1:"+port;
+            while(true){
+                Logger.log("Trying to connected to "+ip+"...attempt "+redo);
+                EventDispatcher.exec("adb connect " + ip, null);
+                Thread.sleep(1500);
+                if(bridge.hasInitialDeviceList()) {
+                    for(IDevice tempDevice:bridge.getDevices()){
+                        if(tempDevice.getName().contains(ip)){
+                            Logger.log("Connected!");
+                            device = tempDevice;
+                            if(redo > 1){
+                                Logger.log("Wait for 12 sec....................");
+                                Thread.sleep(12000);
+                            }
+                            break;
+                        }
+                    }
+                }
+                if(device != null){
+                    break;
+                }
+
+                redo++;
+                if(redo > 8){
+                    JOptionPane.showMessageDialog(null, "Device not found! Retry");
+                    closeInstance();
                     return false;
-                });
+                }
+                Thread.sleep(3000);
+            }
+
+            EventDispatcher.execADBIP( ip, "logcat -c", s -> false);
+
+            if(!Global.OnlyPosMode) {
+                Logger.log("Account path: " + chooser.getCurrentDirectory().getAbsolutePath() + "\\");
+                this.store.metadata.setAccountPath(chooser.getCurrentDirectory().getAbsolutePath() + "\\");
+            }
+            this.store.metadata.setIp(ip);
+            this.store.metadata.setNox(selectedNox);
+            this.store.marshellMetadata();
+            System.out.println("push event");
+            EventDispatcher.execADBIP(store.metadata.getIp(), "push \""+FilePath.EVENTS_PATH+"\" /sdcard/" , s->{
+                Logger.log(s);
+                return false;
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,7 +199,7 @@ public class UserInterface extends JPanel  {
         this.removeAll();
         this.add(activeOrCloseBTN, BorderLayout.CENTER);
         activeOrCloseBTN.setText("Active");
-        activeOrCloseBTN.setPreferredSize(new Dimension(600, 600));
+        activeOrCloseBTN.setPreferredSize(new Dimension(200, 50));
     }
 
     private JPanel createFarmPanel() {
@@ -168,6 +217,19 @@ public class UserInterface extends JPanel  {
         final JButton delay = new JButton("Delay");
         final JPanel featurePane = new JPanel(new BorderLayout());
         final JPanel featureCBPane = new JPanel(new GridLayout(2,6));
+
+
+        final JButton link = new JButton("Go to Web Interface: www.wztechs.com/brutalage_controller");
+        link.addActionListener(be->{
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("http://www.wztechs.com/brutalage_controller"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         currBtn.addActionListener(e->{
             StringBuilder builder = new StringBuilder();
@@ -280,7 +342,12 @@ public class UserInterface extends JPanel  {
         actionBtn.addActionListener(e->{
             switch (actionBtn.getText()) {
                 case "Start":
-                    if (!store.getAccountGroup().isEmpty()) {
+                    if(isPosMode){
+                        store.createRemoteWS();
+                        gameInstance.start();
+                        actionBtn.setText("PAUSE");
+                    }
+                    else if (!store.getAccountGroup().isEmpty()) {
                         topPane.remove(posMode);
                         gotoBtn.setText("Jump Into");
                         panel.revalidate();
@@ -433,9 +500,6 @@ public class UserInterface extends JPanel  {
         for(Map.Entry<String, Integer> entry: store.metadata.getGatherPriorities().entrySet()){
             JTextField tf = new JTextField(String.valueOf(entry.getValue()),2);
             tf.setPreferredSize(new Dimension(70,25));
-
-
-
             tf.addKeyListener(new KeyAdapter() {
                 public void keyPressed(KeyEvent ke) {
                     if(ke.getKeyCode() == KeyEvent.VK_BACK_SPACE){
@@ -523,17 +587,22 @@ public class UserInterface extends JPanel  {
         panel.add(botPane, BorderLayout.SOUTH);
 
         posMode.addActionListener(e->{
-            panel.remove(sp);
-            panel.remove(botPane);
-            panel.remove(topPane);
-            actionBtn.setText("PAUSE")  ;
-            panel.add(new JLabel("Web Interface............... wztechs.com/brutalage_controller", SwingConstants.CENTER), BorderLayout.NORTH);
+            isPosMode = true;
+            panel.removeAll();
+            panel.add(link, BorderLayout.NORTH);
             panel.add(actionBtn, BorderLayout.CENTER);
             panel.add(delay, BorderLayout.EAST);
             panel.revalidate();
-            store.createRemoteWS();
-            gameInstance.start();
         });
+
+        if(Global.OnlyPosMode){
+            isPosMode = true;
+            panel.removeAll();
+            panel.add(link, BorderLayout.NORTH);
+            panel.add(actionBtn, BorderLayout.CENTER);
+            panel.add(delay, BorderLayout.EAST);
+            panel.revalidate();
+        }
 
         System.out.println("interface added");
         return panel;

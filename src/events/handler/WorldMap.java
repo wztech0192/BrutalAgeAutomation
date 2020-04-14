@@ -214,6 +214,8 @@ public class WorldMap {
             game.dispatch.changePosition(buiX, buiY);
             game.dispatch("tap_build");
         }
+        game.dispatch.delay(1.5);
+        game.dispatch("change_name");
 
         game.startEvent(GameStatus.initiate, "complete");
     }

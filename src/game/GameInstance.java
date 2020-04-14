@@ -12,6 +12,7 @@ import store.Store;
 import util.Logger;
 import util.MyDebugger;
 
+import java.net.ConnectException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -26,7 +27,7 @@ public class GameInstance {
     public JsonObject posTarget;
     private AccountUpdateListener updateListener;
     public Account account;
-
+    public int restarting = 0;
     public boolean debug;
 
 
@@ -103,21 +104,33 @@ public class GameInstance {
                     }
                 }
             }
-            catch(AdbCommandRejectedException e){
-                Logger.log("Emulator Stopped!!");
-            }
-            catch(Exception e){
-                if(store.isForceStop){
-                    Logger.log("Force stopped, start new round!");
-                    store.setForceStop(false);
+            catch(AdbCommandRejectedException | ConnectException e){
+                if(restarting == 0 || restarting == 2) {
+                    restarting += 1;
+                    Logger.log("Emulator Stopped!! Attempt to restart..");
+                    if (store.restartEmulator()) {
+                        Logger.log("Restart success");
+                        startEvent(GameStatus.initiate);
+                    } else {
+                        Logger.log("Restart failed");
+                    }
+                    restarting += 1;
                 }
 
-                else{
-                    GameException.fire(this, e);
-                }
+            }
+            catch(Exception e){
                 if(store.isClose){
                     Logger.log("Closed");
                 }else{
+
+                    if(store.isForceStop){
+                        Logger.log("Force stopped, start new round!");
+                        store.setForceStop(false);
+                    }
+                    else{
+                        GameException.fire(this, e);
+                    }
+
                     startEvent(GameStatus.initiate);
                 }
             }

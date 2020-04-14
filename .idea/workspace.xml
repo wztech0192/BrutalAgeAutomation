@@ -7,20 +7,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/BrutalAgeFarm.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/BrutalAgeFarm.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/Config.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/util/Global.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/EventMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/EventMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/LogProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/LogProcess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/CityWork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/CityWork.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/Initiate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/Initiate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/Starting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/Starting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WorldMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/ClanEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ClanEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/GameInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameInstance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/GameStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameStatus.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/Metadata.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Metadata.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/MyDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/MyDebugger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/FilePath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/FilePath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Logger.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,18 +76,6 @@
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="events" />
-      <recent name="" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
-      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources" />
-      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\src\resources" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="events.handler" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources" />
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources\res" />
@@ -90,8 +83,20 @@
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources\image" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="events" />
+      <recent name="" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="events.handler" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\src\resources" />
+    </key>
   </component>
-  <component name="RunManager" selected="Application.Debug">
+  <component name="RunManager" selected="Application.Production">
     <configuration name="Debug" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="BrutalAgeFarm" />
@@ -206,7 +211,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586641914351</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="add multi instance">
+      <created>1586724557165</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1586724557165</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -274,10 +286,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="177" key="#Project_Structure/0.0.1920.1040@0.0.1920.1040" timestamp="1581915489599" />
-    <state x="713" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1585468264510">
+    <state x="713" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1586724954165">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="713" y="321" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1585468264510" />
+    <state x="713" y="321" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1586724954165" />
     <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser" timestamp="1585677814859">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -294,58 +306,58 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="756" y="403" width="407" height="242" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1585432167723" />
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1586641913106">
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1586724554469">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586641913106" />
-    <state width="451" height="466" key="DebuggerActiveHint" timestamp="1585631765575">
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586724554469" />
+    <state width="451" height="466" key="DebuggerActiveHint" timestamp="1586725398219">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="451" height="466" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1585631765575" />
+    <state width="451" height="466" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1586725398219" />
     <state x="727" y="388" key="FileChooserDialogImpl" timestamp="1581916119586">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="727" y="388" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1581916119586" />
-    <state width="1876" height="236" key="GridCell.Tab.0.bottom" timestamp="1586724307544">
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom" timestamp="1586828483328">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586724307544" />
-    <state width="1876" height="236" key="GridCell.Tab.0.center" timestamp="1586724307543">
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586828483328" />
+    <state width="1876" height="236" key="GridCell.Tab.0.center" timestamp="1586828483328">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586724307543" />
-    <state width="1876" height="236" key="GridCell.Tab.0.left" timestamp="1586724307543">
+    <state width="1876" height="236" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586828483328" />
+    <state width="1876" height="236" key="GridCell.Tab.0.left" timestamp="1586828483328">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586724307543" />
-    <state width="1876" height="236" key="GridCell.Tab.0.right" timestamp="1586724307543">
+    <state width="1876" height="236" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586828483328" />
+    <state width="1876" height="236" key="GridCell.Tab.0.right" timestamp="1586828483328">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586724307543" />
-    <state width="1876" height="270" key="GridCell.Tab.1.bottom" timestamp="1586723291929">
+    <state width="1876" height="236" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586828483328" />
+    <state width="1876" height="270" key="GridCell.Tab.1.bottom" timestamp="1586740783784">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="270" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586723291929" />
-    <state width="1876" height="270" key="GridCell.Tab.1.center" timestamp="1586723291928">
+    <state width="1876" height="270" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586740783784" />
+    <state width="1876" height="270" key="GridCell.Tab.1.center" timestamp="1586740783784">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="270" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586723291928" />
-    <state width="1876" height="270" key="GridCell.Tab.1.left" timestamp="1586723291928">
+    <state width="1876" height="270" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586740783784" />
+    <state width="1876" height="270" key="GridCell.Tab.1.left" timestamp="1586740783784">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="270" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586723291928" />
-    <state width="1876" height="270" key="GridCell.Tab.1.right" timestamp="1586723291928">
+    <state width="1876" height="270" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586740783784" />
+    <state width="1876" height="270" key="GridCell.Tab.1.right" timestamp="1586740783784">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="270" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586723291928" />
+    <state width="1876" height="270" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586740783784" />
     <state x="446" y="93" key="SettingsEditor" timestamp="1586662603628">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="446" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1586662603628" />
-    <state x="558" y="251" key="Vcs.Push.Dialog.v2" timestamp="1586641915828">
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2" timestamp="1586724559056">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1586641915828" />
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1586724559056" />
     <state width="960" height="520" key="XDebugger.FullValuePopup" timestamp="1581913162358">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -374,14 +386,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="0" y="0" width="1639" height="749" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1585636534264" />
-    <state x="1184" y="236" width="736" height="804" key="find.popup" timestamp="1586657715559">
+    <state x="1149" y="236" width="736" height="804" key="find.popup" timestamp="1586883117132">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1184" y="236" width="736" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1586657715559" />
-    <state x="629" y="229" width="672" height="678" key="search.everywhere.popup" timestamp="1586655977084">
+    <state x="1149" y="236" width="736" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1586883117132" />
+    <state x="629" y="229" width="672" height="678" key="search.everywhere.popup" timestamp="1586728133676">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="629" y="229" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1586655977084" />
+    <state x="629" y="229" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1586728133676" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -20,11 +20,13 @@ public class Logger {
     }
 
     public static void recordRound(Account acc, String str) {
-        log( "------------- ******** "+acc.getId()+ "#"+acc.getRound()+ " round ended using: " +str + " ******** ------------- " );
-        addToFile(
-                FilePath.TIME_FILE_PATH,
-                acc.getId()+ "#"+acc.getRound()+":   " +str
-        );
+        if(acc != null) {
+            log("------------- ******** " + acc.getId() + "#" + acc.getRound() + " round ended using: " + str + " ******** ------------- ");
+            addToFile(
+                    FilePath.TIME_FILE_PATH,
+                    acc.getId() + "#" + acc.getRound() + ":   " + str
+            );
+        }
     }
 
 

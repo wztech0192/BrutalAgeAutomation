@@ -35,6 +35,7 @@ public class EventDispatcher implements IShellOutputReceiver {
     private Tesseract tesseract;
     public boolean requirePullFile = false;
     public GameInstance game;
+    public String inputEventFile = null;
 
     public EventDispatcher(GameInstance game) {
         this.game = game;
@@ -130,26 +131,40 @@ public class EventDispatcher implements IShellOutputReceiver {
 
     }
 
+    private String getInputEventFile(){
+        if(inputEventFile == null){
+            inputEventFile = "event4";
+           /* StringBuilder str = new StringBuilder("");
+            execADBIP(game.store.metadata.getIp(),"shell getevent", s->{
+                str.append(s);
+                return false;
+            });*/
+
+        }
+        return inputEventFile;
+    }
+
     public void mapzoom() throws Exception {
+
         for(int i =0; i<5;i++) {
-            exec("su 0 cat /mnt/sdcard/baevents/map_out_event > /dev/input/event4");
+            exec("su 0 cat /mnt/sdcard/baevents/map_out_event > /dev/input/"+getInputEventFile());
             game.dispatch.staticDelay(0.25);
         }
         mapzoomin();
     }
 
     public void mapzoomin() throws Exception{
-        exec("su 0 cat /mnt/sdcard/baevents/map_in_event > /dev/input/event4");
+        exec("su 0 cat /mnt/sdcard/baevents/map_in_event > /dev/input/"+getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
     public void zoomout() throws Exception {
-        exec("su 0 cat /mnt/sdcard/baevents/zoomout_event > /dev/input/event4");
+        exec("su 0 cat /mnt/sdcard/baevents/zoomout_event > /dev/input/"+getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
     public void zoomin() throws Exception {
-        exec("su 0 cat /mnt/sdcard/baevents/zoomin_event > /dev/input/event4");
+        exec("su 0 cat /mnt/sdcard/baevents/zoomin_event > /dev/input/"+getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
@@ -160,7 +175,7 @@ public class EventDispatcher implements IShellOutputReceiver {
         int redo = 10;
         do {
             prevWorld = game.log.world.clone();
-            exec(tapStr + "&" + tapStr);
+            exec(tapStr + "&" + tapStr + "&" + tapStr);
             staticDelay(1.5);
         } while (Arrays.equals(game.log.world, prevWorld) && redo-- > 0);
 
@@ -576,14 +591,16 @@ public class EventDispatcher implements IShellOutputReceiver {
             Process proc = rt.exec(cmd);
             BufferedReader stdInput = new BufferedReader(new
                     InputStreamReader(proc.getInputStream()));
-            String s;
-            while (true) {
-                s = stdInput.readLine();
-                if (s == null) break;
-                if (reader.read(s)) break;
+            if(reader != null) {
+                String s;
+                while (true) {
+                    s = stdInput.readLine();
+                    if (s == null) break;
+                    if (reader.read(s)) break;
+                }
+                proc.destroy();
             }
             stdInput.close();
-            proc.destroy();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

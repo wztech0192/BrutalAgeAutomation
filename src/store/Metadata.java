@@ -12,6 +12,7 @@ import java.util.TreeMap;
 public class Metadata {
     private String accountPath = FilePath.ACCOUNT_PATH;
     private String ip = "127.0.0.1:62001";
+    private String nox = "";
     private FeatureToggler featureToggler;
     private int delay = 600;
     private TreeMap<String, Integer> gatherPriorities;
@@ -40,6 +41,14 @@ public class Metadata {
 
     public void setMaxPosAcc(int maxPosAcc) {
         this.maxPosAcc = maxPosAcc;
+    }
+
+    public String getNox() {
+        return nox;
+    }
+    @XmlElement
+    public void setNox(String nox) {
+        this.nox = nox;
     }
 
     @XmlElement

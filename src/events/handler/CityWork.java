@@ -137,7 +137,9 @@ public class CityWork {
         game.dispatch("open_my_item");
         game.dispatch("use_all_resource");
 
-        levelUpAllBuilding(game);
+        if(game.account.getBuildingLvl("stronghold") < 8 || game.account.doInRound(6)) {
+            levelUpAllBuilding(game);
+        }
 
         hammerAction(game);
 

@@ -18,6 +18,13 @@ public class WhenStart {
             game.dispatch.requirePullFile = false;
         }
 
+        if(game.account != null){
+            game.dispatch.delay(3);
+            if(game.account.getBuildingLvl("stronghold") >= 9){
+                game.dispatch("top_left");
+                game.dispatch("top_left");
+            }
+        }
         game.dispatch("login_test");
 
         game.dispatch("get_rss_info");

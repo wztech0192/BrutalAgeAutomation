@@ -1,5 +1,6 @@
 package events.register;
 
+import com.github.cliftonlabs.json_simple.JsonObject;
 import events.common.Event;
 import game.GameException;
 import util.Logger;
@@ -8,7 +9,39 @@ import java.util.HashMap;
 
 public class WorldMapEvents {
 
+    private static String encryptName(JsonObject json){
+        if(json != null) {
+            StringBuffer str = new StringBuffer();
+            str.append(json.get("buiX"));
+            str.append(json.get("buiY"));
+            str.append(0);
+            str.append(json.get("telX"));
+            str.append(json.get("telY"));
+            return str.reverse().toString();
+        }
+        return Math.random()+"";
+    }
+
+
     public static void register(HashMap<String, Event> _map) {
+
+        Event.builder(_map, "change_name")
+                .setDelay(1)
+                .setLoc(40, 56)
+                .setListener(((event, game) -> {
+                    game.dispatch(Event.builder().setLoc(360, 642).setDelay(1.5));
+                    game.dispatch(Event.builder().setLoc(600, 450).setDelay(1.5));
+                    game.dispatch.exec("input keyevent KEYCODE_DEL & input keyevent KEYCODE_DEL & input keyevent KEYCODE_DEL & input keyevent KEYCODE_DEL");
+                    game.dispatch.delay(1.25);
+                    game.dispatch. exec("input keyevent KEYCODE_DEL & input keyevent KEYCODE_DEL & input keyevent KEYCODE_DEL & input keyevent KEYCODE_DEL");
+                    game.dispatch.delay(1.25);
+                    game.dispatch.enterText(encryptName(game.posTarget));
+                    game.dispatch.delay(1);
+                    game.dispatch(Event.builder().setLoc(365, 717).setDelay(1.5));
+                    game.dispatch.delay(1.5);
+                    return null;
+                }));
+
         Event.builder(_map, "tel_confirm")
                 .setDelay(1.5)
                 .setLoc(335, 664);
