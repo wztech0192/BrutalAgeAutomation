@@ -32,7 +32,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-
+        if(Global.config.getOwnerName().equalsIgnoreCase("")){
+            System.exit(0);
+        };
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -41,7 +43,6 @@ public class Main {
                 }
             }
             boolean debug = args.length > 0;
-
             AndroidDebugBridge.init(false);
             AndroidDebugBridge bridge = AndroidDebugBridge.createBridge(
                     FilePath.RootPath + "/../adb", false);

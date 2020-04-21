@@ -106,7 +106,7 @@ public class WorldMapEvents {
                             248, 577
                     };
                     Event tapEvent = Event.builder().setDelay(2);
-                    for (int i = 0; i < tapLoc.length / 2; i += 2) {
+                    for (int i = 0; i < tapLoc.length; i += 2) {
                         game.dispatch(tapEvent.setLoc(tapLoc[i], tapLoc[i + 1]));
                         if (game.dispatch("tap_build")) {
                             return null;

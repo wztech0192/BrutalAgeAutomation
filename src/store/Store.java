@@ -68,7 +68,6 @@ public class Store extends WebSocketAdapter {
             metadata =  new Metadata();
             util.Marshaller.marshell(metadata, FilePath.METADATA_PATH+"_"+tag);
         }
-        metadata.getFeatureToggler().getShortValue();
     }
 
     public ArrayList<Account> unmarshellAcounts(){

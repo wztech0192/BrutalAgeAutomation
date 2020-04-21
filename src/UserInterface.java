@@ -11,6 +11,7 @@ import util.Global;
 import util.Logger;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -27,8 +28,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class UserInterface extends JPanel  {
-
+public class UserInterface extends JPanel {
+    private JPanel featureCBPane;
+    private JPanel numberPaneWrapper;
+    private JPanel priorityPaneWrapper;
 
     private Store store;
     private boolean debug;
@@ -55,8 +58,8 @@ public class UserInterface extends JPanel  {
 
         this.add(activeOrCloseBTN, BorderLayout.CENTER);
 
-        activeOrCloseBTN.addActionListener(e->{
-            switch(activeOrCloseBTN.getText()){
+        activeOrCloseBTN.addActionListener(e -> {
+            switch (activeOrCloseBTN.getText()) {
                 case "Active":
                     activeOrCloseBTN.setText("Loading.........");
                     owner.repaint();
@@ -71,9 +74,9 @@ public class UserInterface extends JPanel  {
         });
     }
 
-    private void active(){
-        new Thread(()->{
-            if(connectToDevice()) {
+    private void active() {
+        new Thread(() -> {
+            if (connectToDevice()) {
                 this.removeAll();
                 gameInstance = new GameInstance(store, debug);
                 System.out.println("active interface");
@@ -81,21 +84,23 @@ public class UserInterface extends JPanel  {
                 this.add(activeOrCloseBTN, BorderLayout.NORTH);
                 activeOrCloseBTN.setText("Close");
                 activeOrCloseBTN.setPreferredSize(null);
-                if(debug)
+                if (debug)
                     gameInstance.start();
 
                 owner.pack();
                 owner.repaint();
             }
         }).start();
-    };
+    }
+
+    ;
 
     private boolean connectToDevice() {
         try {
             store = new Store(tag, bridge);
 
             final JComboBox<String> noxSelect = new JComboBox<>(noxInstances.toArray(new String[0]));
-            noxSelect.setSelectedItem(  this.store.metadata.getNox());
+            noxSelect.setSelectedItem(this.store.metadata.getNox());
 
 
             JPanel myPanel = new JPanel(new BorderLayout());
@@ -105,7 +110,7 @@ public class UserInterface extends JPanel  {
             emulatorPanel.add(noxSelect);
             emulatorPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Emulator"));
             JFileChooser chooser = null;
-            if(!Global.OnlyPosMode) {
+            if (!Global.OnlyPosMode) {
                 JPanel chooserPanel = new JPanel();
                 chooser = new JFileChooser();
                 chooser.setControlButtonsAreShown(false);
@@ -128,29 +133,29 @@ public class UserInterface extends JPanel  {
             }
 
             String selectedNox = (String) noxSelect.getSelectedItem();
-            EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+selectedNox, null);
+            EventDispatcher.exec(Global.config.getNoxPath() + "/Nox.exe -clone:" + selectedNox, null);
 
 
             int redo = 0;
             String port = Global.getNoxPort(selectedNox);
 
-            if(port.equalsIgnoreCase("")){
+            if (port.equalsIgnoreCase("")) {
                 JOptionPane.showMessageDialog(null, "Device not found! Retry");
                 closeInstance();
                 return false;
             }
 
-            String ip = "127.0.0.1:"+port;
-            while(true){
-                Logger.log("Trying to connected to "+ip+"...attempt "+redo);
+            String ip = "127.0.0.1:" + port;
+            while (true) {
+                Logger.log("Trying to connected to " + ip + "...attempt " + redo);
                 EventDispatcher.exec("adb connect " + ip, null);
                 Thread.sleep(1500);
-                if(bridge.hasInitialDeviceList()) {
-                    for(IDevice tempDevice:bridge.getDevices()){
-                        if(tempDevice.getName().contains(ip)){
+                if (bridge.hasInitialDeviceList()) {
+                    for (IDevice tempDevice : bridge.getDevices()) {
+                        if (tempDevice.getName().contains(ip)) {
                             Logger.log("Connected!");
                             device = tempDevice;
-                            if(redo > 1){
+                            if (redo > 1) {
                                 Logger.log("Wait for 12 sec....................");
                                 Thread.sleep(12000);
                             }
@@ -158,12 +163,12 @@ public class UserInterface extends JPanel  {
                         }
                     }
                 }
-                if(device != null){
+                if (device != null) {
                     break;
                 }
 
                 redo++;
-                if(redo > 8){
+                if (redo > 8) {
                     JOptionPane.showMessageDialog(null, "Device not found! Retry");
                     closeInstance();
                     return false;
@@ -171,9 +176,9 @@ public class UserInterface extends JPanel  {
                 Thread.sleep(3000);
             }
 
-            EventDispatcher.execADBIP( ip, "logcat -c", s -> false);
+            EventDispatcher.execADBIP(ip, "logcat -c", s -> false);
 
-            if(!Global.OnlyPosMode) {
+            if (!Global.OnlyPosMode) {
                 Logger.log("Account path: " + chooser.getCurrentDirectory().getAbsolutePath() + "\\");
                 this.store.metadata.setAccountPath(chooser.getCurrentDirectory().getAbsolutePath() + "\\");
             }
@@ -181,7 +186,7 @@ public class UserInterface extends JPanel  {
             this.store.metadata.setNox(selectedNox);
             this.store.marshellMetadata();
             System.out.println("push event");
-            EventDispatcher.execADBIP(store.metadata.getIp(), "push \""+FilePath.EVENTS_PATH+"\" /sdcard/" , s->{
+            EventDispatcher.execADBIP(store.metadata.getIp(), "push \"" + FilePath.EVENTS_PATH + "\" /sdcard/", s -> {
                 Logger.log(s);
                 return false;
             });
@@ -202,6 +207,195 @@ public class UserInterface extends JPanel  {
         activeOrCloseBTN.setPreferredSize(new Dimension(200, 50));
     }
 
+    private JPanel createCBFeaturePane(JTable table, DefaultTableModel model) {
+        final JPanel featureCBPane = new JPanel(new GridLayout(8, 2));
+        featureCBPane.setBorder(BorderFactory.createTitledBorder(""));
+        ItemListener featureListener = e -> {
+            store.metadata.getFeatureToggler().set(((JCheckBox) e.getItem()).getText(), e.getStateChange() == ItemEvent.SELECTED);
+            store.marshellMetadata();
+        };
+        for (Map.Entry<String, Boolean> entry : store.metadata.getFeatureToggler().getFeatures().entrySet()) {
+            JCheckBox cb = new JCheckBox(entry.getKey(), entry.getValue());
+            cb.addItemListener(featureListener);
+            featureCBPane.add(cb);
+        }
+        final JButton setSelectedFeatureBtn = new JButton("Set Selected");
+        final JButton setAllFeatureBtn = new JButton("Set All");
+        featureCBPane.add(setSelectedFeatureBtn);
+        featureCBPane.add(setAllFeatureBtn);
+
+        setSelectedFeatureBtn.addActionListener(e -> {
+            int start = table.getSelectedRow();
+            int end = table.getSelectionModel().getMaxSelectionIndex();
+            if (start != -1) {
+                for (; start <= end; start++) {
+                    Account acc = store.getAccountGroup().getAccount(start);
+                    acc.getFeatureToggler().cloneFeature(store.metadata.getFeatureToggler());
+                    String[] newData = acc.getColumnData();
+                    for (int i = 0; i < model.getColumnCount(); i++) {
+                        model.setValueAt(newData[i], start, i);
+                    }
+                    store.updateAccount(acc);
+                }
+                JOptionPane.showMessageDialog(null, "Completed");
+            }
+        });
+
+        setAllFeatureBtn.addActionListener(e -> {
+            int index = 0;
+            for (Account acc : store.getAccountGroup().getAccounts()) {
+                acc.getFeatureToggler().cloneFeature(store.metadata.getFeatureToggler());
+                String[] newData = acc.getColumnData();
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    model.setValueAt(newData[i], index, i);
+                }
+                store.updateAccount(acc);
+                index++;
+            }
+            JOptionPane.showMessageDialog(null, "Completed");
+
+        });
+        return featureCBPane;
+    }
+
+
+    private JPanel createNumberPane(JTable table, DefaultTableModel model) {
+        final JPanel numberPaneWrapper = new JPanel(new GridLayout(5, 2));
+        final HashMap<String, JTextField> numberTextFields = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : store.metadata.getNumberFeaturer().getNumberSetting().entrySet()) {
+            JTextField tf = new JTextField(String.valueOf(entry.getValue()), 7);
+            tf.setPreferredSize(new Dimension(200, 25));
+            numberTextFields.put(entry.getKey(), tf);
+            addLabelTextField(entry.getKey(), tf, numberPaneWrapper);
+        }
+
+        final JButton setSelectedNumberBtn = new JButton("Set Selected");
+        final JButton setAllNumberBtn = new JButton("Set All");
+
+        numberPaneWrapper.add(setSelectedNumberBtn);
+        numberPaneWrapper.add(setAllNumberBtn);
+
+
+        setSelectedNumberBtn.addActionListener(e -> {
+            try {
+                for (Map.Entry<String, JTextField> entry : numberTextFields.entrySet()) {
+                    store.metadata.getNumberFeaturer().setNumberSetting(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
+                }
+                int start = table.getSelectedRow();
+                int end = table.getSelectionModel().getMaxSelectionIndex();
+                if (start != -1) {
+                    for (; start <= end; start++) {
+                        Account acc = store.getAccountGroup().getAccount(start);
+                        for (Map.Entry<String, Integer> entry : store.metadata.getNumberFeaturer().getNumberSetting().entrySet()) {
+                            acc.getNumberFeaturer().setNumberSetting(entry.getKey(), entry.getValue());
+                        }
+                        String[] newData = acc.getColumnData();
+                        for (int i = 0; i < model.getColumnCount(); i++) {
+                            model.setValueAt(newData[i], start, i);
+                        }
+                        store.updateAccount(acc);
+                    }
+                    JOptionPane.showMessageDialog(null, "Completed");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Number only!");
+            }
+        });
+        setAllNumberBtn.addActionListener(e -> {
+            try {
+                for (Map.Entry<String, JTextField> entry : numberTextFields.entrySet()) {
+                    store.metadata.getNumberFeaturer().setNumberSetting(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
+                }
+                int index = 0;
+                for (Account acc : store.getAccountGroup().getAccounts()) {
+                    for (Map.Entry<String, Integer> entry : store.metadata.getNumberFeaturer().getNumberSetting().entrySet()) {
+                        acc.getNumberFeaturer().setNumberSetting(entry.getKey(), entry.getValue());
+                    }
+                    String[] newData = acc.getColumnData();
+                    for (int i = 0; i < model.getColumnCount(); i++) {
+                        model.setValueAt(newData[i], index, i);
+                    }
+                    store.updateAccount(acc);
+                    index++;
+                }
+                JOptionPane.showMessageDialog(null, "Completed");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Number only!");
+            }
+        });
+        return numberPaneWrapper;
+    }
+
+    private JPanel createPriorityPane(JTable table, DefaultTableModel model) {
+        final JPanel priorityPaneWrapper = new JPanel(new GridLayout(6, 2));
+
+        priorityPaneWrapper.setBorder(BorderFactory.createTitledBorder("Priority: (Never) 0 <<<<<< 5 (Always)"));
+        final HashMap<String, JTextField> priorityTextfields = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : store.metadata.getNumberFeaturer().getGatherPriorities().entrySet()) {
+            JTextField tf = new JTextField(String.valueOf(entry.getValue()), 7);
+            tf.setPreferredSize(new Dimension(200, 25));
+            priorityTextfields.put(entry.getKey(), tf);
+            addLabelTextField(entry.getKey(), tf, priorityPaneWrapper);
+        }
+
+
+        final JButton setSelectedPriorityBtn = new JButton("Set Selected");
+        final JButton setAllPriorityBtn = new JButton("Set All");
+        priorityPaneWrapper.add(setSelectedPriorityBtn);
+        priorityPaneWrapper.add(setAllPriorityBtn);
+
+        setSelectedPriorityBtn.addActionListener(e -> {
+            try {
+                for (Map.Entry<String, JTextField> entry : priorityTextfields.entrySet()) {
+                    store.metadata.getNumberFeaturer().setGatherPriority(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
+                }
+                int start = table.getSelectedRow();
+                int end = table.getSelectionModel().getMaxSelectionIndex();
+                if (start != -1) {
+                    for (; start <= end; start++) {
+                        Account acc = store.getAccountGroup().getAccount(start);
+                        for (Map.Entry<String, Integer> entry : store.metadata.getNumberFeaturer().getGatherPriorities().entrySet()) {
+                            acc.getNumberFeaturer().setGatherPriority(entry.getKey(), entry.getValue());
+                        }
+                        String[] newData = acc.getColumnData();
+                        for (int i = 0; i < model.getColumnCount(); i++) {
+                            model.setValueAt(newData[i], start, i);
+                        }
+                        store.updateAccount(acc);
+                    }
+                    JOptionPane.showMessageDialog(null, "Completed");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Number only!");
+            }
+        });
+
+        setAllPriorityBtn.addActionListener(e -> {
+            try {
+                for (Map.Entry<String, JTextField> entry : priorityTextfields.entrySet()) {
+                    store.metadata.getNumberFeaturer().setGatherPriority(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
+                }
+                int index = 0;
+                for (Account acc : store.getAccountGroup().getAccounts()) {
+                    for (Map.Entry<String, Integer> entry : store.metadata.getNumberFeaturer().getGatherPriorities().entrySet()) {
+                        acc.getNumberFeaturer().setGatherPriority(entry.getKey(), entry.getValue());
+                    }
+                    String[] newData = acc.getColumnData();
+                    for (int i = 0; i < model.getColumnCount(); i++) {
+                        model.setValueAt(newData[i], index, i);
+                    }
+                    store.updateAccount(acc);
+                    index++;
+                }
+                JOptionPane.showMessageDialog(null, "Completed");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Number only!");
+            }
+        });
+        return priorityPaneWrapper;
+    }
+
+
     private JPanel createFarmPanel() {
         final JPanel panel = new JPanel(new BorderLayout());
 
@@ -215,12 +409,10 @@ public class UserInterface extends JPanel  {
         final JButton currBtn = new JButton("Current");
         final JButton deleteBtn = new JButton("Delete account");
         final JButton delay = new JButton("Delay");
-        final JPanel featurePane = new JPanel(new BorderLayout());
-        final JPanel featureCBPane = new JPanel(new GridLayout(2,6));
 
 
         final JButton link = new JButton("Go to Web Interface: www.wztechs.com/brutalage_controller");
-        link.addActionListener(be->{
+        link.addActionListener(be -> {
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
             if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                 try {
@@ -231,12 +423,12 @@ public class UserInterface extends JPanel  {
             }
         });
 
-        currBtn.addActionListener(e->{
+        currBtn.addActionListener(e -> {
             StringBuilder builder = new StringBuilder();
             EventDispatcher.execADBIP(
                     store.metadata.getIp(),
                     " shell content query --uri content://settings/secure --where \"name=\\'android_id\\'\"",
-                    s->{
+                    s -> {
                         builder.append(s);
                         return false;
                     });
@@ -251,7 +443,7 @@ public class UserInterface extends JPanel  {
                 return false;
             }
         };
-        final JTable table = new JTable(model){
+        final JTable table = new JTable(model) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component component = super.prepareRenderer(renderer, row, column);
@@ -262,23 +454,22 @@ public class UserInterface extends JPanel  {
             }
         };
 
-        table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {     // to detect doble click events
-                    JTable target = (JTable)me.getSource();
+                    JTable target = (JTable) me.getSource();
                     int row = target.getSelectedRow(); // select a row
-                    Account acc= store.getAccountGroup().getAccount(row);
+                    Account acc = store.getAccountGroup().getAccount(row);
                     displayAccountDialog(acc, model);
                 }
             }
         });
 
 
-
-        gotoBtn.addActionListener(e->{
-            if(gotoBtn.getText().equals("Go Into")) {
+        gotoBtn.addActionListener(e -> {
+            if (gotoBtn.getText().equals("Go Into")) {
                 int i = table.getSelectedRow();
                 if (i != -1) {
                     Account acc = store.getAccountGroup().getAccount(i);
@@ -289,7 +480,7 @@ public class UserInterface extends JPanel  {
                         ex.printStackTrace();
                     }
                 }
-            }else{
+            } else {
                 store.getAccountGroup().setIndex(table.getSelectedRow());
                 store.setForceStop(true);
             }
@@ -298,12 +489,13 @@ public class UserInterface extends JPanel  {
         createBtn.addActionListener(e -> {
 
             try {
-                JTextField accountID = new JTextField("");
+                JTextField accountID = new JTextField();
                 JComboBox<String> hordeList = new JComboBox<>(Account.Hordes);
-                JTextField serverID=  new JTextField("519");
-                JTextField clan = new JTextField("");
+                hordeList.setSelectedIndex(store.metadata.getHorde());
+                JTextField serverID = new JTextField(String.valueOf(store.metadata.getServer()));
+                JTextField clan = new JTextField(store.metadata.getClan());
 
-                JPanel createPanel = new JPanel(new GridLayout(4,2));
+                JPanel createPanel = new JPanel(new GridLayout(4, 2));
                 createPanel.add(new JLabel("Account id (optional): "));
                 createPanel.add(accountID);
                 createPanel.add(new JLabel("server id: "));
@@ -315,39 +507,44 @@ public class UserInterface extends JPanel  {
 
                 int result = JOptionPane.showConfirmDialog(this, createPanel,
                         "Create", JOptionPane.OK_CANCEL_OPTION);
-                if(result == JOptionPane.OK_OPTION) {
-                    Account acc = new Account( Integer.parseInt(serverID.getText()), !accountID.getText().equalsIgnoreCase("") ? accountID.getText() : store.createNewID());
-                    acc.setServerID( Integer.parseInt(serverID.getText()));
+                if (result == JOptionPane.OK_OPTION) {
+                    Account acc = new Account(Integer.parseInt(serverID.getText()), !accountID.getText().equalsIgnoreCase("") ? accountID.getText() : store.createNewID());
+
+                    int server = Integer.parseInt(serverID.getText());
+                    acc.setServerID(server);
                     acc.setHorde(hordeList.getSelectedIndex());
                     acc.setClan(clan.getText());
+
+                    store.metadata.setClan(clan.getText());
+                    store.metadata.setServer(server);
+                    store.metadata.setHorde(hordeList.getSelectedIndex());
+
                     store.addAccount(acc);
 
                     model.addRow(acc.getColumnData());
                 }
-            }
-            catch(NumberFormatException ignore){
+            } catch (NumberFormatException ignore) {
                 JOptionPane.showMessageDialog(null, "Invalid server ID");
             }
         });
 
         gameInstance.setAccountUpdateListener(acc -> {
             int index = store.getAccountGroup().getAccounts().indexOf(acc);
-            topPane.setBorder(BorderFactory.createTitledBorder("Current: "+acc.getSubId()));
+            topPane.setBorder(BorderFactory.createTitledBorder("Current: " + acc.getSubId()));
             String[] newData = acc.getColumnData();
             for (int i = 0; i < model.getColumnCount(); i++) {
                 model.setValueAt(newData[i], index, i);
             }
         });
 
-        actionBtn.addActionListener(e->{
+        actionBtn.addActionListener(e -> {
             switch (actionBtn.getText()) {
                 case "Start":
-                    if(isPosMode){
+                    if (isPosMode) {
                         store.createRemoteWS();
                         gameInstance.start();
                         actionBtn.setText("PAUSE");
-                    }
-                    else if (!store.getAccountGroup().isEmpty()) {
+                    } else if (!store.getAccountGroup().isEmpty()) {
                         topPane.remove(posMode);
                         gotoBtn.setText("Jump Into");
                         panel.revalidate();
@@ -356,10 +553,10 @@ public class UserInterface extends JPanel  {
                         topPane.revalidate();
                         this.revalidate();
                         int startIndex = table.getSelectedRow();
-                        if(startIndex == -1){
+                        if (startIndex == -1) {
                             startIndex = 0;
                         }
-                        topPane.setBorder(BorderFactory.createTitledBorder("Current: #"+(startIndex+1)));
+                        topPane.setBorder(BorderFactory.createTitledBorder("Current: #" + (startIndex + 1)));
 
                         actionBtn.setText("PAUSE");
                         store.getAccountGroup().setIndex(startIndex);
@@ -395,21 +592,20 @@ public class UserInterface extends JPanel  {
             }
         });
 
-        delay.addActionListener(e->{
+        delay.addActionListener(e -> {
             try {
-                String str = JOptionPane.showInputDialog(null, "Delay",store.getDelay()+"" );
-                if(!str.equalsIgnoreCase(""))
+                String str = JOptionPane.showInputDialog(null, "Delay", store.getDelay() + "");
+                if (!str.equalsIgnoreCase(""))
                     store.setDelay(Integer.parseInt(str));
-            }
-            catch(NumberFormatException ignored){
-                JOptionPane.showMessageDialog(null,"Number only");
+            } catch (NumberFormatException ignored) {
+                JOptionPane.showMessageDialog(null, "Number only");
             }
         });
 
         final JButton resetError = new JButton("Reset Error");
-        resetError.addActionListener(e->{
+        resetError.addActionListener(e -> {
             int index = 0;
-            for(Account acc: store.getAccountGroup().getAccounts()){
+            for (Account acc : store.getAccountGroup().getAccounts()) {
                 acc.setError(0);
                 store.updateAccount(acc);
                 String[] newData = acc.getColumnData();
@@ -418,7 +614,7 @@ public class UserInterface extends JPanel  {
                 }
                 index++;
             }
-            JOptionPane.showMessageDialog(null,"Reset all error");
+            JOptionPane.showMessageDialog(null, "Reset all error");
         });
 
 
@@ -429,53 +625,6 @@ public class UserInterface extends JPanel  {
         actionPane.add(delay);
         actionPane.add(resetError);
 
-
-        ItemListener featureListener = e -> {
-            store.metadata.getFeatureToggler().set(((JCheckBox)e.getItem()).getText(), e.getStateChange() == ItemEvent.SELECTED);
-            store.marshellMetadata();
-        };
-        for(Map.Entry<String, Boolean> entry: store.metadata.getFeatureToggler().getFeatures().entrySet()){
-            JCheckBox cb = new JCheckBox(entry.getKey(), entry.getValue());
-            cb.addItemListener(featureListener);
-            featureCBPane.add(cb);
-        }
-        featurePane.add(featureCBPane, BorderLayout.CENTER);
-
-        final JPanel featureActionPane = new JPanel();
-        final JButton setSelectedFeatureBtn = new JButton("Set Selected");
-        final JButton setAllFeatureBtn = new JButton("Set All");
-        featureActionPane.add(setSelectedFeatureBtn);
-        featureActionPane.add(setAllFeatureBtn);
-        featurePane.add(featureActionPane, BorderLayout.SOUTH);
-
-        setSelectedFeatureBtn.addActionListener(e->{
-            int start = table.getSelectedRow();
-            int end = table.getSelectionModel().getMaxSelectionIndex();
-            if(start != -1){
-                for(;start<=end;start++){
-                    Account acc = store.getAccountGroup().getAccount(start);
-                    acc.getFeatureToggler().cloneFeature(store.metadata.getFeatureToggler());
-                    String[] newData = acc.getColumnData();
-                    for (int i = 0; i < model.getColumnCount(); i++) {
-                        model.setValueAt(newData[i], start, i);
-                    }
-                    store.updateAccount(acc);
-                }
-            }
-        });
-
-        setAllFeatureBtn.addActionListener(e->{
-            int index = 0;
-            for(Account acc : store.getAccountGroup().getAccounts()){
-                acc.getFeatureToggler().cloneFeature(store.metadata.getFeatureToggler());
-                String[] newData = acc.getColumnData();
-                for (int i = 0; i < model.getColumnCount(); i++) {
-                    model.setValueAt(newData[i], index, i);
-                }
-                store.updateAccount(acc);
-                index++;
-            }
-        });
 
         actionBtn.setBackground(Color.DARK_GRAY);
         actionBtn.setForeground(Color.WHITE);
@@ -492,101 +641,45 @@ public class UserInterface extends JPanel  {
         panel.add(sp, BorderLayout.CENTER);
 
 
-        JPanel botPane = new JPanel(new BorderLayout());
-
-        featurePane.setBorder(BorderFactory.createTitledBorder(""));
-
-        JPanel priorityPane = new JPanel();
-        for(Map.Entry<String, Integer> entry: store.metadata.getGatherPriorities().entrySet()){
-            JTextField tf = new JTextField(String.valueOf(entry.getValue()),2);
-            tf.setPreferredSize(new Dimension(70,25));
-            tf.addKeyListener(new KeyAdapter() {
-                public void keyPressed(KeyEvent ke) {
-                    if(ke.getKeyCode() == KeyEvent.VK_BACK_SPACE){
-                        tf.setEditable(true);
-                        if(tf.getText().length() == 1 || tf.getText().length() == 0){
-                            tf.setText("0");
-                            store.metadata.setGatherPriority(entry.getKey(), 0);;
-                        }else{
-                            store.metadata.setGatherPriority(entry.getKey(),Integer.parseInt(tf.getText().substring(0, tf.getText().length()-1)));
-                        }
-                        store.marshellMetadata();
-                    }
-                    else if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
-                        store.metadata.setGatherPriority(entry.getKey(), Integer.parseInt(tf.getText()+ ke.getKeyChar()));
-                        store.marshellMetadata();
-                        tf.setEditable(true);
-                    }else{
-                        tf.setEditable(false);
-                    }
-                }
-            });
-            addLabelTextField(entry.getKey(), tf, priorityPane);
-        }
+        final JPanel botPane = new JPanel(new BorderLayout());
 
 
-        final JPanel priorityPaneWrapper = new JPanel(new BorderLayout());
-        final JPanel priorityAction = new JPanel();
-        final JButton setSelectedPriorityBtn = new JButton("Set Selected");
-        final JButton setAllPriorityBtn = new JButton("Set All");
-        final JButton resetAllPriorityBtn = new JButton("Reset All");
+        featureCBPane = createCBFeaturePane(table, model);
+        numberPaneWrapper = createNumberPane(table, model);
+        priorityPaneWrapper = createPriorityPane(table, model);
 
-        priorityAction.add(setSelectedPriorityBtn);
-        priorityAction.add(setAllPriorityBtn);
-        priorityAction.add(resetAllPriorityBtn);
-        priorityPaneWrapper.add(priorityPane, BorderLayout.CENTER);
-        priorityPaneWrapper.add(priorityAction, BorderLayout.SOUTH);
-
-        resetAllPriorityBtn.addActionListener(e->{
-            store.metadata.populateGatherPriority();
-            store.marshellMetadata();
-            for(Account acc: store.getAccountGroup().getAccounts()){
-                acc.populateGatherPriority();
-                store.updateAccount(acc);
-            }
-            setAllPriorityBtn.doClick();
-        });
-
-
-        setSelectedPriorityBtn.addActionListener(e->{
-            int start = table.getSelectedRow();
-            int end = table.getSelectionModel().getMaxSelectionIndex();
-            if(start != -1){
-                for(;start<=end;start++){
-                    Account acc = store.getAccountGroup().getAccount(start);
-                    for(Map.Entry<String,Integer> entry:store.metadata.getGatherPriorities().entrySet()){
-                        acc.setGatherPriority(entry.getKey(), entry.getValue());
-                    }
-                    String[] newData = acc.getColumnData();
-                    for (int i = 0; i < model.getColumnCount(); i++) {
-                        model.setValueAt(newData[i], start, i);
-                    }
+        final JButton resetAll = new JButton("Reset All");
+        resetAll.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to reset all?",null, JOptionPane.OK_CANCEL_OPTION);
+            if (confirm == JOptionPane.OK_OPTION) {
+                store.metadata.resetNumberFeaturer();
+                store.metadata.resetFeatureToggler();
+                store.marshellMetadata();
+                for (Account acc : store.getAccountGroup().getAccounts()) {
+                    acc.resetNumberFeaturer();
+                    acc.resetFeatureToggler();
                     store.updateAccount(acc);
                 }
             }
+            botPane.removeAll();
+            featureCBPane = createCBFeaturePane(table, model);
+            numberPaneWrapper = createNumberPane(table, model);
+            priorityPaneWrapper = createPriorityPane(table, model);
+            botPane.add(resetAll, BorderLayout.NORTH);
+            botPane.add(featureCBPane, BorderLayout.WEST);
+            botPane.add(numberPaneWrapper, BorderLayout.CENTER);
+            botPane.add(priorityPaneWrapper, BorderLayout.EAST);
+            botPane.repaint();
+            owner.pack();
         });
 
-        setAllPriorityBtn.addActionListener(e->{
-            int index = 0;
-            for(Account acc : store.getAccountGroup().getAccounts()){
-                for(Map.Entry<String,Integer> entry:store.metadata.getGatherPriorities().entrySet()){
-                    acc.setGatherPriority(entry.getKey(), entry.getValue());
-                }
-                String[] newData = acc.getColumnData();
-                for (int i = 0; i < model.getColumnCount(); i++) {
-                    model.setValueAt(newData[i], index, i);
-                }
-                store.updateAccount(acc);
-                index++;
-            }
-        });
-
-
-        botPane.add(featurePane, BorderLayout.CENTER);
-        botPane.add(priorityPaneWrapper,BorderLayout.SOUTH);
+        botPane.add(resetAll, BorderLayout.NORTH);
+        botPane.add(featureCBPane, BorderLayout.WEST);
+        botPane.add(numberPaneWrapper, BorderLayout.CENTER);
+        botPane.add(priorityPaneWrapper, BorderLayout.EAST);
         panel.add(botPane, BorderLayout.SOUTH);
 
-        posMode.addActionListener(e->{
+        posMode.addActionListener(e -> {
             isPosMode = true;
             panel.removeAll();
             panel.add(link, BorderLayout.NORTH);
@@ -595,7 +688,7 @@ public class UserInterface extends JPanel  {
             panel.revalidate();
         });
 
-        if(Global.OnlyPosMode){
+        if (Global.OnlyPosMode) {
             isPosMode = true;
             panel.removeAll();
             panel.add(link, BorderLayout.NORTH);
@@ -603,19 +696,19 @@ public class UserInterface extends JPanel  {
             panel.add(delay, BorderLayout.EAST);
             panel.revalidate();
         }
-
         System.out.println("interface added");
         return panel;
     }
 
-    private JTextField NullableTextField(Object obj){
-        if(obj == null){
+
+    private JTextField NullableTextField(Object obj) {
+        if (obj == null) {
             return new JTextField();
         }
         return new JTextField(obj.toString());
     }
 
-    private void addLabelTextField(String label, JTextField textfield, JPanel panel){
+    private void addLabelTextField(String label, JTextField textfield, JPanel panel) {
         panel.add(new JLabel(label));
         panel.add(textfield);
     }
@@ -625,51 +718,42 @@ public class UserInterface extends JPanel  {
             final JDialog dialog = new JDialog(owner, true);
 
             ItemListener featureListener = e -> {
-                acc.getFeatureToggler().set(((JCheckBox)e.getItem()).getText(), e.getStateChange() == ItemEvent.SELECTED);
+                acc.getFeatureToggler().set(((JCheckBox) e.getItem()).getText(), e.getStateChange() == ItemEvent.SELECTED);
             };
 
             final JPanel topPane = new JPanel(new BorderLayout());
-            final JPanel featurePane = new JPanel(new GridLayout(2,5));
+            final JPanel featurePane = new JPanel(new GridLayout(5, 3));
             featurePane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Features"));
             final HashMap<String, JCheckBox> featureCBs = new HashMap<>();
-            for(Map.Entry<String, Boolean> entry: acc.getFeatureToggler().getFeatures().entrySet()){
+            for (Map.Entry<String, Boolean> entry : acc.getFeatureToggler().getFeatures().entrySet()) {
                 JCheckBox cb = new JCheckBox(entry.getKey(), entry.getValue());
                 cb.addItemListener(featureListener);
                 featureCBs.put(entry.getKey(), cb);
                 featurePane.add(cb);
             }
 
-            final JPanel priorityPane = new JPanel();
-            for(Map.Entry<String, Integer> entry: acc.getGatherPriorities().entrySet()){
-                JTextField tf = new JTextField(String.valueOf(entry.getValue()),2);
-                tf.setPreferredSize(new Dimension(70,25));
-                tf.addKeyListener(new KeyAdapter() {
-                    public void keyPressed(KeyEvent ke) {
-                        if(ke.getKeyCode() == KeyEvent.VK_BACK_SPACE){
-                            tf.setEditable(true);
-                            if(tf.getText().length() == 1 || tf.getText().length() == 0){
-                                tf.setText("0");
-                                acc.setGatherPriority(entry.getKey(), 0);;
-                            }else{
-                                acc.setGatherPriority(entry.getKey(),Integer.parseInt(tf.getText().substring(0, tf.getText().length()-1)));
-                            }
-                            store.updateAccount(acc);
-                        }
-                        else if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
-                            acc.setGatherPriority(entry.getKey(), Integer.parseInt(tf.getText()+ ke.getKeyChar()));
-                            store.updateAccount(acc);
-                            tf.setEditable(true);
-                        }else{
-                            tf.setEditable(false);
-                        }
-                    }
-                });
+            final JPanel numberPane = new JPanel(new GridLayout(4,2));
+            final HashMap<String, JTextField> numberTextfield = new HashMap<>();
+            for (Map.Entry<String, Integer> entry : acc.getNumberFeaturer().getNumberSetting().entrySet()) {
+                JTextField tf = new JTextField(String.valueOf(entry.getValue()), 7);
+                tf.setPreferredSize(new Dimension(200, 25));
+                numberTextfield.put(entry.getKey(), tf);
+                addLabelTextField(entry.getKey(), tf, numberPane);
+            }
+
+            final JPanel priorityPane = new JPanel(new GridLayout(5,2));
+            final HashMap<String, JTextField> priorityTextfield = new HashMap<>();
+            for (Map.Entry<String, Integer> entry : acc.getNumberFeaturer().getGatherPriorities().entrySet()) {
+                JTextField tf = new JTextField(String.valueOf(entry.getValue()), 4);
+                tf.setPreferredSize(new Dimension(200, 25));
+                priorityTextfield.put(entry.getKey(), tf);
                 addLabelTextField(entry.getKey(), tf, priorityPane);
             }
 
             topPane.setBorder(BorderFactory.createTitledBorder(""));
-            topPane.add(priorityPane, BorderLayout.NORTH);
-            topPane.add(featurePane, BorderLayout.CENTER);
+            topPane.add(numberPane, BorderLayout.WEST);
+            topPane.add(priorityPane, BorderLayout.CENTER);
+            topPane.add(featurePane, BorderLayout.EAST);
 
 
             final JCheckBox changedServerCB = new JCheckBox("Changed Server", acc.getChangedServer());
@@ -680,11 +764,12 @@ public class UserInterface extends JPanel  {
             final JTextField hordeField = NullableTextField(acc.getHordeLabel());
             final JTextField clanField = NullableTextField(acc.getClan());
             final JTextField levelField = NullableTextField(acc.getLevel());
+            final JTextField prevLevelField = NullableTextField(acc.getPreviousLevel());
             final JTextField errorField = NullableTextField(acc.getError());
             final JTextField lastGiftTimeField = NullableTextField(acc.getLastGiftTime());
             final JTextField lastRoundField = NullableTextField(acc.getLastRound());
 
-            final JPanel metaPanel = new JPanel(new GridLayout(9, 2));
+            final JPanel metaPanel = new JPanel(new GridLayout(10, 2));
             metaPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Account Data"));
             metaPanel.add(changedServerCB);
             metaPanel.add(finishInitCB);
@@ -693,6 +778,7 @@ public class UserInterface extends JPanel  {
             addLabelTextField("Server ID: ", serverIDField, metaPanel);
             addLabelTextField("Horde: ", hordeField, metaPanel);
             addLabelTextField("Clan: ", clanField, metaPanel);
+            addLabelTextField("Prev Level: ", prevLevelField, metaPanel);
             addLabelTextField("Level: ", levelField, metaPanel);
             addLabelTextField("Error: ", errorField, metaPanel);
             addLabelTextField("Last Gift Time: ", lastGiftTimeField, metaPanel);
@@ -703,7 +789,7 @@ public class UserInterface extends JPanel  {
             rssPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Resources"));
             HashMap<String, JTextField> resourcesFields = new HashMap<>();
 
-            for(Map.Entry<String, Integer> entry: acc.getResources().entrySet()){
+            for (Map.Entry<String, Integer> entry : acc.getResources().entrySet()) {
                 JTextField field = NullableTextField(entry.getValue());
                 resourcesFields.put(entry.getKey(), field);
                 addLabelTextField(entry.getKey(), field, rssPanel);
@@ -712,7 +798,7 @@ public class UserInterface extends JPanel  {
             final JPanel buildingPanel = new JPanel(new GridLayout(acc.getBuildings().size(), 2));
             buildingPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Buildings"));
             HashMap<String, JTextField> buildingFields = new HashMap<>();
-            for(Map.Entry<String, Integer> entry: acc.getBuildings().entrySet()){
+            for (Map.Entry<String, Integer> entry : acc.getBuildings().entrySet()) {
                 JTextField field = NullableTextField(entry.getValue());
                 buildingFields.put(entry.getKey(), field);
                 addLabelTextField(entry.getKey(), field, buildingPanel);
@@ -721,16 +807,16 @@ public class UserInterface extends JPanel  {
             final JPanel[] hammerPanels = new JPanel[2];
             JTextField[][] hammerFields = new JTextField[2][4];
             BuildHammer hammer = acc.getPrimaryHammer();
-            for(int i =0 ; i<2; i++) {
+            for (int i = 0; i < 2; i++) {
                 hammerPanels[i] = new JPanel(new GridLayout(4, 2));
                 hammerFields[i][0] = NullableTextField(hammer.getBuildingName());
                 hammerFields[i][1] = NullableTextField(hammer.getNextBuildingLevel());
                 hammerFields[i][2] = NullableTextField(hammer.getHammer());
                 hammerFields[i][3] = NullableTextField(hammer.getExpiration());
-                addLabelTextField("Building Name: ",  hammerFields[i][0], hammerPanels[i]);
-                addLabelTextField("Next Level: ",  hammerFields[i][1], hammerPanels[i]);
-                addLabelTextField("Complete TIme: ",  hammerFields[i][2], hammerPanels[i]);
-                addLabelTextField("Expiration: ",  hammerFields[i][3], hammerPanels[i]);
+                addLabelTextField("Building Name: ", hammerFields[i][0], hammerPanels[i]);
+                addLabelTextField("Next Level: ", hammerFields[i][1], hammerPanels[i]);
+                addLabelTextField("Complete TIme: ", hammerFields[i][2], hammerPanels[i]);
+                addLabelTextField("Expiration: ", hammerFields[i][3], hammerPanels[i]);
                 hammer = acc.getSecondaryHammer();
             }
             hammerPanels[0].setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Primary Hammer"));
@@ -757,8 +843,9 @@ public class UserInterface extends JPanel  {
             mainPane.add(buildingPanel, BorderLayout.EAST);
 
             final JButton saveBtn = new JButton("Save");
-            saveBtn.addActionListener(e->{
-                try{
+            saveBtn.addActionListener(e -> {
+                try {
+
 
                     acc.setChangedServer(changedServerCB.isSelected());
                     acc.setFinishInit(finishInitCB.isSelected());
@@ -767,35 +854,44 @@ public class UserInterface extends JPanel  {
                     acc.setRandomized(isRandomizeCB.isSelected());
                     acc.setHorde(hordeField.getText());
                     acc.setClan(clanField.getText());
+                    acc.setPreviousLevel(Integer.parseInt(prevLevelField.getText()));
                     acc.setLevel(Integer.parseInt(levelField.getText()));
                     acc.setError(Integer.parseInt(errorField.getText()));
                     acc.setLastGiftTime(LocalDateTime.parse(lastGiftTimeField.getText()));
                     acc.setLastRound(LocalDateTime.parse(lastRoundField.getText()));
 
-                    for(Map.Entry<String, JCheckBox> entry:featureCBs.entrySet()){
+                    for (Map.Entry<String, JTextField> entry : priorityTextfield.entrySet()) {
+                        acc.getNumberFeaturer().setGatherPriority(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
+                    }
+
+                    for (Map.Entry<String, JTextField> entry : numberTextfield.entrySet()) {
+                        acc.getNumberFeaturer().setNumberSetting(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
+                    }
+
+                    for (Map.Entry<String, JCheckBox> entry : featureCBs.entrySet()) {
                         acc.getFeatureToggler().set(entry.getKey(), entry.getValue().isSelected());
                     }
 
-                    for(Map.Entry<String, JTextField> entry:resourcesFields.entrySet()){
+                    for (Map.Entry<String, JTextField> entry : resourcesFields.entrySet()) {
                         acc.setResource(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
                     }
 
-                    for(Map.Entry<String, JTextField> entry:buildingFields.entrySet()){
+                    for (Map.Entry<String, JTextField> entry : buildingFields.entrySet()) {
                         acc.setBuildingLevel(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
                     }
 
                     BuildHammer hammerSet = acc.getPrimaryHammer();
-                    for(int i =0 ; i<2; i++) {
-                        if(!hammerFields[i][0].getText().equalsIgnoreCase("")){
+                    for (int i = 0; i < 2; i++) {
+                        if (!hammerFields[i][0].getText().equalsIgnoreCase("")) {
                             hammerSet.setBuildingName(hammerFields[i][0].getText());
                         }
-                        if(!hammerFields[i][1].getText().equalsIgnoreCase("")){
+                        if (!hammerFields[i][1].getText().equalsIgnoreCase("")) {
                             hammerSet.setNextBuildingLevel(Integer.parseInt(hammerFields[i][1].getText()));
                         }
-                        if(!hammerFields[i][2].getText().equalsIgnoreCase("")){
+                        if (!hammerFields[i][2].getText().equalsIgnoreCase("")) {
                             hammerSet.setHammer(LocalDateTime.parse(hammerFields[i][2].getText()));
                         }
-                        if(!hammerFields[i][3].getText().equalsIgnoreCase("")){
+                        if (!hammerFields[i][3].getText().equalsIgnoreCase("")) {
                             hammerSet.setExpiration(LocalDateTime.parse(hammerFields[i][3].getText()));
                         }
                         hammerSet = acc.getSecondaryHammer();
@@ -810,9 +906,8 @@ public class UserInterface extends JPanel  {
                     }
 
                     dialog.dispose();
-                }
-                catch (Exception ex){
-                    JOptionPane.showMessageDialog(null,"Save Failed "+ex.getMessage());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Save Failed " + ex.getMessage());
                 }
             });
             mainPane.add(saveBtn, BorderLayout.SOUTH);
@@ -823,8 +918,7 @@ public class UserInterface extends JPanel  {
             dialog.setLocationRelativeTo(this);
             dialog.setResizable(true);
             dialog.setVisible(true);
-        }
-        catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
     }

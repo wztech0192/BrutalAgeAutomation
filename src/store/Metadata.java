@@ -15,11 +15,16 @@ public class Metadata {
     private String nox = "";
     private FeatureToggler featureToggler;
     private int delay = 600;
-    private TreeMap<String, Integer> gatherPriorities;
+    private NumberFeaturer numberFeaturer;
     private LinkedList<String> SavedPosAcc = new LinkedList<>();
     private int maxPosAcc = 5;
+    private String clan = "";
+    private int server = 519;
+    private int horde = 0;
+
     public Metadata(){
         featureToggler = new FeatureToggler();
+        resetNumberFeaturer();
     }
 
 
@@ -41,6 +46,30 @@ public class Metadata {
 
     public void setMaxPosAcc(int maxPosAcc) {
         this.maxPosAcc = maxPosAcc;
+    }
+
+    public int getHorde() {
+        return horde;
+    }
+
+    public void setClan(String clan) {
+        this.clan = clan;
+    }
+
+    public int getServer() {
+        return server;
+    }
+
+    public void setHorde(int horde) {
+        this.horde = horde;
+    }
+
+    public String getClan() {
+        return clan;
+    }
+
+    public void setServer(int server) {
+        this.server = server;
     }
 
     public String getNox() {
@@ -84,33 +113,22 @@ public class Metadata {
         return this.delay;
     }
 
-    public TreeMap<String, Integer> getGatherPriorities() {
-        if(gatherPriorities == null){
-            populateGatherPriority();
+    public NumberFeaturer getNumberFeaturer() {
+        if(numberFeaturer == null){
+            resetNumberFeaturer();
         }
-        return gatherPriorities;
+        return numberFeaturer;
     }
-
-    public void setGatherPriority(String key, int value) {
-        if(this.gatherPriorities == null){
-            populateGatherPriority();
-        }
-        this.gatherPriorities.put(key, value);
-    }
-
     @XmlElement
-    public void setGatherPriorities(TreeMap<String, Integer> gatherPriorities) {
-        this.gatherPriorities = gatherPriorities;
+    public void setNumberFeaturer(NumberFeaturer numberFeaturer) {
+        this.numberFeaturer = numberFeaturer;
     }
 
-    public void populateGatherPriority(){
-        gatherPriorities = new TreeMap<>();
-        gatherPriorities.put("meat", 0);
-        gatherPriorities.put("wood", 0);
-        gatherPriorities.put("rock", 0);
-        gatherPriorities.put("ivory", 0);
-        gatherPriorities.put("mana", 0);
-        gatherPriorities.put("a_minLevel", 2);
-        gatherPriorities.put("a_maxLevel", 4);
+    public void resetNumberFeaturer() {
+        this.numberFeaturer = new NumberFeaturer();
+    }
+
+    public void resetFeatureToggler() {
+        this.featureToggler = new FeatureToggler();
     }
 }

@@ -15,6 +15,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import store.MatchPoint;
 import util.FilePath;
+import util.Global;
 import util.Logger;
 
 import javax.imageio.ImageIO;
@@ -35,7 +36,6 @@ public class EventDispatcher implements IShellOutputReceiver {
     private Tesseract tesseract;
     public boolean requirePullFile = false;
     public GameInstance game;
-    public String inputEventFile = null;
 
     public EventDispatcher(GameInstance game) {
         this.game = game;
@@ -132,16 +132,7 @@ public class EventDispatcher implements IShellOutputReceiver {
     }
 
     private String getInputEventFile(){
-        if(inputEventFile == null){
-            inputEventFile = "event4";
-           /* StringBuilder str = new StringBuilder("");
-            execADBIP(game.store.metadata.getIp(),"shell getevent", s->{
-                str.append(s);
-                return false;
-            });*/
-
-        }
-        return inputEventFile;
+        return Global.config.getEventName();
     }
 
     public void mapzoom() throws Exception {
@@ -158,6 +149,10 @@ public class EventDispatcher implements IShellOutputReceiver {
         game.dispatch.staticDelay(0.25);
     }
 
+    public void cityZoom()  throws Exception{
+        exec("su 0 cat /mnt/sdcard/baevents/city_zoom_event > /dev/input/"+getInputEventFile());
+        game.dispatch.staticDelay(0.25);
+    }
     public void zoomout() throws Exception {
         exec("su 0 cat /mnt/sdcard/baevents/zoomout_event > /dev/input/"+getInputEventFile());
         game.dispatch.staticDelay(0.25);
@@ -297,11 +292,11 @@ public class EventDispatcher implements IShellOutputReceiver {
                     event.name, event.loc[0], event.loc[1], (int) game.log.city.x, (int) game.log.city.y, (int) diffX, (int) diffY
             ));
 
-            staticDelay(0.15);
             execMiddleware(event);
             if ((absDiffX + absDiffY) >= 22) {
                 exec(String.format("input swipe %d %d %d %d 500", tapBuildingEvent.loc[0], tapBuildingEvent.loc[1],
                         tapBuildingEvent.loc[0] - (int) diffX, tapBuildingEvent.loc[1] - (int) diffY));
+                staticDelay(0.15);
                 redo--;
             } else {
                 sendEvent(tapBuildingEvent);
@@ -344,7 +339,7 @@ public class EventDispatcher implements IShellOutputReceiver {
                 if(game.account != null) {
                     if (event.getName().equalsIgnoreCase("stronghold")) {
                         if (game.account.getBuildingLvl("stronghold") >= 6) {
-                            hx = 500;
+                            hx = 520;
                         }
                     }
                 }
@@ -393,7 +388,7 @@ public class EventDispatcher implements IShellOutputReceiver {
 
             if (game.log.btnName.equalsIgnoreCase("main:")) {
                 staticDelay(1.5);
-                exec("input tap 400 1156");
+                exec("input tap 362 1183");
             }
             else if(game.log.btnName.equalsIgnoreCase("popup:bg") ||game.log.btnName.contains("board:btn_chest") ){
                 exec("input tap 324 500");
@@ -699,4 +694,5 @@ public class EventDispatcher implements IShellOutputReceiver {
             sendEvent("top_left");
         }
     }
+
 }

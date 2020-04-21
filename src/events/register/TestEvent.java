@@ -79,23 +79,34 @@ public class TestEvent {
                     }
                 }));
 
-        Event.builder(_map, "login_test_2")
+
+        Event.builder(_map, "test_click")
                 .setDelay(1.5)
-                .setLoc(510, 110)
+                .setLoc(362, 1183)
                 .setListener(
-                        (event, game) -> game.log.btnName.equalsIgnoreCase(":fullHitzone") ? null : event
+                        (event, game) -> game.log.btnName.contains("hud:") ? null : event
                 );
 
         Event.builder(_map, "login_test")
-                .setTargetName(":fullHitzone")
                 .setDelay(1.5)
-                .setLoc(510, 110)
+                .setLoc(362, 1183)
                 .setMaxRedo(2)
                 .setListener((event, game) -> {
-                    if (!game.log.btnName.equalsIgnoreCase(event.targetName) &&
-                            !game.dispatch("login_test_2") &&
+                    if (!game.log.btnName.contains("hud:") &&
+                            !game.dispatch("test_click") &&
                             !game.dispatch("template_close")) {
-                            return event;
+                        return event;
+                    }
+                    return null;
+                });
+
+
+        Event.builder(_map, "login_zoom")
+                .setLoc(362, 1183)
+                .setDelay(1.5)
+                .setListener((event, game) -> {
+                    for(int i=0;i<3;i++){
+                        game.dispatch.cityZoom();
                     }
                     return null;
                 });
@@ -120,8 +131,7 @@ public class TestEvent {
 
                         int maxTroop = 0;
                         if(game.account != null) {
-                             maxTroop = (game.account.getBuildingLvl("portal") < 6 ? 4000 : 10000) *
-                                    (game.account.getBuildingLvl("stronghold") < 6 ? 2: 3);
+                             maxTroop = game.account.getNumberFeaturer().getNumberSetting().get("Max Troop");
 
                              if(troops > -1){
                                  game.account.setTroops(troops);

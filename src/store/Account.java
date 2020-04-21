@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @XmlRootElement(name = "Account")
 public class Account {
 
-    public static String[] Columns = { "ID", "Error", "Stronghold",  "P) Meat", "P) Wood", "P) Rock","P) Ivory", "P) Mana", "Troops",  FeatureToggler.displayShortName()};
+    public static String[] Columns = { "ID", "Error", "Stronghold",  "P) Meat", "P) Wood", "P) Rock","P) Ivory", "P) Mana", "Troops"};
 
     //"Wood", "Ivory", "Mana", "Rock", "Meat"
     public String[] getColumnData(){
@@ -25,13 +25,12 @@ public class Account {
                 getSubId(),
                 String.valueOf(getError()),
                 String.valueOf(getBuildingLvl("stronghold")),
-                getGatherPriorities().get("meat")+") "+df2.format(resources.get("meat") / K) +" K",
-                getGatherPriorities().get("wood")+") "+df2.format(resources.get("wood") / K) +" K",
-                getGatherPriorities().get("rock")+") "+df2.format( resources.get("rock") / K )+" K",
-                getGatherPriorities().get("ivory")+") "+df2.format(resources.get("ivory") / K )+" K",
-                getGatherPriorities().get("mana")+") "+df2.format( resources.get("mana") / K) +" K",
-                String.valueOf(getTroops()),
-                getFeatureToggler().getShortValue()
+                getNumberFeaturer().getGatherPriorities().get("meat")+") "+df2.format(resources.get("meat") / K) +" K",
+                getNumberFeaturer().getGatherPriorities().get("wood")+") "+df2.format(resources.get("wood") / K) +" K",
+                getNumberFeaturer().getGatherPriorities().get("rock")+") "+df2.format( resources.get("rock") / K )+" K",
+                getNumberFeaturer().getGatherPriorities().get("ivory")+") "+df2.format(resources.get("ivory") / K )+" K",
+                getNumberFeaturer().getGatherPriorities().get("mana")+") "+df2.format( resources.get("mana") / K) +" K",
+                String.valueOf(getTroops())
         };
     }
 
@@ -51,7 +50,6 @@ public class Account {
     private FeatureToggler featureToggler;
     private HashMap<String, Integer> buildings;
     private HashMap<String, Integer> resources;
-    private TreeMap<String, Integer> gatherPriorities;
     private boolean changedServer = false;
     private boolean finishInit;
     private int troops = 0;
@@ -72,7 +70,7 @@ public class Account {
     private boolean isJoinClan = false;
     private boolean isRandomized = false;
     private int previousLevel = 0;
-
+    private NumberFeaturer numberFeaturer;
 
 
     public Account(){}
@@ -116,9 +114,7 @@ public class Account {
         buildings.put("warhub4",0);
         buildings.put("warhub5",0);
 
-
-    populateGatherPriority();
-
+        resetNumberFeaturer();
     }
 
 
@@ -439,39 +435,23 @@ public class Account {
         this.previousLevel = previousLevel;
     }
 
-    public TreeMap<String, Integer> getGatherPriorities() {
-        if(gatherPriorities == null){
-            populateGatherPriority();
+    public NumberFeaturer getNumberFeaturer() {
+        if(numberFeaturer == null){
+            resetNumberFeaturer();
         }
-        return gatherPriorities;
+        return numberFeaturer;
     }
-
-    public void setGatherPriority(String key, int value) {
-        if(this.gatherPriorities == null){
-            populateGatherPriority();
-        }
-        this.gatherPriorities.put(key, value);
-    }
-
     @XmlElement
-    public void setGatherPriorities(TreeMap<String, Integer> gatherPriorities) {
-        this.gatherPriorities = gatherPriorities;
+    public void setNumberFeaturer(NumberFeaturer numberFeaturer) {
+        this.numberFeaturer = numberFeaturer;
     }
 
-    public void populateGatherPriority(){
-        gatherPriorities = new TreeMap<>();
-        gatherPriorities.put("meat", 0);
-        gatherPriorities.put("wood", 0);
-        gatherPriorities.put("rock", 0);
-        gatherPriorities.put("ivory", 0);
-        gatherPriorities.put("mana", 0);
-        gatherPriorities.put("a_minLevel", 2);
-        gatherPriorities.put("a_maxLevel", 4);
+    public void resetNumberFeaturer() {
+        this.numberFeaturer = new NumberFeaturer();
     }
-
     public ArrayList<String> getGatherPrioritiesArray() {
         HashMap<String, Integer> priorityTree = new HashMap<>();
-        for(Map.Entry<String, Integer> entry : gatherPriorities.entrySet()){
+        for(Map.Entry<String, Integer> entry : getNumberFeaturer().getGatherPriorities().entrySet()){
             if(entry.getValue() != 0 && !entry.getKey().equalsIgnoreCase("a_maxLevel") && !entry.getKey().equalsIgnoreCase("a_minLevel")){
                 if(entry.getKey().equalsIgnoreCase("meat") || entry.getKey().equalsIgnoreCase("wood")){
                     priorityTree.put(entry.getKey()+"3", entry.getValue());
@@ -491,5 +471,9 @@ public class Account {
 
     public boolean doInRound(int round){
         return this.getBuildingLvl("stronghold") < 10 || this.round % round == 0;
+    }
+
+    public void resetFeatureToggler() {
+        this.featureToggler = new FeatureToggler();
     }
 }

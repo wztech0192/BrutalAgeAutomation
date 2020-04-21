@@ -26,47 +26,54 @@ public class CityWork {
                 game.startEvent(GameStatus.initiate);
             } else {
                 Logger.log("**fire regular pahse");
-                levelUpAllBuilding(game);
+                if(game.account.getBuildingLvl("stronghold") < 8 || game.account.doInRound(6)) {
+                    levelUpAllBuilding(game);
+                }
 
                 if(game.account.getFeatureToggler().get("Upgrade Building")) {
                     hammerAction(game);
                 }
 
-                if(game.account.getBuildingLvl("stronghold") > 5) {
+                if(game.account.getBuildingLvl("stronghold") >= 7) {
                     game.dispatch("flag");
                     game.dispatch("get_troop_info");
+
+                    int transportRound = game.account.getNumberFeaturer().getNumberSetting().get("Transport Round");
+                    if(game.account.getBuildingLvl("stronghold") >= 9 && game.log.marches > 0 && transportRound > 0
+                            && game.account.doInRound(transportRound) ){
+                        game.dispatch("transport");
+                    }
 
                     if (game.account.getFeatureToggler().get("Heal Troops") && game.log.shouldHeal) {
                         game.dispatch("healing_spring_access");
                     }
 
-                    if (game.account.getFeatureToggler().get("Train Troops") && game.log.shouldTrain) {
-                        if (game.account.getResource("wood") > 50000)
+                    if(game.log.shouldTrain) {
+                        if (game.account.getFeatureToggler().get("Train Warrior")){
                             game.dispatch("warrior");
+                        }
+                        if (game.account.getFeatureToggler().get("Train Rider (7+)")){
+                            game.dispatch("rider");
+                        }
+                        if (game.account.getFeatureToggler().get("Train Shaman (7+)")){
+                            game.dispatch("shaman");
+                        }
                     }
-                }else{
-                    if (game.account.getFeatureToggler().get("Train Troops")) {
-                        if (game.account.getResource("wood") > 50000)
-                            game.dispatch("warrior");
-                    }
+                }else if (game.account.getFeatureToggler().get("Train Warrior")){
+                    game.dispatch("warrior");
                 }
+
 
                 game.dispatch.pullAccountData(game.account.getId());
-
-
-                if(game.account.getBuildingLvl("stronghold") >= 9 && game.log.marches > 0 && game.account.getFeatureToggler().get("Transport") && game.account.doInRound(2) ){
-                    game.dispatch("transport");
-                }
 
                 Logger.log("-- Finish current round "+game.account.getRound());
                 game.account.setRound(game.account.getRound()+1);
                 if (game.account.getBuildingLvl("stronghold") >= 6 &&
                         game.log.marches > 0 &&
                         game.log.idleTroops > 0 &&
-                        game.account.getFeatureToggler().get("Gathering")
+                        game.account.getFeatureToggler().get("Gathering (6+)")
                 ) {
                     game.updateAccount();
-                    game.dispatch("squirrel");
                     game.startEvent(GameStatus.world_map);
                 } else {
                     game.updateAccount();
@@ -96,23 +103,25 @@ public class CityWork {
             game.updateAccount();
         }
 
-        if (game.account.getFeatureToggler().get("Second Hammer")) {
-            //use hammer
-            if (game.account.getSecondaryHammer().isExpired() && game.dispatch("use_hammer")) {
-                Logger.log("Expired secondary hammer, reuse");
-                game.account.getSecondaryHammer().resetExpiration();
-                game.updateAccount();
-            }
-        }
-
-        if(game.account.getSecondaryHammer().isAvailable()) {
-            String target = game.account.nextBuildingTarget(game.account.getPrimaryHammer());
-            if (!target.equalsIgnoreCase("")) {
-                Logger.log("Use secondary hammer");
-                if (!hammerBuild(game, game.account.getSecondaryHammer(), target, game.account.getPrimaryHammer().getBuildingName())) {
-                    game.account.getSecondaryHammer().setHammer(LocalDateTime.now().plusMinutes(30));
+        if(game.account.isFinishInit()) {
+            if (game.account.getFeatureToggler().get("Second Hammer")) {
+                //use hammer
+                if (game.account.getSecondaryHammer().isExpired() && game.dispatch("use_hammer")) {
+                    Logger.log("Expired secondary hammer, reuse");
+                    game.account.getSecondaryHammer().resetExpiration();
+                    game.updateAccount();
                 }
-                game.updateAccount();
+            }
+
+            if (game.account.getSecondaryHammer().isAvailable()) {
+                String target = game.account.nextBuildingTarget(game.account.getPrimaryHammer());
+                if (!target.equalsIgnoreCase("")) {
+                    Logger.log("Use secondary hammer");
+                    if (!hammerBuild(game, game.account.getSecondaryHammer(), target, game.account.getPrimaryHammer().getBuildingName())) {
+                        game.account.getSecondaryHammer().setHammer(LocalDateTime.now().plusMinutes(30));
+                    }
+                    game.updateAccount();
+                }
             }
         }
     }
@@ -126,20 +135,12 @@ public class CityWork {
 
         bulkLevelUpBuilding(game, "portal", 3);
 
-        game.dispatch("get_quest_gift");
-
-        game.dispatch("squirrel");
-
-        game.dispatch("get_all_mail");
-
-        game.dispatch("workshop");
-
         game.dispatch("open_my_item");
         game.dispatch("use_all_resource");
 
-        if(game.account.getBuildingLvl("stronghold") < 8 || game.account.doInRound(6)) {
-            levelUpAllBuilding(game);
-        }
+        game.dispatch("get_quest_gift");
+
+        levelUpAllBuilding(game);
 
         hammerAction(game);
 
@@ -147,9 +148,7 @@ public class CityWork {
             game.dispatch("healing_spring_access");
         }
 
-        if (game.account.getFeatureToggler().get("Train Troops")) {
-            game.dispatch("warrior");
-        }
+        game.dispatch("warrior");
 
         game.dispatch("bottom_left");
         game.dispatch.delay(3);
@@ -247,21 +246,20 @@ public class CityWork {
         bulkLevelUpBuilding(game, "research", 2);
         bulkLevelUpBuilding(game, "warehouse", 3);
 
-        bulkLevelUpBuilding(game, "tower", 3);
+        bulkLevelUpBuilding(game, "tower",  3);
         bulkLevelUpBuilding(game, "golden_tree", 3);
 
         if (game.account.getBuildingLvl("warhub1") < 3) {
             game.dispatch("get_quest_gift");
         }
 
-
+        int wantedLevel = game.account.getBuildingLvl("stronghold")>=5 ? 4:3;
         for (int i = 1; i <= 5; i++) {
-            bulkLevelUpBuilding(game, "well" + i, 3);
+            bulkLevelUpBuilding(game, "well" + i, wantedLevel);
         }
 
-
         for (int i = 1; i <= 5; i++) {
-            bulkLevelUpBuilding(game, "warhub" + i, 3);
+            bulkLevelUpBuilding(game, "warhub" + i, wantedLevel);
         }
         game.dispatch("get_quest_gift");
 

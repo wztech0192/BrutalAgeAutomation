@@ -51,6 +51,12 @@ public class MyDebugger {
                             case "ls":
                                 EventMap.printAll();
                                 break;
+                            case "zoomin":
+                                game.dispatch.zoomin();
+                                break;
+                            case "zoomout":
+                                game.dispatch.zoomout();
+                                break;
                             case "new":
                                 game.dispatch.stopGame();
                                 game.dispatch.changeAccount(game.store.createNewID(), false);

@@ -147,9 +147,16 @@ public class ClanEvents {
         Event.builder(_map, "apply_clan")
                 .setLoc(666, 1211)
                 .setDelay(2)
-                .setChain(
-                        _map.get("confirm_clan")
-                );
-
+                .setListener(((event, game) -> {
+                    if(!game.account.isFinishInit()){
+                        game.dispatch("confirm_clan");
+                    }else{
+                        game.dispatch(Event.builder().setLoc(360, 1088).setDelay(1.25));
+                        game.dispatch(Event.builder().setLoc( 360, 1088).setDelay(1.25));
+                        game.dispatch(Event.builder().setLoc(360, 878).setDelay(1.25));
+                        game.dispatch(Event.builder().setLoc(666, 1211).setDelay(1.55));
+                    }
+                    return null;
+                }));
     }
 }

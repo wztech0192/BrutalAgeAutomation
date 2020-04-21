@@ -20,25 +20,31 @@ public class WhenStart {
 
         if(game.account != null){
             game.dispatch.delay(3);
-            if(game.account.getBuildingLvl("stronghold") >= 9){
+            if(game.account.getBuildingLvl("stronghold")>=6){
                 game.dispatch("top_left");
+            }
+            if(game.account.getBuildingLvl("stronghold") >= 10){
                 game.dispatch("top_left");
             }
         }
+        game.dispatch.delay(2);
         game.dispatch("login_test");
 
         game.dispatch("get_rss_info");
 
         game.dispatch("login_test");
 
+        game.dispatch("login_zoom");
+
         if(!game.account.isFinishInit()){
+            game.account.setPreviousLevel(1);
+            game.updateAccount();
             game.dispatch.changeHorde(game.account.getHorde());
         }
 
         if(!game.account.isJoinClan()){
 
             game.dispatch("apply_clan");
-
             if (game.account.getClan() != null && !game.account.getClan().equalsIgnoreCase("")) {
                 game.dispatch("search_clan");
                 game.dispatch.enterText(game.account.getClan());
@@ -52,7 +58,7 @@ public class WhenStart {
 
 
         if(game.account.getPreviousLevel()  == 0 ||
-                (game.account.getLevel() >= 7 && game.account.getLevel() <= 12 && game.account.getPreviousLevel() != game.account.getLevel())){
+                (game.account.getLevel() >= 10 && game.account.getLevel() <= 12 && game.account.getPreviousLevel() != game.account.getLevel())) {
             game.dispatch("open_talent");
             game.dispatch("use_talent");
             game.account.setPreviousLevel(game.account.getLevel());
@@ -62,7 +68,7 @@ public class WhenStart {
 
         if(game.account.isOver()) {
 
-            if (game.account.getFeatureToggler().get("Hit Monster")) {
+            if (game.account.getFeatureToggler().get("Hit Monster (8+)")) {
                 if(game.account.getBuildingLvl("stronghold") >= 8){
                     game.dispatch("monster_access");
                 }
@@ -70,9 +76,10 @@ public class WhenStart {
 
             if (game.account.getFeatureToggler().get("Use Squirrel")) {
                 game.dispatch("squirrel");
+                game.dispatch("login_zoom");
             }
 
-            if(game.account.getFeatureToggler().get("Read Mails") && game.account.doInRound(6)) {
+            if(game.account.getFeatureToggler().get("Read Mails") && game.account.doInRound(5)) {
                 if (game.account.getLevel() > 4) {
                     game.dispatch("get_all_mail");
                 }
@@ -92,7 +99,7 @@ public class WhenStart {
                 }
             }
 
-            if (game.account.getFeatureToggler().get("Use Resource") && game.account.doInRound(6)) {
+            if (game.account.isFinishInit() && game.account.getFeatureToggler().get("Use Resource") && (game.account.getBuildingLvl("stronghold") <9 || game.account.doInRound(6))) {
                 game.dispatch("open_my_item");
                 game.dispatch("use_all_resource");
             }
@@ -105,7 +112,7 @@ public class WhenStart {
             game.account.setLastGiftTime(LocalDateTime.now());
         }
 
-
+        game.dispatch("login_zoom");
         game.startEvent(GameStatus.city_work);
 
     }
@@ -113,9 +120,8 @@ public class WhenStart {
     public static void firePosMode(GameInstance game) throws Exception {
 
         game.dispatch.delay(2);
-
         game.dispatch("login_test");
-
+        game.dispatch("login_zoom");
         game.startEvent(GameStatus.city_work);
 
     }

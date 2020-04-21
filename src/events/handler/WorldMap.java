@@ -55,7 +55,7 @@ public class WorldMap {
 
         if(game.account.isRandomized()){
             for(int i =0 ; i<4; i++) {
-                if (game.log.world_set[0] < 270 && game.log.world_set[1] < 600) {
+                if (game.log.world_set[0] < 270 && game.log.world_set[1] < 500) {
                     game.dispatch("change_outpost");
                     game.dispatch("world_set");
                 }else{
@@ -118,8 +118,8 @@ public class WorldMap {
                     minLvl = 2;
                 }
             }else{
-                minLvl = game.account.getGatherPriorities().get("a_minLevel");
-                maxLvl = game.account.getGatherPriorities().get("a_maxLevel");
+                minLvl = game.account.getNumberFeaturer().getNumberSetting().get("Min Monster Level");
+                maxLvl = game.account.getNumberFeaturer().getNumberSetting().get("Max Monster Level");
             }
 
 
@@ -167,11 +167,11 @@ public class WorldMap {
         int cx = 512;
         int cy = 512;
 
-        int minR = 190;
+        int minR = 180;
         int maxR = 230;
 
-        int minD = -90;
-        int maxD = 120;
+        int minD = -100;
+        int maxD = 150;
 
         int randomR = (int) (Math.random() * ((maxR - minR) + 1)) + minR;
         int randomD = (int) (Math.random() * ((maxD - minD) + 1)) + minD;

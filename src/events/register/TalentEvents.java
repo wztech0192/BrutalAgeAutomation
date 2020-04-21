@@ -29,19 +29,28 @@ public class TalentEvents {
                     game.log.talentScroll = 0 ;
 
                     if(talentPoint>0){
-                        for(int i =0 ; i< 10;i ++){
+                        int redo = 0;
+                        while(true){
                             int diff = (int)(game.log.talentScroll) - -120;
                             int absDiff = Math.abs(diff);
-                            if(absDiff > 5){
+                            if(absDiff > 8){
                                 //251 680
                                 if(Math.abs(diff) > 100){
-                                    diff = (diff/absDiff) * 90;
+                                    diff = (diff/absDiff) * 50;
                                 }
                                 Logger.log("difference "+diff);
                                 game.dispatch.exec(String.format("input swipe 251 680 251 %d 300", 680 - diff));
+                                game.dispatch.delay(1);
                             }else{
                                 break;
                             }
+
+                            if(redo > 15){
+                                game.dispatch("top_left");
+                                game.dispatch("top_left");
+                                return event;
+                            }
+                            redo++;
                         }
                     }
 
