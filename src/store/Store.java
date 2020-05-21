@@ -32,33 +32,23 @@ public class Store extends WebSocketAdapter {
     public boolean isForceStop;
     public boolean isClose;
     public String tag;
-    private AndroidDebugBridge bridge;
 
     public Store(String tag, AndroidDebugBridge bridge){
         this.tag = tag;
-        this.bridge = bridge;
         unmarshellMetadata();
     }
 
-
-
-    public Store(IDevice device) {
-        unmarshellMetadata();
-        init(device);
-    }
 
     public void init(IDevice device){
+        this.positionQueue = new LinkedList<>();
         this.device = device;
         this.accountPath = metadata.getAccountPath();
         accountGroup = new AccountGroup(unmarshellAcounts());
     }
 
     public boolean isPositionMode(){
-        return positionQueue != null;
+        return ws != null;
     }
-
-
-
 
     public void unmarshellMetadata(){
         try {
@@ -107,9 +97,10 @@ public class Store extends WebSocketAdapter {
         sendDataBack("acc", json);
     }
 
+
     public void createRemoteWS() {
         try {
-            positionQueue = new LinkedList<>();
+            Logger.log("Create remote ws");
             ws = new WebSocketFactory().setConnectionTimeout(10000).createSocket(SERVER).addListener(this)
                     .addExtension(WebSocketExtension.PERMESSAGE_DEFLATE).connect();
             JsonObject payload = new JsonObject();
@@ -123,11 +114,17 @@ public class Store extends WebSocketAdapter {
         }
     }
 
-    public void sendPing(){
-
-        ws.sendPing();
-
+    public void closeRemoteWS(){
+        Logger.log("Close remote ws");
+        ws.sendClose();
+        ws = null;
     }
+
+    public void sendPing(){
+        ws.sendPing();
+    }
+
+
 
     public void sendDataBack(String type, JsonObject payload) {
         JsonObject json = new JsonObject();
@@ -266,8 +263,12 @@ public class Store extends WebSocketAdapter {
 
     public void close() {
         isClose = true;
-        if(ws != null)
+        if(ws != null) {
             ws.sendClose();
+            ws = null;
+        }
+        positionQueue = null;
+        pause = false;
     }
 
     public boolean restartEmulator() {

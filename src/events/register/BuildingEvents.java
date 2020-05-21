@@ -59,6 +59,31 @@ public class BuildingEvents {
                     return null;
                 }));
 
+        Event.builder(_map, "close_speedup").setLoc(72, 301).setDelay(1.5);
+
+        int[] speedUpLoc = new int[]{344, 503, 653};
+        Event.builder(_map, "use_speedup")
+                .setDelay(1.5)
+                .setListener(((event, game) -> {
+                    int i =0 ;
+                    Event useEvent = Event.builder().setLoc(563, speedUpLoc[i++]).setDelay(1.5);
+                    Event useConfirmEvent = Event.builder().setLoc(364, 716).setDelay(1.5);
+                    Event closeEvent = Event.builder().setLoc(77, 298).setDelay(1);
+                    do{
+                        game.dispatch(useEvent);
+                        if(game.log.btnName.contains("btn_get")){
+                            game.dispatch(closeEvent);
+                            if(i>= speedUpLoc.length){
+                                game.dispatch("top_left");
+                                return event;
+                            }
+                            useEvent.setLoc(563,  speedUpLoc[i++]);
+                        }else{
+                            game.dispatch(useConfirmEvent);
+                        }
+                    } while(game.log.btnName.contains("btn_use") || game.log.btnName.contains("btn_close"));
+                    return null;
+                }));
         registerBuilding(_map);
 
     }
@@ -69,6 +94,7 @@ public class BuildingEvents {
         Event.builder(_map, "tap_building")
                 .setLoc(350, 630)
                 .setDelay(1.5);
+
 
         Event.builder(_map, "fire")
                 .isBuilding()
@@ -97,6 +123,22 @@ public class BuildingEvents {
                 .setTargetName("loc_1")
                 .isBuilding(true)
                 .setLoc(-1591, -306, 400, 513);
+
+        Event.builder(_map, "stronghold_speed_up")
+                .isBuilding()
+                .setLoc(-1591, -306, 595, 400)
+                .setListener(((event, game) -> {
+                    for(int i =0; i<10; i++){
+                        if(game.log.btnName.contains("speedup")){
+                            game.dispatch.staticDelay(1.5);
+                            return game.dispatch("use_speedup") ? null : event;
+                        }else{
+                            game.dispatch(Event.builder().isBuilding()
+                                    .setLoc(-1591, -306, 595, 400));
+                        }
+                    }
+                    return event;
+                }));
 
         Event.builder(_map, "portal")
                 .setTargetName("loc_2")
@@ -211,6 +253,16 @@ public class BuildingEvents {
                 .isBuilding(true)
                 .setLoc(-545, -1802, 480, 500);
 
+        Event.builder(_map, "warrior_speedup")
+                .setTargetName("loc_16")
+                .isBuilding()
+                .setLoc(-991, -1379)
+                .setListener(((event, game) -> {
+                    game.dispatch("tap_building");
+                    //641 749
+                    return null;
+                }));
+
         Event.builder(_map, "warrior")
                 .setTargetName("loc_16")
                 .isBuilding()
@@ -285,6 +337,16 @@ public class BuildingEvents {
                 .setTargetName("loc_28")
                 .setLoc(-2065, -1735, 360, 510);
 
+        Event.builder(_map, "defense_hall")
+                .isBuilding(true)
+                .setLoc(-583,-1553, 450, 485);
+
+        Event.builder(_map, "war_hall")
+                .isBuilding(true)
+                .setLoc(-259,-1628,467, 475);
+
+
+
         Event.builder(_map, "squirrel")
                 .setTargetName("loc_28")
                 .isBuilding()
@@ -295,6 +357,16 @@ public class BuildingEvents {
                         Event.builder().setLoc(156, 768).setDelay(1.5),
                         Event.builder().setLoc(156, 768).setDelay(1.5)
                 );
+
+        Event.builder(_map, "pig")
+                .isBuilding()
+                .setLoc(-2281,-1951)
+                .setChain(
+                        Event.builder().setLoc(337, 490).setDelay(1.5),
+                        Event.builder().setLoc(337, 517).setDelay(1.5),
+                        Event.builder().setLoc(337, 520).setDelay(1.5)
+                );
+
         Event.builder(_map, "flag")
                 .setTargetName("building:flag")
                 .isBuilding()

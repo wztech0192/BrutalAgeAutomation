@@ -40,7 +40,7 @@ public class EventDispatcher implements IShellOutputReceiver {
     public EventDispatcher(GameInstance game) {
         this.game = game;
         tesseract = new Tesseract();
-        tesseract.setTessVariable("tessedit_char_whitelist", "012345679KkMm/,.");
+        tesseract.setTessVariable("tessedit_char_whitelist", "0123456789KkMm/,.:dD");
         tesseract.setDatapath(FilePath.TRAIN_DATA_PATH);
         resetExecuteTime();
     }
@@ -85,9 +85,9 @@ public class EventDispatcher implements IShellOutputReceiver {
     }
 
     public void enterText(String str) throws Exception {
-        exec("input keyevent KEYCODE_DEL & input keyevent KEYCODE_DEL & input keyevent KEYCODE_DEL & input keyevent KEYCODE_DEL");
-        delay(1);
+        game.dispatch.deleteText();
         exec("input text \"" + str + "\"");
+        staticDelay(0.25);
     }
 
     public void swipeServer(int diff) throws Exception {
@@ -149,6 +149,11 @@ public class EventDispatcher implements IShellOutputReceiver {
         game.dispatch.staticDelay(0.25);
     }
 
+    public void deleteText()  throws Exception{
+        exec("su 0 cat /mnt/sdcard/baevents/delete_event > /dev/input/"+getInputEventFile());
+        game.dispatch.staticDelay(0.25);
+    }
+
     public void cityZoom()  throws Exception{
         exec("su 0 cat /mnt/sdcard/baevents/city_zoom_event > /dev/input/"+getInputEventFile());
         game.dispatch.staticDelay(0.25);
@@ -172,7 +177,7 @@ public class EventDispatcher implements IShellOutputReceiver {
             prevWorld = game.log.world.clone();
             exec(tapStr + "&" + tapStr + "&" + tapStr);
             staticDelay(1.5);
-        } while (Arrays.equals(game.log.world, prevWorld) && redo-- > 0);
+        } while (game.log.btnName.contains("tiles") && Arrays.equals(game.log.world, prevWorld) && redo-- > 0);
 
         if (redo > 0) {
             game.dispatch.exec(tapStr);
@@ -191,8 +196,8 @@ public class EventDispatcher implements IShellOutputReceiver {
         delay(1);
         enterText(String.valueOf(y));
         delay(1);
-        exec("input tap  358 646");
-        delay(1.5);
+        exec("input tap 358 646");
+        staticDelay(1.25);
     }
 
 
@@ -260,6 +265,9 @@ public class EventDispatcher implements IShellOutputReceiver {
                 exec("input swipe 400 1000 200 400 500");
                 staticDelay(0.5);
                 sendEvent("top_left");
+                if(game.log.btnName.contains("profile")){
+                    game.dispatch("top_left");
+                }
                 exec("input swipe 400 1000 200 400 500");
                 staticDelay(0.5);
             }
@@ -292,6 +300,10 @@ public class EventDispatcher implements IShellOutputReceiver {
                     event.name, event.loc[0], event.loc[1], (int) game.log.city.x, (int) game.log.city.y, (int) diffX, (int) diffY
             ));
 
+            if(game.log.btnName.contains("scene_tiles")){
+                game.dispatch("bottom_left");
+            }
+
             execMiddleware(event);
             if ((absDiffX + absDiffY) >= 22) {
                 exec(String.format("input swipe %d %d %d %d 500", tapBuildingEvent.loc[0], tapBuildingEvent.loc[1],
@@ -300,6 +312,16 @@ public class EventDispatcher implements IShellOutputReceiver {
                 redo--;
             } else {
                 sendEvent(tapBuildingEvent);
+
+                if(event.isUpgrade){
+                    if(!game.log.btnName.contains("loc")){
+                        game.dispatch("top_left");
+                        if(game.log.btnName.contains("profile")){
+                            game.dispatch("top_left");
+                        }
+                        sendEvent(tapBuildingEvent);
+                    }
+                }
                 if(!game.log.btnName.contains("loc_30")){
                     break;
                 }
@@ -354,7 +376,12 @@ public class EventDispatcher implements IShellOutputReceiver {
                          return false;
                      }
                      else if(redo == 5 || redo == 11){
+                         game.dispatch("top_left");
+                         if(game.log.btnName.contains("profile")){
+                             game.dispatch("top_left");
+                         }
                          exec("input swipe 337 834 600 1000 500");
+                         game.dispatch("login_zoom");
                     }
 
                     locateBuidlingSwipe(event);

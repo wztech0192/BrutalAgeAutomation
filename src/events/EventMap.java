@@ -17,36 +17,41 @@ public class EventMap {
         Event.builder(_map, "top_left")
                 .setDelay(1.5)
                 .setLoc(58, 65);
+
+        Event.builder(_map, "test_city")
+                .setDelay(1)
+                .setLoc(72, 1107, 87, 1107, 200)
+                .setListener(((event, game) -> {
+                    game.log.isInCity = !game.log.btnName.contains("btn_next_op");
+                    Logger.log("Now in city: "+game.log.isInCity);
+                    if(game.log.btnName.contains("btn_rank")){
+                        game.dispatch("top_left");
+                        if(game.account != null) {
+                            game.dispatch("top_left");
+                        }
+                    }
+                    else if(game.log.btnName.contains("dummy")) {
+                        game.dispatch("top_left");
+                        game.dispatch("top_left");
+                        game.dispatch("top_left");
+                    }
+                    else if(game.log.btnName.contains("flag")){
+                        game.dispatch("top_left");
+                        game.dispatch("top_left");
+                        game.dispatch("top_left");
+                        game.dispatch("top_left");
+                    }
+                    return null;
+                }));
+
         Event.builder(_map, "bottom_left")
                 .setDelay(2)
                 .setLoc(55, 1198)
-                .setChain(
-                        Event.builder()
-                                .setDelay(1)
-                                .setLoc(72, 1107, 87, 1107, 200)
-                                .setListener(((event, game) -> {
-                                    game.log.isInCity = !game.log.btnName.contains("btn_next_op");
-                                    Logger.log("Now in city: "+game.log.isInCity);
-                                    if(game.log.btnName.contains("btn_rank")){
-                                        game.dispatch("top_left");
-                                        if(game.account != null) {
-                                            game.dispatch("top_left");
-                                        }
-                                    }
-                                    else if(game.log.btnName.contains("dummy")) {
-                                        game.dispatch("top_left");
-                                        game.dispatch("top_left");
-                                        game.dispatch("top_left");
-                                    }
-                                    else if(game.log.btnName.contains("flag")){
-                                        game.dispatch("top_left");
-                                        game.dispatch("top_left");
-                                        game.dispatch("top_left");
-                                        game.dispatch("top_left");
-                                    }
-                                    return null;
-                                }))
-                );
+                .setListener(((event, game) -> {
+                    game.dispatch.staticDelay(1.5);
+                    game.dispatch("test_city");
+                    return null;
+                }));
 
 
         Event.builder(_map, "open_my_item")

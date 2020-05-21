@@ -19,7 +19,7 @@ public class ChangeServer {
         System.out.println("Server " + game.log.serverID + " opened for " + openDate + " days");
 
 
-        int targetServerID = game.store.isPositionMode() ? Integer.parseInt((String)game.posTarget.get("server"))  : game.account.getServerID();
+        int targetServerID = game.posTarget != null ? Integer.parseInt((String)game.posTarget.get("server"))  : game.account.getServerID();
 
         int targetServerIndex = game.log.serverID - targetServerID - (openDate >= 3 ? 0 : 1);
         //int targetServerIndex = 568 - 528 - 1;

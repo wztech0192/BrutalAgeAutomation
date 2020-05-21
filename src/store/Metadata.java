@@ -28,7 +28,6 @@ public class Metadata {
     }
 
 
-
     public FeatureToggler getFeatureToggler() {
         if(featureToggler == null){
             featureToggler = new FeatureToggler();

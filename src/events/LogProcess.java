@@ -6,6 +6,7 @@ import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
 import org.opencv.core.Point;
+import store.Account;
 import util.Logger;
 
 import java.time.Duration;
@@ -24,6 +25,9 @@ public class LogProcess {
     private final static Pattern regexCurrTroops = Pattern.compile("m_currentTroopsNumber = (\\d*)");
     private final static Pattern regexTransportSelected = Pattern.compile("selectedTotal= (\\d*)");
     private final static Pattern regexMaxTransport = Pattern.compile("maxNum (\\d*)");
+    private final static Pattern regexTransportIndex = Pattern.compile("SetSlider (\\d*) ");
+    private final static Pattern regexMaxRss = Pattern.compile("max resource: (\\d*)");
+    private final static Pattern regexGetText = Pattern.compile("showText = (.*) textLength");
     private final static Pattern regexLimitTransport = Pattern.compile("limit (\\d*)");
     private final static DateTimeFormatter buildTimePattern = DateTimeFormatter.ofPattern("MMM d, yyyy h:m:s a");
     public boolean shouldTrain;
@@ -31,6 +35,8 @@ public class LogProcess {
     public int marches;
     public double talentScroll = 0;
 
+    public int transportIndex = 0;
+    public int[] transportRss = new int[5];
     public int buildingCompleteLevel = 0;
     public LocalDateTime buidlingCompleteTime = LocalDateTime.now();
     public int[] touchPoint = new int[2];
@@ -49,13 +55,15 @@ public class LogProcess {
     public int limitTransportNum = 0;
 
     public boolean isInCity = true;
+    public String text;
+    LogCatReceiverTask lcrt;
 
     public LogProcess(GameInstance game) {
         this.game = game;
     }
 
     public void startLog() {
-        LogCatReceiverTask lcrt = new LogCatReceiverTask(game.store.device);
+        lcrt = new LogCatReceiverTask(game.store.device);
         lcrt.addLogCatListener(msgList -> {
             if(game.store.isClose){
                 lcrt.stop();
@@ -127,6 +135,12 @@ public class LogProcess {
                 if ((m = regexTalentScroll.matcher(str)).find()) {
                     talentScroll = Double.parseDouble(m.group(1));
                 }
+                else if((m = regexGetText.matcher((str))).find()){
+                    text = m.group(1);
+                }
+                else{
+                    handleCityWork(str);
+                }
                 break;
             case city_work:
                 handleCityWork(str);
@@ -156,9 +170,9 @@ public class LogProcess {
 
 
         if (str.contains("_offsetCityMap")) {
-            if (game.store.isPositionMode()) {
+            if (game.posTarget != null) {
                 handlePosModeStart();
-            } else {
+            } else if(game.account != null) {
                 if (serverID != game.account.getServerID()) {
 
                     if (game.account.getChangedServer()) {
@@ -232,11 +246,25 @@ public class LogProcess {
         if (m.find()) {
             Logger.log(str);
             buildingCompleteLevel = Integer.parseInt(m.group(1));
-            buidlingCompleteTime = LocalDateTime.parse(m.group(3),   // = 7:07:00 PM
+            buidlingCompleteTime = LocalDateTime.parse(m.group(3).trim(),   // = 7:07:00 PM
                     buildTimePattern).minus(Duration.between(LocalDateTime.now(),
-                    LocalDateTime.parse(m.group(2),   // = 7:07:00 PM
+                    LocalDateTime.parse(m.group(2).trim(),   // = 7:07:00 PM
                             buildTimePattern)));
             Logger.log("Some building complete lvl " + buildingCompleteLevel + " at: " + buidlingCompleteTime);
+        }
+        else{
+            handleTransport(str);
+        }
+    }
+
+    private void handleTransport(String str){
+        Matcher m;
+
+         if((m= regexTransportIndex.matcher(str)).find()){
+            transportIndex = Integer.parseInt(m.group(1));
+        }
+        else if((m=regexMaxRss.matcher(str)).find()){
+            transportRss[transportIndex] =  Integer.parseInt(m.group(1));
         }
         else if((m= regexTransportSelected.matcher(str)).find()){
             selectedTransportNum = Integer.parseInt(m.group(1));

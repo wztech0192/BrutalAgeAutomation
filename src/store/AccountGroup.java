@@ -40,21 +40,6 @@ public class AccountGroup {
         this.index = index;
     }
 
-    public void updateCompletedBuildingQueue(){
-        Account acc;
-
-        for(int i =0 ; i<accounts.size(); i++){
-            acc = accounts.get(i);
-            if(acc.isFinishInit()) {
-                if (i != index && acc.getError() < 100 && !completedQueueIndex.contains(i) && (
-                        acc.getPrimaryHammer().isAvailable() ||
-                                (acc.getSecondaryHammer().isAvailable() && !acc.nextBuildingTarget(acc.getPrimaryHammer()).equalsIgnoreCase(""))
-                )) {
-                    completedQueueIndex.add(i);
-                }
-            }
-        }
-    }
 
     public Account getNextAccount(){
         if(accounts.isEmpty()) return null;
@@ -62,10 +47,6 @@ public class AccountGroup {
         acc =  accounts.get(index++);
         if(index >= accounts.size() ){
             index = 0;
-        }
-
-        if(acc != null) {
-            acc.refreshHammerData();
         }
 
         return acc;

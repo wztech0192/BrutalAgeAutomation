@@ -29,6 +29,19 @@ public class BuildHammer {
         }
     }
 
+
+    public void syncStatus(boolean compVal){
+        if(isAvailable() != compVal){
+            Logger.log("Hammer status not equal "+isAvailable()+","+compVal);
+            if(compVal){
+                setHammer(LocalDateTime.now().minusMinutes(1));
+            }
+            else{
+               setHammer(LocalDateTime.now().plusMinutes(15));
+            }
+        }
+    }
+
     public LocalDateTime getHammer() {
         return hammer;
     }
@@ -75,7 +88,6 @@ public class BuildHammer {
         if(expiration==null) return false;
 
         long min = Duration.between(LocalDateTime.now(), expiration).toMinutes();
-        Logger.log("Secondary hammer expired in: "+min+" minutes" );
         return min <= 1;
     }
 

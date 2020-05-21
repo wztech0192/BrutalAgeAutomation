@@ -25,11 +25,10 @@ public class GameInstance {
     public EventDispatcher dispatch;
     public Store store;
     public JsonObject posTarget;
-    private AccountUpdateListener updateListener;
+    public AccountUpdateListener updateListener;
     public Account account;
     public int restarting = 0;
     public boolean debug;
-
 
     public GameInstance(Store store, boolean debug) {
         this.debug = debug;
@@ -70,20 +69,22 @@ public class GameInstance {
         new Thread(()-> {
             try {
                 dispatch.delay(1);
-                if (store.isPositionMode()) {
+
+                if(status.get() == GameStatus.initiate){
+                    if (lastRound != null) {
+                        //  store.getAccountGroup().updateCompletedBuildingQueue();
+                        Logger.log("**End at " + LocalDateTime.now().toString());
+                        Logger.recordRound(account,Duration.between(lastRound, LocalDateTime.now()).toMinutes()+" minutes ");
+                    }
+                    lastRound = LocalDateTime.now();
+                    Logger.log("**Start at " + LocalDateTime.now().toString());
+                    Initiate.fire(this);
+                }
+
+                if(posTarget != null){
                     startPosModeEvent(finishStatus);
-                } else {
+                }else{
                     switch (status.get()) {
-                        case initiate:
-                            if (lastRound != null) {
-                              //  store.getAccountGroup().updateCompletedBuildingQueue();
-                                Logger.log("**End at " + LocalDateTime.now().toString());
-                                Logger.recordRound(account,Duration.between(lastRound, LocalDateTime.now()).toMinutes()+" minutes ");
-                            }
-                            lastRound = LocalDateTime.now();
-                            Logger.log("**Start at " + LocalDateTime.now().toString());
-                            Initiate.fire(this);
-                            break;
                         case starting:
                             Starting.fire(this);
                             break;
@@ -148,16 +149,8 @@ public class GameInstance {
             posTarget.put("status", finishStatus);
             store.sendDataBack("update", posTarget);
         }
+        updateListener.onUpdate(null);
         switch (status.get()) {
-            case initiate:
-                if(lastRound != null){
-                    System.out.println("**End at "+LocalDateTime.now().toString());
-                    System.out.println("******** Round ended using: "+ Duration.between(lastRound, LocalDateTime.now()).toMinutes()+" minutes");
-                }
-                lastRound = LocalDateTime.now();
-                System.out.println("**Start at "+LocalDateTime.now().toString());
-                Initiate.firePosMode(this);
-                break;
             case starting:
                 Starting.fire(this);
                 break;

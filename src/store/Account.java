@@ -17,12 +17,13 @@ import java.util.stream.Collectors;
 @XmlRootElement(name = "Account")
 public class Account {
 
-    public static String[] Columns = { "ID", "Error", "Stronghold",  "P) Meat", "P) Wood", "P) Rock","P) Ivory", "P) Mana", "Troops"};
+    public static String[] Columns = { "ID", "Name", "Error", "Stronghold",  "P) Meat", "P) Wood", "P) Rock","P) Ivory", "P) Mana", "Troops"};
 
     //"Wood", "Ivory", "Mana", "Rock", "Meat"
     public String[] getColumnData(){
         return new String[]{
                 getSubId(),
+                getName(),
                 String.valueOf(getError()),
                 String.valueOf(getBuildingLvl("stronghold")),
                 getNumberFeaturer().getGatherPriorities().get("meat")+") "+df2.format(resources.get("meat") / K) +" K",
@@ -43,12 +44,13 @@ public class Account {
             "blue"
     };
 
+    private String name;
     private static DecimalFormat df2 = new DecimalFormat("#.##");
     private static double K = 1000.0;
-
     private int round;
     private FeatureToggler featureToggler;
     private HashMap<String, Integer> buildings;
+    private static HashMap<String, Integer> defaultBuildings;
     private HashMap<String, Integer> resources;
     private boolean changedServer = false;
     private boolean finishInit;
@@ -72,6 +74,34 @@ public class Account {
     private int previousLevel = 0;
     private NumberFeaturer numberFeaturer;
 
+    static{
+        defaultBuildings = new HashMap<>();
+        defaultBuildings.put("stronghold",1);
+        defaultBuildings.put("portal",1);
+        defaultBuildings.put("help_wagon", 0);
+
+        defaultBuildings.put("war_camp",0);
+        defaultBuildings.put("healing_spring",0);
+        defaultBuildings.put("research",0);
+        defaultBuildings.put("warehouse",0);
+        defaultBuildings.put("tower",1);
+        defaultBuildings.put("golden_tree",0);
+
+        defaultBuildings.put("well1",0);
+        defaultBuildings.put("well2",0);
+        defaultBuildings.put("well3",0);
+        defaultBuildings.put("well4",0);
+        defaultBuildings.put("well5",0);
+
+        defaultBuildings.put("warhub1",0);
+        defaultBuildings.put("warhub2",0);
+        defaultBuildings.put("warhub3",0);
+        defaultBuildings.put("warhub4",0);
+        defaultBuildings.put("warhub5",0);
+
+        defaultBuildings.put("defense_hall",0);
+        defaultBuildings.put("war_hall",0);
+    }
 
     public Account(){}
     public Account(int server, String id){
@@ -89,32 +119,19 @@ public class Account {
         resources.put("ivory", 0);
         resources.put("mana", 0);
 
-        buildings = new HashMap<>();
-
-        buildings.put("stronghold",1);
-        buildings.put("portal",1);
-        buildings.put("help_wagon", 0);
-
-        buildings.put("war_camp",0);
-        buildings.put("healing_spring",0);
-        buildings.put("research",0);
-        buildings.put("warehouse",0);
-        buildings.put("tower",1);
-        buildings.put("golden_tree",0);
-
-        buildings.put("well1",0);
-        buildings.put("well2",0);
-        buildings.put("well3",0);
-        buildings.put("well4",0);
-        buildings.put("well5",0);
-
-        buildings.put("warhub1",0);
-        buildings.put("warhub2",0);
-        buildings.put("warhub3",0);
-        buildings.put("warhub4",0);
-        buildings.put("warhub5",0);
-
+        syncBuildings();
         resetNumberFeaturer();
+    }
+
+    private void syncBuildings() {
+        if(buildings == null){
+            buildings = new HashMap<>();
+        }
+        for(Map.Entry<String, Integer> entry: defaultBuildings.entrySet()){
+            if(!buildings.containsKey(entry.getKey())){
+                buildings.put(entry.getKey(),entry.getValue());
+            }
+        }
     }
 
 
@@ -151,10 +168,7 @@ public class Account {
         buildings.put(building, getBuildingLvl(building) + 1);
         game.updateAccount();
     }
-    public void setBuildingLevel(GameInstance game, String building, int level){
-        buildings.put(building, level);
-        game.updateAccount();
-    }
+
     public void setBuildingLevel(String building, int level){
         buildings.put(building, level);
     }
@@ -176,6 +190,7 @@ public class Account {
     @XmlElement
     public void setBuildings(HashMap<String, Integer> buildings) {
         this.buildings = buildings;
+        syncBuildings();
     }
 
     public int getServerID() {
@@ -242,6 +257,9 @@ public class Account {
     public boolean isRssLessThan(String rss1, String rss2){
         return getResource(rss1) < getResource(rss2);
     }
+
+
+
 
     public BuildHammer getPrimaryHammer() {
         return primaryHammer;
@@ -342,81 +360,24 @@ public class Account {
         return last >= 30;
     }
 
-    public String nextBuildingTarget(BuildHammer hammer) {
-
-        String highestWell = "well1";
-        String highestWarhub = "warhub1";
-
-        for(int i =2; i<=5; i++){
-            if(getBuildingLvl(highestWell) < getBuildingLvl("well"+i)){
-                highestWell = "well"+i;
-            }
-            if(getBuildingLvl(highestWarhub) < getBuildingLvl("warhub"+i)){
-                highestWarhub = "warhub"+i;
+    public void validateBuildings(){
+        for(Map.Entry<String, Integer> entry: getBuildings().entrySet()){
+            if(entry.getValue() > 15){
+                entry.setValue(4);
             }
         }
 
-      /*  if(buildingCondition("portal", 10, hammer)){
-            return "portal";
-        }*/
-        if(buildingCondition(highestWarhub, 5, hammer)){
-            return highestWarhub;
+        if(getBuildingLvl("stronghold") < getBuildingLvl("portal")){
+            setBuildingLevel("stronghold",  getBuildingLvl("portal"));
         }
-        else if(buildingCondition(highestWell, 6, hammer)){
-            return highestWell;
-        }
-        else if(buildingCondition("research", 7, hammer)){
-            return "research";
-        }
-        else if(buildingCondition("warehouse", 8, hammer)){
-            return "warehouse";
-        }
-        else if(buildingCondition("golden_tree", 9, hammer)){
-            return "golden_tree";
-        }
-        else if(buildingCondition("help_wagon", 25, hammer)){
-            return "help_wagon";
-        }
-
-        int lowestLvl = 50;
-        String lowest = "";
-        if(buildingCondition("war_camp", 25, hammer)){
-            lowest = "war_camp";
-            lowestLvl = getBuildingLvl("war_camp");
-        }
-
-        for(int i =1; i<=5; i++){
-            if(buildingCondition("warhub"+i, 25, hammer)){
-                if(getBuildingLvl("warhub"+i) < lowestLvl){
-                    lowest = "warhub"+i;
-                    lowestLvl = getBuildingLvl("warhub"+i);
-                }
-            }
-            if(buildingCondition("well"+i, 25, hammer)){
-                if(getBuildingLvl("well"+i) < lowestLvl){
-                    lowest = "well"+i;
-                    lowestLvl = getBuildingLvl("well"+i);
-                }
-            }
-        }
-
-        return lowest;
     }
-    @XmlElement
+
     public boolean isJoinClan() {
         return isJoinClan;
     }
-
+    @XmlElement
     public void setJoinClan(boolean joinClan) {
         isJoinClan = joinClan;
-    }
-
-    private boolean buildingCondition(String target, int maxLvl, BuildHammer hammer){
-
-        return getBuildingLvl(target) != 0
-                && !target.equalsIgnoreCase(hammer.getBuildingName())
-                && getBuildingLvl(target) < getBuildingLvl("stronghold")
-                && getBuildingLvl(target) < maxLvl;
     }
 
     public int getRound() {
@@ -475,5 +436,13 @@ public class Account {
 
     public void resetFeatureToggler() {
         this.featureToggler = new FeatureToggler();
+    }
+
+    public String getName() {
+        return name;
+    }
+    @XmlElement
+    public void setName(String name) {
+        this.name  = name;
     }
 }

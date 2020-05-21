@@ -58,6 +58,16 @@ public class ClanEvents {
                     Logger.log("*** Max Transport: "+game.log.limitTransportNum);
                     if(game.log.maxTransportNum >= game.log.limitTransportNum) {
                         for (int i = 311; i <= 711; i += 100) {
+                            if(i == 311 && game.log.transportRss[0] < 250000){ //dont transport wood if rss is < 250000
+                                /*
+                                * 0 wood  -0
+                                    1 rock  -3
+                                    2 ivory -4
+                                    3 meat -1
+                                    4 mana -2
+                                * */
+                                continue;
+                            }
                             game.dispatch.exec(String.format("input swipe 539 %d 579 %d", i, i));
                             game.dispatch.staticDelay(0.25);
                             Logger.log("*** Transport: "+game.log.selectedTransportNum+"/"+game.log.limitTransportNum);
@@ -136,7 +146,7 @@ public class ClanEvents {
                 .setDelay(2)
                 .setListener(((event, game) -> {
                     game.dispatch("top_left");
-                    game.dispatch.delay(2);
+                    game.dispatch.staticDelay(2);
                     int redo = 0;
                     while(!game.log.isInCity && redo++ < 4){
                         game.dispatch("bottom_left");
@@ -148,15 +158,22 @@ public class ClanEvents {
                 .setLoc(666, 1211)
                 .setDelay(2)
                 .setListener(((event, game) -> {
+                    game.dispatch.staticDelay(2);
                     if(!game.account.isFinishInit()){
                         game.dispatch("confirm_clan");
                     }else{
                         game.dispatch(Event.builder().setLoc(360, 1088).setDelay(1.25));
+                        if(game.log.btnName.contains(":shield")){
+                            game.dispatch("confirm_clan");
+                            game.dispatch(Event.builder().setLoc(360, 1088).setDelay(1.25));
+                        }
                         game.dispatch(Event.builder().setLoc( 360, 1088).setDelay(1.25));
                         game.dispatch(Event.builder().setLoc(360, 878).setDelay(1.25));
                         game.dispatch(Event.builder().setLoc(666, 1211).setDelay(1.55));
                     }
                     return null;
                 }));
+
+
     }
 }

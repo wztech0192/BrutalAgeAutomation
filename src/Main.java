@@ -11,6 +11,8 @@ import util.FilePath;
 import util.Global;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -44,13 +46,10 @@ public class Main {
             }
             boolean debug = args.length > 0;
             AndroidDebugBridge.init(false);
+
             AndroidDebugBridge bridge = AndroidDebugBridge.createBridge(
                     FilePath.RootPath + "/../adb", false);
-
-
-            if (!debug) {
-                Runtime.getRuntime().addShutdownHook(new Thread(EventDispatcher::killServer));
-            }
+            Runtime.getRuntime().addShutdownHook(new Thread(AndroidDebugBridge::disconnectBridge));
 
 
             File noxBin = new File(Global.config.getNoxPath());
@@ -79,7 +78,6 @@ public class Main {
 
             tabbedPane.addTab("Four", new UserInterface(mFrame, debug, bridge, "Four",noxInstances ));
 
-
             mFrame.add(tabbedPane);
             mFrame.setTitle("Brutal Age Controller");
             mFrame.pack();
@@ -87,7 +85,12 @@ public class Main {
             mFrame.setResizable(true);
             mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //allow x to exit the application
             mFrame.setVisible(true);
-
+            mFrame.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    AndroidDebugBridge.disconnectBridge();
+                    System.exit(0);
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();

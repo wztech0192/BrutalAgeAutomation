@@ -38,6 +38,7 @@
       <element id="file-copy" path="$PROJECT_DIR$/AdbWinApi.dll" />
       <element id="file-copy" path="$PROJECT_DIR$/AdbWinUsbApi.dll" />
       <element id="file-copy" path="$PROJECT_DIR$/resources/adb.exe" />
+      <element id="file-copy" path="$PROJECT_DIR$/start.jar" />
     </root>
   </artifact>
 </component>

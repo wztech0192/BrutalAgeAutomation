@@ -6,7 +6,10 @@ import store.MatchPoint;
 import util.Logger;
 
 import java.awt.image.BufferedImage;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class TestEvent {
 
@@ -123,6 +126,7 @@ public class TestEvent {
                         String wounded = game.dispatch.doOSR(538,154 ,663 ,185).replaceAll("[^0-9]", "");
                         int idle = getNumber(game.dispatch.doOSR(362,218 ,479 ,255),true);
 
+
                         Logger.log("******** troop status");
                         Logger.log("Troops: "+troops);
                         Logger.log("Idle Troops: "+idle);
@@ -156,6 +160,8 @@ public class TestEvent {
                     return null;
                 }));
 
+
+        final Pattern regexHammerTime = Pattern.compile("\\d\\d");
         Event.builder(_map, "get_rss_info")
             .setDelay(1.5)
             .setListener(((event, game) -> {
@@ -170,6 +176,14 @@ public class TestEvent {
                     int ivory = getNumber(game.dispatch.doOSR(image,628, 60,690, 94), false);
                    // int rock = getNumber(game.dispatch.doOSR(image,378,65,467,93));
 
+
+                    String time1 = game.dispatch.doOSR(8, 220, 93, 238);
+                    String time2 = game.dispatch.doOSR(8, 334, 93, 351);
+                    boolean availableHammer1 = !regexHammerTime.matcher(time1).find() ;
+                    boolean availableHammer2 = !regexHammerTime.matcher(time2).find() ;
+
+                    Logger.log("Hammer 1: "+ time1+", "+availableHammer1);
+                    Logger.log("Hammer 2: "+ time2+", "+availableHammer2);
                     Logger.log("Level: "+level);
                     Logger.log("Wood: "+wood);
                     Logger.log("Meat: "+meat);
@@ -177,6 +191,8 @@ public class TestEvent {
                     Logger.log("Rock: "+rock);
                     Logger.log("Ivory: "+ivory);
                     if(game.account != null) {
+                        game.account.getPrimaryHammer().syncStatus(availableHammer1);
+                        game.account.getSecondaryHammer().syncStatus(availableHammer2);
                         game.account.setLevel(level);
                         game.account.setResource("meat", meat);
                         game.account.setResource("wood", wood);
@@ -192,4 +208,5 @@ public class TestEvent {
                 return null;
             }));
     }
+
 }

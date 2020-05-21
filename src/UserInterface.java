@@ -1,26 +1,20 @@
 import com.android.ddmlib.*;
 import dispatcher.EventDispatcher;
 import game.GameInstance;
-import jdk.nashorn.internal.scripts.JD;
 import store.Account;
 import store.BuildHammer;
-import store.Config;
 import store.Store;
 import util.FilePath;
 import util.Global;
 import util.Logger;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +24,7 @@ import java.util.Map;
 
 public class UserInterface extends JPanel {
     private JPanel featureCBPane;
+    private JPanel globalFeaturePane;
     private JPanel numberPaneWrapper;
     private JPanel priorityPaneWrapper;
 
@@ -140,7 +135,7 @@ public class UserInterface extends JPanel {
             String port = Global.getNoxPort(selectedNox);
 
             if (port.equalsIgnoreCase("")) {
-                JOptionPane.showMessageDialog(null, "Device not found! Retry");
+                JOptionPane.showMessageDialog(owner, "Device not found! Retry");
                 closeInstance();
                 return false;
             }
@@ -169,7 +164,7 @@ public class UserInterface extends JPanel {
 
                 redo++;
                 if (redo > 8) {
-                    JOptionPane.showMessageDialog(null, "Device not found! Retry");
+                    JOptionPane.showMessageDialog(owner, "Device not found! Retry");
                     closeInstance();
                     return false;
                 }
@@ -207,6 +202,22 @@ public class UserInterface extends JPanel {
         activeOrCloseBTN.setPreferredSize(new Dimension(200, 50));
     }
 
+    private JPanel createGlobalFeaturePane() {
+        final JPanel globalPane = new JPanel();
+        globalPane.setBorder(BorderFactory.createTitledBorder(""));
+        ItemListener featureListener = e -> {
+            store.metadata.getFeatureToggler().getGlobalFeatures().put(((JCheckBox) e.getItem()).getText(), e.getStateChange() == ItemEvent.SELECTED);
+            store.marshellMetadata();
+        };
+        for (Map.Entry<String, Boolean> entry : store.metadata.getFeatureToggler().getGlobalFeatures().entrySet()) {
+            JCheckBox cb = new JCheckBox(entry.getKey(), entry.getValue());
+            cb.addItemListener(featureListener);
+            globalPane.add(cb);
+        }
+        return globalPane;
+    }
+
+
     private JPanel createCBFeaturePane(JTable table, DefaultTableModel model) {
         final JPanel featureCBPane = new JPanel(new GridLayout(8, 2));
         featureCBPane.setBorder(BorderFactory.createTitledBorder(""));
@@ -237,7 +248,7 @@ public class UserInterface extends JPanel {
                     }
                     store.updateAccount(acc);
                 }
-                JOptionPane.showMessageDialog(null, "Completed");
+                JOptionPane.showMessageDialog(owner, "Completed");
             }
         });
 
@@ -252,7 +263,7 @@ public class UserInterface extends JPanel {
                 store.updateAccount(acc);
                 index++;
             }
-            JOptionPane.showMessageDialog(null, "Completed");
+            JOptionPane.showMessageDialog(owner, "Completed");
 
         });
         return featureCBPane;
@@ -281,6 +292,7 @@ public class UserInterface extends JPanel {
                 for (Map.Entry<String, JTextField> entry : numberTextFields.entrySet()) {
                     store.metadata.getNumberFeaturer().setNumberSetting(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
                 }
+                store.marshellMetadata();
                 int start = table.getSelectedRow();
                 int end = table.getSelectionModel().getMaxSelectionIndex();
                 if (start != -1) {
@@ -295,10 +307,10 @@ public class UserInterface extends JPanel {
                         }
                         store.updateAccount(acc);
                     }
-                    JOptionPane.showMessageDialog(null, "Completed");
+                    JOptionPane.showMessageDialog(owner, "Completed");
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Number only!");
+                JOptionPane.showMessageDialog(owner, "Number only!");
             }
         });
         setAllNumberBtn.addActionListener(e -> {
@@ -306,6 +318,7 @@ public class UserInterface extends JPanel {
                 for (Map.Entry<String, JTextField> entry : numberTextFields.entrySet()) {
                     store.metadata.getNumberFeaturer().setNumberSetting(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
                 }
+                store.marshellMetadata();
                 int index = 0;
                 for (Account acc : store.getAccountGroup().getAccounts()) {
                     for (Map.Entry<String, Integer> entry : store.metadata.getNumberFeaturer().getNumberSetting().entrySet()) {
@@ -318,9 +331,9 @@ public class UserInterface extends JPanel {
                     store.updateAccount(acc);
                     index++;
                 }
-                JOptionPane.showMessageDialog(null, "Completed");
+                JOptionPane.showMessageDialog(owner, "Completed");
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Number only!");
+                JOptionPane.showMessageDialog(owner, "Number only!");
             }
         });
         return numberPaneWrapper;
@@ -349,6 +362,7 @@ public class UserInterface extends JPanel {
                 for (Map.Entry<String, JTextField> entry : priorityTextfields.entrySet()) {
                     store.metadata.getNumberFeaturer().setGatherPriority(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
                 }
+                store.marshellMetadata();
                 int start = table.getSelectedRow();
                 int end = table.getSelectionModel().getMaxSelectionIndex();
                 if (start != -1) {
@@ -363,10 +377,10 @@ public class UserInterface extends JPanel {
                         }
                         store.updateAccount(acc);
                     }
-                    JOptionPane.showMessageDialog(null, "Completed");
+                    JOptionPane.showMessageDialog(owner, "Completed");
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Number only!");
+                JOptionPane.showMessageDialog(owner, "Number only!");
             }
         });
 
@@ -375,6 +389,7 @@ public class UserInterface extends JPanel {
                 for (Map.Entry<String, JTextField> entry : priorityTextfields.entrySet()) {
                     store.metadata.getNumberFeaturer().setGatherPriority(entry.getKey(), Integer.parseInt(entry.getValue().getText()));
                 }
+                store.marshellMetadata();
                 int index = 0;
                 for (Account acc : store.getAccountGroup().getAccounts()) {
                     for (Map.Entry<String, Integer> entry : store.metadata.getNumberFeaturer().getGatherPriorities().entrySet()) {
@@ -387,9 +402,9 @@ public class UserInterface extends JPanel {
                     store.updateAccount(acc);
                     index++;
                 }
-                JOptionPane.showMessageDialog(null, "Completed");
+                JOptionPane.showMessageDialog(owner, "Completed");
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Number only!");
+                JOptionPane.showMessageDialog(owner, "Number only!");
             }
         });
         return priorityPaneWrapper;
@@ -403,12 +418,22 @@ public class UserInterface extends JPanel {
         final JPanel topPane = new JPanel(new BorderLayout());
         final JButton actionBtn = new JButton("Start");
 
-        final JButton posMode = new JButton("Position Mode");
         final JButton createBtn = new JButton("Add Account");
         final JButton gotoBtn = new JButton("Go Into");
         final JButton currBtn = new JButton("Current");
         final JButton deleteBtn = new JButton("Delete account");
         final JButton delay = new JButton("Delay");
+
+
+        final JCheckBox posModeCB = new JCheckBox("Position Mode", store.isPositionMode());
+        posModeCB.addActionListener(e->{
+            if(!store.isPositionMode()) {
+                store.createRemoteWS();
+            }else{
+                store.closeRemoteWS();
+            }
+        });
+
 
 
         final JButton link = new JButton("Go to Web Interface: www.wztechs.com/brutalage_controller");
@@ -432,7 +457,7 @@ public class UserInterface extends JPanel {
                         builder.append(s);
                         return false;
                     });
-            JOptionPane.showMessageDialog(null, builder.toString());
+            JOptionPane.showMessageDialog(owner, builder.toString());
         });
 
         // Column Names
@@ -489,15 +514,15 @@ public class UserInterface extends JPanel {
         createBtn.addActionListener(e -> {
 
             try {
-                JTextField accountID = new JTextField();
+                JTextField count = new JTextField("1");
                 JComboBox<String> hordeList = new JComboBox<>(Account.Hordes);
                 hordeList.setSelectedIndex(store.metadata.getHorde());
                 JTextField serverID = new JTextField(String.valueOf(store.metadata.getServer()));
                 JTextField clan = new JTextField(store.metadata.getClan());
 
                 JPanel createPanel = new JPanel(new GridLayout(4, 2));
-                createPanel.add(new JLabel("Account id (optional): "));
-                createPanel.add(accountID);
+                createPanel.add(new JLabel("Create How Many?"));
+                createPanel.add(count);
                 createPanel.add(new JLabel("server id: "));
                 createPanel.add(serverID);
                 createPanel.add(new JLabel("horde: "));
@@ -505,65 +530,55 @@ public class UserInterface extends JPanel {
                 createPanel.add(new JLabel("clan name (optional): "));
                 createPanel.add(clan);
 
-                int result = JOptionPane.showConfirmDialog(this, createPanel,
+                int result = JOptionPane.showConfirmDialog(owner, createPanel,
                         "Create", JOptionPane.OK_CANCEL_OPTION);
                 if (result == JOptionPane.OK_OPTION) {
-                    Account acc = new Account(Integer.parseInt(serverID.getText()), !accountID.getText().equalsIgnoreCase("") ? accountID.getText() : store.createNewID());
-
+                    int countNum = Integer.parseInt(count.getText());
                     int server = Integer.parseInt(serverID.getText());
-                    acc.setServerID(server);
-                    acc.setHorde(hordeList.getSelectedIndex());
-                    acc.setClan(clan.getText());
-
+                    for(int i=1; i<=countNum; i++){
+                        Account acc = new Account(Integer.parseInt(serverID.getText()), store.createNewID()+"_"+i);
+                        acc.setServerID(server);
+                        acc.setHorde(hordeList.getSelectedIndex());
+                        acc.setClan(clan.getText());
+                        store.addAccount(acc);
+                        model.addRow(acc.getColumnData());
+                    }
                     store.metadata.setClan(clan.getText());
                     store.metadata.setServer(server);
                     store.metadata.setHorde(hordeList.getSelectedIndex());
-
-                    store.addAccount(acc);
-
-                    model.addRow(acc.getColumnData());
                 }
             } catch (NumberFormatException ignore) {
-                JOptionPane.showMessageDialog(null, "Invalid server ID");
+                JOptionPane.showMessageDialog(owner, "Invalid server ID");
             }
         });
 
         gameInstance.setAccountUpdateListener(acc -> {
-            int index = store.getAccountGroup().getAccounts().indexOf(acc);
-            topPane.setBorder(BorderFactory.createTitledBorder("Current: " + acc.getSubId()));
-            String[] newData = acc.getColumnData();
-            for (int i = 0; i < model.getColumnCount(); i++) {
-                model.setValueAt(newData[i], index, i);
+            if(acc != null){
+                int index = store.getAccountGroup().getAccounts().indexOf(acc);
+                topPane.setBorder(BorderFactory.createTitledBorder("Current: " + acc.getSubId()));
+                String[] newData = acc.getColumnData();
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    model.setValueAt(newData[i], index, i);
+                }
+            }else{
+                topPane.setBorder(BorderFactory.createTitledBorder("Pending "+store.positionQueue.size()+
+                        ", stored account "+store.metadata.getSavedPosAcc().size()+"/"+store.metadata.getMaxPosAcc()));
             }
         });
 
         actionBtn.addActionListener(e -> {
             switch (actionBtn.getText()) {
                 case "Start":
-                    if (isPosMode) {
-                        store.createRemoteWS();
-                        gameInstance.start();
-                        actionBtn.setText("PAUSE");
-                    } else if (!store.getAccountGroup().isEmpty()) {
-                        topPane.remove(posMode);
-                        gotoBtn.setText("Jump Into");
-                        panel.revalidate();
-                        panel.repaint();
-                        actionPane.revalidate();
-                        topPane.revalidate();
-                        this.revalidate();
-                        int startIndex = table.getSelectedRow();
-                        if (startIndex == -1) {
-                            startIndex = 0;
-                        }
-                        topPane.setBorder(BorderFactory.createTitledBorder("Current: #" + (startIndex + 1)));
-
-                        actionBtn.setText("PAUSE");
-                        store.getAccountGroup().setIndex(startIndex);
-                        gameInstance.start();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "You dont have any account");
+                    gotoBtn.setText("Jump Into");
+                    this.revalidate();
+                    int startIndex = table.getSelectedRow();
+                    if (startIndex == -1) {
+                        startIndex = 0;
                     }
+                    topPane.setBorder(BorderFactory.createTitledBorder("Starting"));
+                    actionBtn.setText("PAUSE");
+                    store.getAccountGroup().setIndex(startIndex);
+                    gameInstance.start();
                     break;
                 case "PAUSE":
                     actionBtn.setText("RESUME");
@@ -579,7 +594,7 @@ public class UserInterface extends JPanel {
 
         deleteBtn.addActionListener(e -> {
             if (table.getSelectedRow() >= 0) {
-                int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to delete this account?", "Warning",
+                int confirm = JOptionPane.showConfirmDialog(owner, "Are you sure to delete this account?", "Warning",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.WARNING_MESSAGE);
 
@@ -598,7 +613,7 @@ public class UserInterface extends JPanel {
                 if (!str.equalsIgnoreCase(""))
                     store.setDelay(Integer.parseInt(str));
             } catch (NumberFormatException ignored) {
-                JOptionPane.showMessageDialog(null, "Number only");
+                JOptionPane.showMessageDialog(owner, "Number only");
             }
         });
 
@@ -614,7 +629,7 @@ public class UserInterface extends JPanel {
                 }
                 index++;
             }
-            JOptionPane.showMessageDialog(null, "Reset all error");
+            JOptionPane.showMessageDialog(owner, "Reset all error");
         });
 
 
@@ -632,7 +647,7 @@ public class UserInterface extends JPanel {
         actionBtn.setPreferredSize(new Dimension(100, 60));
         topPane.setBorder(BorderFactory.createTitledBorder("Current: None"));
         topPane.add(actionBtn, BorderLayout.WEST);
-        topPane.add(posMode, BorderLayout.EAST);
+        topPane.add(posModeCB, BorderLayout.EAST);
         topPane.add(actionPane, BorderLayout.CENTER);
 
         JScrollPane sp = new JScrollPane(table);
@@ -643,7 +658,7 @@ public class UserInterface extends JPanel {
 
         final JPanel botPane = new JPanel(new BorderLayout());
 
-
+        globalFeaturePane = createGlobalFeaturePane();
         featureCBPane = createCBFeaturePane(table, model);
         numberPaneWrapper = createNumberPane(table, model);
         priorityPaneWrapper = createPriorityPane(table, model);
@@ -662,6 +677,7 @@ public class UserInterface extends JPanel {
                 }
             }
             botPane.removeAll();
+            globalFeaturePane = createGlobalFeaturePane();
             featureCBPane = createCBFeaturePane(table, model);
             numberPaneWrapper = createNumberPane(table, model);
             priorityPaneWrapper = createPriorityPane(table, model);
@@ -669,6 +685,7 @@ public class UserInterface extends JPanel {
             botPane.add(featureCBPane, BorderLayout.WEST);
             botPane.add(numberPaneWrapper, BorderLayout.CENTER);
             botPane.add(priorityPaneWrapper, BorderLayout.EAST);
+            botPane.add(globalFeaturePane, BorderLayout.SOUTH);
             botPane.repaint();
             owner.pack();
         });
@@ -677,16 +694,9 @@ public class UserInterface extends JPanel {
         botPane.add(featureCBPane, BorderLayout.WEST);
         botPane.add(numberPaneWrapper, BorderLayout.CENTER);
         botPane.add(priorityPaneWrapper, BorderLayout.EAST);
+        botPane.add(globalFeaturePane, BorderLayout.SOUTH);
         panel.add(botPane, BorderLayout.SOUTH);
 
-        posMode.addActionListener(e -> {
-            isPosMode = true;
-            panel.removeAll();
-            panel.add(link, BorderLayout.NORTH);
-            panel.add(actionBtn, BorderLayout.CENTER);
-            panel.add(delay, BorderLayout.EAST);
-            panel.revalidate();
-        });
 
         if (Global.OnlyPosMode) {
             isPosMode = true;
@@ -761,6 +771,7 @@ public class UserInterface extends JPanel {
             final JCheckBox joinedClanCB = new JCheckBox("Joined Clan", acc.isJoinClan());
             final JCheckBox isRandomizeCB = new JCheckBox("Is Randomized", acc.isRandomized());
             final JTextField serverIDField = NullableTextField(acc.getServerID());
+            final JTextField nameField = NullableTextField( acc.getName());
             final JTextField hordeField = NullableTextField(acc.getHordeLabel());
             final JTextField clanField = NullableTextField(acc.getClan());
             final JTextField levelField = NullableTextField(acc.getLevel());
@@ -769,7 +780,7 @@ public class UserInterface extends JPanel {
             final JTextField lastGiftTimeField = NullableTextField(acc.getLastGiftTime());
             final JTextField lastRoundField = NullableTextField(acc.getLastRound());
 
-            final JPanel metaPanel = new JPanel(new GridLayout(10, 2));
+            final JPanel metaPanel = new JPanel(new GridLayout(11, 2));
             metaPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Account Data"));
             metaPanel.add(changedServerCB);
             metaPanel.add(finishInitCB);
@@ -780,6 +791,7 @@ public class UserInterface extends JPanel {
             addLabelTextField("Clan: ", clanField, metaPanel);
             addLabelTextField("Prev Level: ", prevLevelField, metaPanel);
             addLabelTextField("Level: ", levelField, metaPanel);
+            addLabelTextField("Name: ", nameField, metaPanel);
             addLabelTextField("Error: ", errorField, metaPanel);
             addLabelTextField("Last Gift Time: ", lastGiftTimeField, metaPanel);
             addLabelTextField("Last Round Time: ", lastRoundField, metaPanel);
@@ -854,6 +866,7 @@ public class UserInterface extends JPanel {
                     acc.setRandomized(isRandomizeCB.isSelected());
                     acc.setHorde(hordeField.getText());
                     acc.setClan(clanField.getText());
+                    acc.setName(nameField.getText());
                     acc.setPreviousLevel(Integer.parseInt(prevLevelField.getText()));
                     acc.setLevel(Integer.parseInt(levelField.getText()));
                     acc.setError(Integer.parseInt(errorField.getText()));
@@ -907,7 +920,7 @@ public class UserInterface extends JPanel {
 
                     dialog.dispose();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Save Failed " + ex.getMessage());
+                    JOptionPane.showMessageDialog(owner, "Save Failed " + ex.getMessage());
                 }
             });
             mainPane.add(saveBtn, BorderLayout.SOUTH);

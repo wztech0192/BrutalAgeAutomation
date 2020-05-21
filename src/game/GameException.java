@@ -14,16 +14,23 @@ public class GameException extends Exception {
 
     }
 
+    public static String prevErrorID = "";
+
     public static void fire(GameInstance game, Exception e){
         try {
             e.printStackTrace();
             game.dispatch.delay(3);
             if(game.account != null) {
-                String errorPath = FilePath.ERROR_PATH + game.account.getId()+"_"+game.account.getError();
-                game.dispatch.screenshot(errorPath + ".png");
-                Logger.addToFile(errorPath + ".txt", game.status.get().name() + ": " + game.account.getId() + " -> " + e.getMessage() + "\n" +
-                        Arrays.toString(e.getStackTrace()));
+                if(prevErrorID ==null || !prevErrorID.equalsIgnoreCase(game.account.getId())){
+                    prevErrorID = game.account.getId();
+
+                    String errorPath = FilePath.ERROR_PATH + game.account.getId()+"_"+game.account.getError();
+                    game.dispatch.screenshot(errorPath + ".png");
+                    Logger.addToFile(errorPath + ".txt", game.status.get().name() + ": " + game.account.getId() + " -> " + e.getMessage() + "\n" +
+                            Arrays.toString(e.getStackTrace()));
+                }
                 game.account.incrementError();
+                game.updateAccount();
             }
         }
         catch(Exception ex){
