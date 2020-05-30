@@ -274,7 +274,7 @@ public class CityWork {
                     if (building.equalsIgnoreCase("stronghold")) {
                         if (game.account.getBuildingLvl("stronghold") == 5) {
                             game.dispatch("confirm_stronghold_6");
-                        } else if (game.account.getBuildingLvl("stronghold") == 7 || game.account.getBuildingLvl("stronghold") == 8 || game.account.getBuildingLvl("stronghold") == 12) {
+                        } else if (game.account.getBuildingLvl("stronghold") == 7 || game.account.getBuildingLvl("stronghold") == 8 || game.account.getBuildingLvl("stronghold") == 11) {
                             if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Auto Use Speed up")) {
                                 if (game.dispatch("stronghold_speed_up")) {
                                     game.account.setBuildingLevel("stronghold", game.account.getBuildingLvl("stronghold") + 1);

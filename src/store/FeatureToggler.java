@@ -43,6 +43,7 @@ public class FeatureToggler {
             globalFeatures.put("Transport At Start", false);
             globalFeatures.put("Auto Use Speed up", true);
             globalFeatures.put("Feed Temple", false);
+            globalFeatures.put("No Clan", false);
          }
         return globalFeatures;
     }

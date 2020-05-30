@@ -48,14 +48,21 @@ public class GetGiftEvents {
         Event.builder(_map, "get_workshop_gift")
                 .setDelay(1.5)
                 .setLoc(406, 615)
-                .setChain(
-                        _map.get("collect_workshop_gift"),
-                        Event.builder()
+                .setListener(((event, game) -> {
+                    game.dispatch.delay(1);
+                    game.dispatch("collect_workshop_gift");
+
+                    if(!game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")){
+                        game.dispatch(Event.builder()
                                 .setLoc(391, 774)
-                                .setDelay(1.5),
-                        _map.get("collect_workshop_gift"),
-                        _map.get("top_left")
-                );
+                                .setDelay(1.5));
+                        game.dispatch("collect_workshop_gift");
+                    }
+
+                    game.dispatch("top_left");
+                    return null;
+
+                }));
 
 
         Event.builder(_map, "get_quest_gift_single")

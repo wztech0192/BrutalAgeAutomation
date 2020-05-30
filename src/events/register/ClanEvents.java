@@ -77,6 +77,9 @@ public class ClanEvents {
                                 return null;
                             }
                         }
+                    }else{
+                        game.dispatch.staticDelay(1);
+                        game.dispatch("top_left");
                     }
                     return event;
                 }));
@@ -86,12 +89,23 @@ public class ClanEvents {
                 .setListener(((event, game) -> {
 
                     for(int i =0;;i++) {
-                        game.dispatch("open_clan");
-                        if(game.log.btnName.contains("bottom_panel:btn_right")){
+                        if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")){
+                            game.dispatch("apply_clan");
+                            game.dispatch("search_clan");
+                            game.dispatch.enterText(game.account.getClan());
+                            game.dispatch("confirm_search_clan");
+                            game.dispatch("join_clan");
+                            game.dispatch.staticDelay(1.5);
                             break;
                         }else{
-                            game.dispatch("top_left");
+                            game.dispatch("open_clan");
+                            if(game.log.btnName.contains("bottom_panel:btn_right")){
+                                break;
+                            }else{
+                                game.dispatch("top_left");
+                            }
                         }
+
                         if(i>=5){
                             return event;
                         }
@@ -103,21 +117,24 @@ public class ClanEvents {
                             break;
                         }
                     }
-                    game.dispatch.staticDelay(1);
+                    game.dispatch.staticDelay(1.5);
                     game.dispatch("top_left");
-                    game.dispatch("top_left");
-                    game.dispatch("top_left");
+
+                    if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")){
+                        game.dispatch("quit_clan");
+                    }else{
+                        game.dispatch("top_left");
+                    }
                     return null;
                 }));
 
 
         Event.builder(_map, "quit_clan")
                 .setDelay(1.5)
-                .setLoc(666, 1211)
                 .setChain(
                         Event.builder()
                             .setDelay(1.5)
-                            .setLoc(355, 1186),
+                            .setLoc(360, 1088),
                         Event.builder()
                             .setDelay(1.5)
                             .setLoc(340, 704),
@@ -167,8 +184,8 @@ public class ClanEvents {
                             game.dispatch("confirm_clan");
                             game.dispatch(Event.builder().setLoc(360, 1088).setDelay(1.25));
                         }
-                        game.dispatch(Event.builder().setLoc( 360, 1088).setDelay(1.25));
-                        game.dispatch(Event.builder().setLoc(360, 878).setDelay(1.25));
+                        game.dispatch(Event.builder().setLoc(340, 704).setDelay(1.25));
+                        game.dispatch(Event.builder().setLoc(355, 880).setDelay(1.25));
                         game.dispatch(Event.builder().setLoc(666, 1211).setDelay(1.55));
                     }
                     return null;

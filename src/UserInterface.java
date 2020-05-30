@@ -271,7 +271,7 @@ public class UserInterface extends JPanel {
 
 
     private JPanel createNumberPane(JTable table, DefaultTableModel model) {
-        final JPanel numberPaneWrapper = new JPanel(new GridLayout(5, 2));
+        final JPanel numberPaneWrapper = new JPanel(new GridLayout(6, 2));
         final HashMap<String, JTextField> numberTextFields = new HashMap<>();
         for (Map.Entry<String, Integer> entry : store.metadata.getNumberFeaturer().getNumberSetting().entrySet()) {
             JTextField tf = new JTextField(String.valueOf(entry.getValue()), 7);
@@ -742,7 +742,7 @@ public class UserInterface extends JPanel {
                 featurePane.add(cb);
             }
 
-            final JPanel numberPane = new JPanel(new GridLayout(4,2));
+            final JPanel numberPane = new JPanel(new GridLayout(5,2));
             final HashMap<String, JTextField> numberTextfield = new HashMap<>();
             for (Map.Entry<String, Integer> entry : acc.getNumberFeaturer().getNumberSetting().entrySet()) {
                 JTextField tf = new JTextField(String.valueOf(entry.getValue()), 7);

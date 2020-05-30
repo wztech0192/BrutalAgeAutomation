@@ -200,7 +200,7 @@ public class WorldMapEvents {
                     game.dispatch(Event.builder().setLoc(570, 970, 680, 970, 300).setDelay(1));
                     game.dispatch(Event.builder().setLoc(570, 844, 680, 844, 300).setDelay(1));
 
-                    int sendWarriorsCount = game.account.getTroops() - game.log.currTroops - 30000;
+                    int sendWarriorsCount = game.account.getTroops() - game.log.currTroops - game.account.getNumberFeaturer().getNumberSetting().get("Min Troop");
 
                     Logger.log(game.account.getTroops()+" / " + game.log.currTroops+", Send "+sendWarriorsCount+" warriors");
                     if (sendWarriorsCount > 0) {

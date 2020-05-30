@@ -39,7 +39,8 @@ public class NumberFeaturer {
         numberSetting = new HashMap<>();
         numberSetting.put("Min Monster Level", 2);
         numberSetting.put("Max Monster Level", 4);
-        numberSetting.put("Max Troop", 30000);
+        numberSetting.put("Max Troop", 300000);
+        numberSetting.put("Min Troop", 30000);
         numberSetting.put("Transport Round", 0);
     }
 
