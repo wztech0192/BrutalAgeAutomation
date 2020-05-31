@@ -173,14 +173,14 @@ public class EventDispatcher implements IShellOutputReceiver {
 
 
     public void selectMonster(int x, int y) throws Exception {
-        int[] prevWorld;
+        double prevScale;
         String tapStr = "input tap " + x + " " + y;
         int redo = 10;
         do {
-            prevWorld = game.log.world.clone();
+            prevScale = game.log.worldScale;
             exec(tapStr + "&" + tapStr + "&" + tapStr);
             staticDelay(1.5);
-        } while (game.log.btnName.contains("tiles") && Arrays.equals(game.log.world, prevWorld) && redo-- > 0);
+        } while (game.log.btnName.contains("tiles") && prevScale == game.log.worldScale && redo-- > 0);
 
         if (redo > 0) {
             game.dispatch.exec(tapStr);
@@ -264,6 +264,11 @@ public class EventDispatcher implements IShellOutputReceiver {
         int otherRedo = 4;
         double prevX = Double.MAX_VALUE, prevY = Double.MAX_VALUE;
         while (redo > 0) {
+
+            if(!game.log.isInCity){
+                game.dispatch("bottom_left");
+            }
+
             if(game.log.btnName.contains("monster_tip")){
                 exec("input swipe 400 1000 200 400 500");
                 staticDelay(0.5);
@@ -302,10 +307,6 @@ public class EventDispatcher implements IShellOutputReceiver {
             Logger.log(String.format("%s(%d, %d)  now(%d, %d)  diff(%d,%d)",
                     event.name, event.loc[0], event.loc[1], (int) game.log.city.x, (int) game.log.city.y, (int) diffX, (int) diffY
             ));
-
-            if(game.log.btnName.contains("scene_tiles")){
-                game.dispatch("bottom_left");
-            }
 
             execMiddleware(event);
             if ((absDiffX + absDiffY) >= 22) {
@@ -417,7 +418,8 @@ public class EventDispatcher implements IShellOutputReceiver {
             }
 
             if(game.log.hasPopupWarning){
-                game.log.hasPopupWarning = sendEvent("close_warning");
+                game.log.hasPopupWarning = false;
+                sendEvent("close_warning");
             }
 
             if (game.log.btnName.equalsIgnoreCase("main:")) {

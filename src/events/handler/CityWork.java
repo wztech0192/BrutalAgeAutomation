@@ -181,7 +181,7 @@ public class CityWork {
             lowestLvl = account.getBuildingLvl("war_camp");
         }
         for (int i = 1; i <= 5; i++) {
-            if (buildingCondition(account, "well" + i, 14, hammer)) {
+            if (buildingCondition(account, "well" + i, 10, hammer)) {
                 if (account.getBuildingLvl("well" + i) < lowestLvl) {
                     lowest = "well" + i;
                     lowestLvl = account.getBuildingLvl("well" + i);
@@ -263,7 +263,7 @@ public class CityWork {
                 Logger.log("Scan level of " + building + " is " + level + " / " + game.account.getBuildingLvl(building));
                 if (level > 3) {
                     if (game.account.getBuildingLvl(building) != level) {
-                        if (level < 11) {
+                        if (level < 25) {
                             game.account.setBuildingLevel(building, level);
                             game.updateAccount();
                             game.dispatch("top_left");

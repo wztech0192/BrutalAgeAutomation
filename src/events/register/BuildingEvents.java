@@ -61,28 +61,31 @@ public class BuildingEvents {
 
         Event.builder(_map, "close_speedup").setLoc(72, 301).setDelay(1.5);
 
-        int[] speedUpLoc = new int[]{344, 503, 653};
         Event.builder(_map, "use_speedup")
                 .setDelay(1.5)
                 .setListener(((event, game) -> {
-                    int i =0 ;
-                    Event useEvent = Event.builder().setLoc(563, speedUpLoc[i++]).setDelay(1.5);
-                    Event useConfirmEvent = Event.builder().setLoc(364, 716).setDelay(1.5);
-                    Event closeEvent = Event.builder().setLoc(77, 298).setDelay(1);
-                    do{
-                        game.dispatch(useEvent);
-                        if(game.log.btnName.contains("btn_get")){
-                            game.dispatch(closeEvent);
-                            if(i>= speedUpLoc.length){
-                                game.dispatch("top_left");
-                                return event;
+
+                    game.dispatch(Event.builder().setLoc(563, 361).setDelay(1.5));
+                    game.dispatch(Event.builder().setLoc( 534, 900).setDelay(1.5));
+
+                    if(game.log.btnName.contains("btn_use")){
+
+                        for(int i=0;i<10;i++){
+                            game.dispatch( Event.builder().setLoc(580, 200, 580, 250, 200).setDelay(1));
+                            if(game.log.btnName.contains("topbar1")){
+                                break;
                             }
-                            useEvent.setLoc(563,  speedUpLoc[i++]);
-                        }else{
-                            game.dispatch(useConfirmEvent);
                         }
-                    } while(game.log.btnName.contains("btn_use") || game.log.btnName.contains("btn_close"));
-                    return Event.SUCCESS;
+                        if(game.log.btnName.contains("btn_free")){
+                            game.dispatch( Event.builder().setLoc(580, 200).setDelay(1));
+                            return Event.SUCCESS;
+                        }
+                    }else{
+                        game.dispatch(Event.builder().setLoc(77, 298).setDelay(1));
+                    }
+
+                    game.dispatch("top_left");
+                    return event;
                 }));
         registerBuilding(_map);
 
@@ -131,7 +134,7 @@ public class BuildingEvents {
                     for(int i =0; i<10; i++){
                         if(game.log.btnName.contains("speedup")){
                             game.dispatch.staticDelay(1.5);
-                            return game.dispatch("use_speedup") ? null : event;
+                            return game.dispatch("use_speedup") ? Event.SUCCESS : event;
                         }else{
                             game.dispatch(Event.builder().isBuilding()
                                     .setLoc(-1591, -306, 595, 400));
@@ -370,18 +373,21 @@ public class BuildingEvents {
                 .isBuilding(true)
                 .setLoc(-259,-1628,467, 475);
 
-
-
         Event.builder(_map, "squirrel")
                 .setTargetName("loc_28")
                 .isBuilding()
                 .setLoc(-1978, -1322)
-                .setChain(
-                        Event.builder().setLoc(350, 630).setDelay(1),
-                        Event.builder().setLoc(156, 768).setDelay(1.25),
-                        Event.builder().setLoc(156, 768).setDelay(1.5),
-                        Event.builder().setLoc(156, 768).setDelay(1.5)
-                );
+                .setListener(((event, game) -> {
+
+                    Event use = Event.builder().setLoc(350, 630).setDelay(1.25);
+                    game.dispatch( use);
+                    game.dispatch( use);
+                    if(!game.account.isFinishInit()){
+                        game.dispatch.staticDelay(2.5);
+                        game.dispatch(Event.builder().setLoc(156, 768).setDelay(1));
+                    }
+                    return Event.SUCCESS;
+                }));
 
         Event.builder(_map, "pig")
                 .isBuilding()

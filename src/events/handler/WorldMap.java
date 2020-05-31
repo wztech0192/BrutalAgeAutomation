@@ -5,15 +5,11 @@ import events.register.WorldMapEvents;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
-import org.opencv.core.Point;
 import store.MatchPoint;
 import util.Logger;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class WorldMap {
@@ -40,14 +36,14 @@ public class WorldMap {
 
 
         if (game.account.getFeatureToggler().get("Auto Repair")) {
-                int[] oldMap = game.log.world_set.clone();
+                int[] oldMap = game.log.worldCurr.clone();
                 game.dispatch("auto_repair");
                 game.dispatch("change_outpost");
-                if(!Arrays.equals(oldMap, game.log.world_set)){
+                if(!Arrays.equals(oldMap, game.log.worldCurr)){
                     game.dispatch("auto_repair");
                 }else{
                     game.dispatch("change_outpost");
-                    if(!Arrays.equals(oldMap, game.log.world_set)){
+                    if(!Arrays.equals(oldMap, game.log.worldCurr)){
                         game.dispatch("auto_repair");
                     }
                 }
@@ -78,7 +74,7 @@ public class WorldMap {
 
             if (game.account.isRandomized()) {
                 for (int i = 0; i < 4; i++) {
-                    if (game.log.world_set[0] < 270 && game.log.world_set[1] < 500) {
+                    if (game.log.worldCurr[0] < 270 && game.log.worldCurr[1] < 500) {
                         game.dispatch("change_outpost");
                         game.dispatch("world_set");
                     } else {
@@ -90,7 +86,7 @@ public class WorldMap {
 
             int loc = 0;
             int[] locArray = new int[]{20, -20, -20, 20, 35, 35, -35, -35};
-            int[] setLoc = game.log.world_set.clone();
+            int[] setLoc = game.log.worldCurr.clone();
 
             int maxLvl = 4;
             int minLvl = 2;
@@ -98,7 +94,6 @@ public class WorldMap {
             ArrayList<String> targets;
 
             while (game.log.idleTroops > 0 && game.log.marches > 0 && loc < locArray.length) {
-                game.dispatch.changePosition(setLoc[0], setLoc[1]);
                 game.dispatch("adjust_map");
 
                 targets = game.account.getGatherPrioritiesArray();
@@ -172,8 +167,9 @@ public class WorldMap {
                         game.dispatch("adjust_map");
                     }
                 }
-                setLoc[0] = game.log.world_set[0] + locArray[loc++];
-                setLoc[1] = game.log.world_set[1] + locArray[loc++];
+                setLoc[0] = game.log.worldCurr[0] + locArray[loc++];
+                setLoc[1] = game.log.worldCurr[1] + locArray[loc++];
+                game.dispatch.changePosition(setLoc[0], setLoc[1]);
             }
         }
 

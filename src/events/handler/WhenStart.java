@@ -43,8 +43,13 @@ public class WhenStart {
             game.dispatch("login_zoom");
             game.dispatch.staticDelay(1);
 
+            if (Math.abs(game.log.city.x - -1540) + Math.abs(game.log.city.y - -889.15002441406) < 5){
+                game.dispatch("dragon_tutorial");
+            }
 
-            if (Math.abs(game.log.city.x - -3222) + Math.abs(game.log.city.y - -1600) < 10 ||
+            if (
+                    Math.abs(game.log.city.x - -2477) + Math.abs(game.log.city.y - -1625) < 10 ||
+                    Math.abs(game.log.city.x - -3222) + Math.abs(game.log.city.y - -1600) < 10 ||
                     Math.abs(game.log.city.x - -3407) + Math.abs(game.log.city.y - -730) < 10 ||
                     Math.abs(game.log.city.x - -1532) + Math.abs(game.log.city.y - -427) < 10 ||
                     Math.abs(game.log.city.x - -340) + Math.abs(game.log.city.y - -268) < 10 ||

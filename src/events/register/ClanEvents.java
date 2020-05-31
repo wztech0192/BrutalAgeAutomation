@@ -131,17 +131,15 @@ public class ClanEvents {
 
         Event.builder(_map, "quit_clan")
                 .setDelay(1.5)
-                .setChain(
-                        Event.builder()
-                            .setDelay(1.5)
-                            .setLoc(360, 1088),
-                        Event.builder()
-                            .setDelay(1.5)
-                            .setLoc(340, 704),
-                        Event.builder()
-                                .setDelay(1.5)
-                                .setLoc(355, 880)
-                );
+                .setListener(((event, game) -> {
+                    game.dispatch(Event.builder().setLoc(370, 1175,370, 560, 500 ));
+                    game.dispatch.staticDelay(1.5);
+                    game.dispatch(Event.builder().setLoc(370, 1100).setDelay(1.25));
+                    game.dispatch(Event.builder().setLoc(370, 704).setDelay(1.25));
+                    game.dispatch(Event.builder().setLoc(355, 880).setDelay(1.25));
+
+                    return Event.SUCCESS;
+                }));
 
         Event.builder(_map, "confirm_clan")
                 .setDelay(1.5)
@@ -173,21 +171,18 @@ public class ClanEvents {
                 }));
 
         Event.builder(_map, "apply_clan")
-                .setLoc(666, 1211)
-                .setDelay(2)
+                .setDelay(1)
                 .setListener(((event, game) -> {
+                    game.log.hasClan = false;
+                    game.dispatch(Event.builder().setLoc(666, 1211));
                     game.dispatch.staticDelay(2);
-                    if(!game.account.isFinishInit()){
+
+                    if(!game.log.hasClan){
                         game.dispatch("confirm_clan");
-                    }else{
-                        game.dispatch(Event.builder().setLoc(360, 1088).setDelay(1.25));
-                        if(game.log.btnName.contains(":shield")){
-                            game.dispatch("confirm_clan");
-                            game.dispatch(Event.builder().setLoc(360, 1088).setDelay(1.25));
-                        }
-                        game.dispatch(Event.builder().setLoc(340, 704).setDelay(1.25));
-                        game.dispatch(Event.builder().setLoc(355, 880).setDelay(1.25));
-                        game.dispatch(Event.builder().setLoc(666, 1211).setDelay(1.55));
+                    }
+                    else{
+                        game.dispatch("quit_clan");
+                        game.dispatch("apply_clan");
                     }
                     return Event.SUCCESS;
                 }));

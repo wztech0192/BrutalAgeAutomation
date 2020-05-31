@@ -16,10 +16,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LogProcess {
+    private final static Pattern regexWorldScale = Pattern.compile("(\\d*) 1$");
     private final static Pattern regexBtnNamePattern = Pattern.compile("character name is ([^,]*), (\\d*), (\\d*)"); // the pattern to search for
     private final static Pattern regexCurrentOffset = Pattern.compile("m_currentOffset:\\((.*),(.*)\\)"); // the pattern to search for
     private final static Pattern regexBuildTime = Pattern.compile(".*lv.(\\d*) building.*currentTiem: (.*), fireTime: (.*)");
-    private final static Pattern regexWorldMap = Pattern.compile("wjh: render extent: ([0-9]*),([0-9]*),([0-9]*),([0-9]*)");
     private final static Pattern regexTalentScroll = Pattern.compile("dummy :(.*)");
     private final static Pattern regexCurrTroops = Pattern.compile("m_currentTroopsNumber = (\\d*)");
     private final static Pattern regexTransportSelected = Pattern.compile("selectedTotal= (\\d*)");
@@ -40,8 +40,8 @@ public class LogProcess {
     public LocalDateTime buidlingCompleteTime = LocalDateTime.now();
     public int[] touchPoint = new int[2];
     public Point city = new Point();
-    public int[] world = new int[4];
-    public int[] world_set = new int[4];
+    public double worldScale;
+    public int[] worldCurr = new int[4];
     public boolean levelupDialog = false;
     public String btnName = "";
     public int idleTroops;
@@ -51,7 +51,7 @@ public class LogProcess {
     public int maxTransportNum = 0;
     public int selectedTransportNum = 0;
     public int limitTransportNum = 0;
-
+    public boolean hasClan = false;
     public boolean isInCity = true;
     public String text;
     LogCatReceiverTask lcrt;
@@ -94,6 +94,14 @@ public class LogProcess {
         Matcher m;
 
 
+
+        if ((m = regexWorldScale.matcher(str)).find()) {
+            if(!m.group(1).trim().equalsIgnoreCase("")){
+                worldScale = Double.parseDouble(m.group(1));
+                Logger.log("world scale " + worldScale);
+            }
+        }
+
         //match click button
         if ((m = regexBtnNamePattern.matcher(str)).find()) {
             btnName = m.group(1);
@@ -112,13 +120,17 @@ public class LogProcess {
             city.y = Double.parseDouble(m.group(2));
         } else if (str.contains("sfx_event_level_up.ogg")) {
             levelupDialog = true;
-        } else if ((m = regexWorldMap.matcher(str)).find()) {
-            isInCity = false;
-            for (int i = 0; i < 4; i++) {
-                world[i] = Integer.parseInt(m.group(i + 1));
-            }
         }else if(str.contains("playEffectL filename sound/sfx_event_notice_window.ogg")){
             hasPopupWarning = true;
+        }
+        else if(str.contains("SaveRawData successs CITYMAP_LOCAL_DATA")){
+            isInCity = true;
+        }
+        else if(str.contains("initTiles =====>")){
+            isInCity = false;
+        }
+        else if(str.contains("setAllianceWarNumber")){
+            hasClan = true;
         }
 
 

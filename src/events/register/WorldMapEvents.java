@@ -1,11 +1,17 @@
 package events.register;
 
+import com.android.ddmlib.RawImage;
 import com.github.cliftonlabs.json_simple.JsonObject;
+import dispatcher.EventDispatcher;
 import events.common.Event;
 import game.GameException;
+import org.opencv.core.Mat;
+import store.MatchPoint;
 import util.Logger;
 
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.List;
 
 public class WorldMapEvents {
 
@@ -163,9 +169,16 @@ public class WorldMapEvents {
 
         Event.builder(_map, "world_set")
                 .setListener(((event, game) -> {
-                    game.log.world_set[0] = ((game.log.world[0] + game.log.world[2]) / 2);
-                    game.log.world_set[1] = ((game.log.world[1] + game.log.world[3]) / 2);
-                    System.out.println("Set: " + game.log.world_set[0] + "," + game.log.world_set[1]);
+
+                    BufferedImage image = game.dispatch.captureAsBI();
+
+                    int x = TestEvent.getNumber(game.dispatch.doOSR(image,293, 1156, 358, 1187 ), true);
+                    int y = TestEvent.getNumber(game.dispatch.doOSR(image,410, 1156, 477, 1187 ), true);
+
+                    game.log.worldCurr[0] = x -1;
+                    game.log.worldCurr[1] = y -1;
+
+                    System.out.println("Current Coordinate: " + game.log.worldCurr[0] + "," + game.log.worldCurr[1]);
                     return Event.SUCCESS;
                 }));
 
@@ -200,6 +213,21 @@ public class WorldMapEvents {
                 .setLoc(214, 1175)
                 .setDelay(1);
 
+        Event.builder(_map, "gather_check")
+                .setListener(((event, game) -> {
+                    RawImage rawImage = game.store.device.getScreenshot();
+                    Mat source = EventDispatcher.rawimg2Mat(rawImage);
+                    List<MatchPoint> points = game.dispatch.getMatch(592, 1100, 651, 1147 ,0, 0, source, "gather_check.png", 1);
+                    if (points.isEmpty()) {
+                        Logger.log("gather not checked");
+                       game.dispatch(Event.builder().setLoc(623, 1123).setDelay(1));
+                    }else{
+                        Logger.log("gather checked");
+                    }
+
+                    return Event.SUCCESS;
+                }));
+
         Event.builder(_map, "attack_monster")
                 .setDelay(2)
                 .setListener(((event, game) -> {
@@ -213,6 +241,7 @@ public class WorldMapEvents {
                         game.dispatch("quickSelect");
                     }
 
+                    game.dispatch("gather_check");
                     game.dispatch(Event.builder().setLoc(520, 1198).setDelay(1));
                     if (!game.log.btnName.contains("btn_go")) {
                         game.dispatch("top_left");

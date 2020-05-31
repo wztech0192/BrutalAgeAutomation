@@ -25,7 +25,7 @@ public class ChangeServerEvents {
 
         Event.builder(_map, "test_migration")
                 .setTargetName("listBoxItem")
-                .setLoc(130, 310, 700, 310, 300)
+                .setLoc(650, 310, 700, 310, 600)
                 .setDelay(1.5)
                 .setListener(
                         (event, game) -> game.log.btnName.contains(event.targetName) ? null : event);

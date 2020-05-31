@@ -6,26 +6,20 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
+    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="add feat">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/EventMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/EventMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/LogProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/LogProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/common/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/common/Event.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/ChangeServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/ChangeServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/CityWork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/CityWork.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WorldMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/ChangeServerEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ChangeServerEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/ClanEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ClanEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/OtherEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/OtherEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/TalentEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TalentEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -99,19 +93,7 @@
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager" selected="Application.Production">
+  <component name="RunManager" selected="Application.Debug">
     <configuration name="Debug" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="BrutalAgeFarm" />
@@ -321,10 +303,6 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="177" key="#Notifications/0.0.1920.1040@0.0.1920.1040" timestamp="1586640866809" />
-    <state x="552" y="177" key="#Project_Structure" timestamp="1581915489599">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="552" y="177" key="#Project_Structure/0.0.1920.1040@0.0.1920.1040" timestamp="1581915489599" />
     <state x="713" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1588484051125">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -333,46 +311,42 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1585677814859" />
-    <state x="696" y="302" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1581916177762">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="696" y="302" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1581916177762" />
-    <state x="765" y="212" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1581916126190">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="765" y="212" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1581916126190" />
     <state x="756" y="403" width="407" height="242" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1585432167723">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="756" y="403" width="407" height="242" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1585432167723" />
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1590080477299">
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1590896038013">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590080477299" />
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590896038013" />
     <state width="451" height="466" key="DebuggerActiveHint" timestamp="1588364404829">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="451" height="466" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1588364404829" />
+    <state x="0" y="111" key="DiffContextDialog" timestamp="1590896035849">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="0" y="111" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1590896035849" />
     <state x="727" y="388" key="FileChooserDialogImpl" timestamp="1588480691384">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="727" y="388" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1588480691384" />
-    <state width="1876" height="236" key="GridCell.Tab.0.bottom" timestamp="1590375794634">
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom" timestamp="1590909068537">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590375794634" />
-    <state width="1876" height="236" key="GridCell.Tab.0.center" timestamp="1590375794634">
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590909068537" />
+    <state width="1876" height="236" key="GridCell.Tab.0.center" timestamp="1590909068537">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590375794634" />
-    <state width="1876" height="236" key="GridCell.Tab.0.left" timestamp="1590375794634">
+    <state width="1876" height="236" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590909068537" />
+    <state width="1876" height="236" key="GridCell.Tab.0.left" timestamp="1590909068537">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590375794634" />
-    <state width="1876" height="236" key="GridCell.Tab.0.right" timestamp="1590375794634">
+    <state width="1876" height="236" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590909068537" />
+    <state width="1876" height="236" key="GridCell.Tab.0.right" timestamp="1590909068537">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590375794634" />
+    <state width="1876" height="236" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590909068537" />
     <state width="1876" height="155" key="GridCell.Tab.1.bottom" timestamp="1588484753845">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -397,10 +371,6 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1590080483918" />
-    <state width="960" height="520" key="XDebugger.FullValuePopup" timestamp="1581913162358">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="960" height="520" key="XDebugger.FullValuePopup/0.0.1920.1040@0.0.1920.1040" timestamp="1581913162358" />
     <state x="92" y="92" width="1736" height="862" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1590082182986">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -413,10 +383,6 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="661" y="342" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582345705897" />
-    <state x="664" y="412" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1581825692532">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="664" y="412" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1920.1040@0.0.1920.1040" timestamp="1581825692532" />
     <state x="775" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590080439694">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -425,14 +391,18 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="0" y="0" width="1639" height="749" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1585636534264" />
-    <state x="1184" y="236" width="736" height="804" key="find.popup" timestamp="1590374237943">
+    <state x="1184" y="236" width="736" height="804" key="find.popup" timestamp="1590908110755">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1184" y="236" width="736" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1590374237943" />
+    <state x="1184" y="236" width="736" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1590908110755" />
     <state x="342" y="139" key="new project wizard" timestamp="1588480148211">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="342" y="139" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1588480148211" />
+    <state x="616" y="235" key="run.anything.popup" timestamp="1590907055240">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="235" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1590907055240" />
     <state x="629" y="229" width="672" height="678" key="search.everywhere.popup" timestamp="1588220836161">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -444,11 +414,6 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/com/android/tools/ddms/ddmlib/25.3.0/ddmlib-25.3.0.jar!/com/android/ddmlib/RawImage.class</url>
           <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/dispatcher/EventDispatcher.java</url>
-          <line>340</line>
-          <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

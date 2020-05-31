@@ -54,12 +54,21 @@ public class TestEvent {
                 .setDelay(1.5)
                 .setListener(((event, game) -> {
                     game.dispatch.delay(1.2);
-                    Event hit = Event.builder().setLoc(588,855).setDelay(0.6);
-                    int redo = 30;
-                    while(!game.log.btnName.contains("dragon_incubation") && redo -- > 0){
+                    Event hit = Event.builder().setLoc(588,855).setDelay(1);
+                    int redo = 10;
+                    while(!game.log.btnName.contains("btn_choose_2") && redo -- > 0){
                         game.dispatch(hit);
                     }
-                    game.dispatch("top_left");
+
+                    game.dispatch.staticDelay(2.5);
+
+                    game.dispatch(hit);
+                    game.dispatch.staticDelay(1);
+                    game.dispatch(hit);
+                    game.dispatch.staticDelay(1);
+                    game.dispatch(hit);
+                    game.dispatch.staticDelay(1);
+
                     return Event.SUCCESS;
                 }));
         Event.builder(_map,"close_update")
@@ -105,12 +114,11 @@ public class TestEvent {
         Event.builder(_map, "login_test")
                 .setDelay(1.5)
                 .setLoc(362, 1183)
-                .setMaxRedo(2)
                 .setListener((event, game) -> {
                     if (!game.log.btnName.contains("hud:") &&
                             !game.dispatch("test_click") &&
                             !game.dispatch("template_close")) {
-                        return event;
+                        return Event.SUCCESS;
                     }
                     return Event.SUCCESS;
                 });
