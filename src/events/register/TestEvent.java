@@ -50,6 +50,18 @@ public class TestEvent {
 
     public static void register(HashMap<String, Event> _map) {
 
+        Event.builder(_map, "dragon_tutorial")
+                .setDelay(1.5)
+                .setListener(((event, game) -> {
+                    game.dispatch.delay(1.2);
+                    Event hit = Event.builder().setLoc(588,855).setDelay(0.6);
+                    int redo = 30;
+                    while(!game.log.btnName.contains("dragon_incubation") && redo -- > 0){
+                        game.dispatch(hit);
+                    }
+                    game.dispatch("top_left");
+                    return Event.SUCCESS;
+                }));
         Event.builder(_map,"close_update")
                 .setDelay(1.5)
                 .setLoc(108, 359);
@@ -78,7 +90,7 @@ public class TestEvent {
                                 .setLoc(p)
                                 .setDelay(1.5)
                         );
-                        return null;
+                        return Event.SUCCESS;
                     }
                 }));
 
@@ -100,7 +112,7 @@ public class TestEvent {
                             !game.dispatch("template_close")) {
                         return event;
                     }
-                    return null;
+                    return Event.SUCCESS;
                 });
 
 
@@ -111,7 +123,7 @@ public class TestEvent {
                     for(int i=0;i<3;i++){
                         game.dispatch.cityZoom();
                     }
-                    return null;
+                    return Event.SUCCESS;
                 });
 
 
@@ -157,7 +169,7 @@ public class TestEvent {
                     }
 
                     game.dispatch("top_left");
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
 
@@ -205,7 +217,7 @@ public class TestEvent {
                 catch(Exception e){
                     e.printStackTrace();
                 }
-                return null;
+                return Event.SUCCESS;
             }));
     }
 

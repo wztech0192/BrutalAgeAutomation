@@ -1,6 +1,7 @@
 package events.handler;
 
 import events.register.TestEvent;
+import events.register.WorldMapEvents;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
@@ -62,7 +63,7 @@ public class WorldMap {
                 int[] randomCoordinate;
                 int redo = 10;
                 do {
-                    randomCoordinate = getRandomCoordinate();
+                    randomCoordinate = WorldMapEvents.getRandomCoordinate(180,230,-100,150);
                     game.dispatch.changePosition(randomCoordinate[0], randomCoordinate[1]);
                     if (game.dispatch("safe_teleport")) {
                         game.account.setRandomized(true);
@@ -181,22 +182,6 @@ public class WorldMap {
     }
 
 
-    public static int[] getRandomCoordinate() {
-        int cx = 512;
-        int cy = 512;
-
-        int minR = 180;
-        int maxR = 230;
-
-        int minD = -100;
-        int maxD = 150;
-
-        int randomR = (int) (Math.random() * ((maxR - minR) + 1)) + minR;
-        int randomD = (int) (Math.random() * ((maxD - minD) + 1)) + minD;
-        int pointX = (int) (cx + randomR * Math.cos(Math.toRadians(randomD)));
-        int pointY = (int) (cy + randomR * Math.sin(Math.toRadians(randomD)));
-        return new int[]{pointX, pointY};
-    }
 
 
     public static void firePosMode(GameInstance game) throws Exception {

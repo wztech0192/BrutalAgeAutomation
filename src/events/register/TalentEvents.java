@@ -81,7 +81,7 @@ public class TalentEvents {
                     }
                     game.dispatch("top_left");
                     game.dispatch("top_left");
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
     }

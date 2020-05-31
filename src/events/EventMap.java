@@ -22,7 +22,20 @@ public class EventMap {
                 .setDelay(1)
                 .setLoc(72, 1107, 87, 1107, 200)
                 .setListener(((event, game) -> {
+
+                    if(game.log.btnName.contains("main:ui_mb")){
+                        game.log.isInCity = false;
+                        game.log.emptyOutPost = true;
+                        game.dispatch(Event.builder().setLoc(354, 640).setDelay(1.5));
+                        return Event.SUCCESS;
+                    };
+
                     game.log.isInCity = !game.log.btnName.contains("btn_next_op");
+
+                    if(!game.log.isInCity){
+                        game.log.emptyOutPost = false;
+                    }
+
                     Logger.log("Now in city: "+game.log.isInCity);
                     if(game.log.btnName.contains("btn_rank")){
                         game.dispatch("top_left");
@@ -41,7 +54,7 @@ public class EventMap {
                         game.dispatch("top_left");
                         game.dispatch("top_left");
                     }
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
         Event.builder(_map, "bottom_left")
@@ -50,7 +63,7 @@ public class EventMap {
                 .setListener(((event, game) -> {
                     game.dispatch.staticDelay(1.5);
                     game.dispatch("test_city");
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
 
@@ -69,6 +82,19 @@ public class EventMap {
                 .setTargetName("board:btn_sure")
                 .setDelay(1.75)
                 .setLoc(368, 930);
+
+        Event.builder(_map, "close_warning")
+                .setDelay(1.75)
+                .setLoc(116, 740)
+                .setListener(((event, game) -> {
+                    if(game.log.btnName.contains("neverPopup")){
+                        game.dispatch(Event.builder().setLoc(369, 623)
+                                .setDelay(1.75));
+                        return Event.SUCCESS;
+                    }
+                    return event;
+
+                }));
 
 
         TutorialEvent.register(_map);

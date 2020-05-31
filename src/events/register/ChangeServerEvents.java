@@ -25,7 +25,7 @@ public class ChangeServerEvents {
 
         Event.builder(_map, "test_migration")
                 .setTargetName("listBoxItem")
-                .setLoc(309, 310, 297, 200, 300)
+                .setLoc(130, 310, 700, 310, 300)
                 .setDelay(1.5)
                 .setListener(
                         (event, game) -> game.log.btnName.contains(event.targetName) ? null : event);
@@ -40,7 +40,7 @@ public class ChangeServerEvents {
                     if (game.log.btnName.contains(event.targetName)) {
                         System.out.println("Test migration");
                         if (game.dispatch("test_migration")) {
-                            return null;
+                            return Event.SUCCESS;
                         }
                         game.dispatch("top_left");
                     }else{

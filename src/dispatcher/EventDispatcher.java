@@ -65,7 +65,10 @@ public class EventDispatcher implements IShellOutputReceiver {
 
     public void changeAccount(String uid, boolean stored) throws Exception {
         //exec("pm clear com.tap4fun.brutalage_test");
+
         exec("rm /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/LASTLOGIN_LOCAL_DATA.sav");
+        exec("rm /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/.bauidcfg");
+        exec("rm /sdcard/tap4fun/be/.bauidcfg");
 
         exec("content insert --uri content://settings/secure --bind name:s:android_id --bind value:s:" + uid);
 
@@ -411,6 +414,10 @@ public class EventDispatcher implements IShellOutputReceiver {
                 }
                 staticDelay(1.5);
                 sendEvent("levelup_dialog");
+            }
+
+            if(game.log.hasPopupWarning){
+                game.log.hasPopupWarning = sendEvent("close_warning");
             }
 
             if (game.log.btnName.equalsIgnoreCase("main:")) {

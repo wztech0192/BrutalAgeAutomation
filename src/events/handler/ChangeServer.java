@@ -1,8 +1,10 @@
 package events.handler;
 
+import events.register.TestEvent;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
+import util.Logger;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -13,26 +15,26 @@ public class ChangeServer {
 
     public static void fire(GameInstance game) throws Exception {
 
-        long openDate = Duration.between(Instant.ofEpochSecond(game.log.openTime)
-                .atZone(ZoneId.systemDefault()).toLocalDateTime(), LocalDateTime.now()).toDays();
-
-        System.out.println("Server " + game.log.serverID + " opened for " + openDate + " days");
-
-
-        int targetServerID = game.posTarget != null ? Integer.parseInt((String)game.posTarget.get("server"))  : game.account.getServerID();
-
-        int targetServerIndex = game.log.serverID - targetServerID - (openDate >= 3 ? 0 : 1);
-        //int targetServerIndex = 568 - 528 - 1;
-        System.out.println("Target server index is " + targetServerIndex);
-        int redoCount = 0;
-
-
         game.dispatch.delay(2);
         game.dispatch("login_test");
         // get all maill
         game.dispatch("get_all_mail");
         game.dispatch("open_my_item");
         game.dispatch("use_migration");
+
+        game.dispatch.staticDelay(1.2);
+
+        int serverID = TestEvent.getNumber(game.dispatch.doOSR(52, 305, 98, 339), true);
+
+        System.out.println("Server " +serverID);
+
+        int targetServerID = game.posTarget != null ? Integer.parseInt((String)game.posTarget.get("server"))  : game.account.getServerID();
+
+        int targetServerIndex = serverID - targetServerID;
+        //int targetServerIndex = 568 - 528 - 1;
+        System.out.println("Target server index is " + targetServerIndex);
+        int redoCount = 0;
+
 
         int diff = targetServerIndex;
         int prevDiff;
@@ -72,5 +74,11 @@ public class ChangeServer {
             redoCount++;
         }
 
+
+        if(game.account != null) {
+            game.account.setChangedServer(true);
+            Logger.log("Account completed migration");
+            game.updateAccount();
+        }
     }
 }

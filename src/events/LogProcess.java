@@ -16,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LogProcess {
-    private final static Pattern regexGameServerNamePattern = Pattern.compile("\\{.*?GameServerName\":\"(\\d+).*?\"ServerOpenTime\":(\\d+).*?\\}"); // the pattern to search for
     private final static Pattern regexBtnNamePattern = Pattern.compile("character name is ([^,]*), (\\d*), (\\d*)"); // the pattern to search for
     private final static Pattern regexCurrentOffset = Pattern.compile("m_currentOffset:\\((.*),(.*)\\)"); // the pattern to search for
     private final static Pattern regexBuildTime = Pattern.compile(".*lv.(\\d*) building.*currentTiem: (.*), fireTime: (.*)");
@@ -34,14 +33,12 @@ public class LogProcess {
     public boolean shouldHeal;
     public int marches;
     public double talentScroll = 0;
-
+    public boolean hasPopupWarning;
     public int transportIndex = 0;
     public int[] transportRss = new int[5];
     public int buildingCompleteLevel = 0;
     public LocalDateTime buidlingCompleteTime = LocalDateTime.now();
     public int[] touchPoint = new int[2];
-    public int serverID = 0;
-    public long openTime = 0;
     public Point city = new Point();
     public int[] world = new int[4];
     public int[] world_set = new int[4];
@@ -49,6 +46,7 @@ public class LogProcess {
     public String btnName = "";
     public int idleTroops;
     public int currTroops;
+    public boolean emptyOutPost;
     private GameInstance game;
     public int maxTransportNum = 0;
     public int selectedTransportNum = 0;
@@ -119,6 +117,8 @@ public class LogProcess {
             for (int i = 0; i < 4; i++) {
                 world[i] = Integer.parseInt(m.group(i + 1));
             }
+        }else if(str.contains("playEffectL filename sound/sfx_event_notice_window.ogg")){
+            hasPopupWarning = true;
         }
 
 
@@ -161,35 +161,17 @@ public class LogProcess {
 
 
     private void handleStart(String str) throws Exception {
-        Matcher m = regexGameServerNamePattern.matcher(str);
-        if (m.find()) {
-            openTime = Long.parseLong(m.group(2));
-            serverID = Integer.parseInt(m.group(1));
-            Logger.log("Current Server ID: " + serverID);
-        }
-
 
         if (str.contains("_offsetCityMap")) {
             if (game.posTarget != null) {
                 handlePosModeStart();
             } else if(game.account != null) {
-                if (serverID != game.account.getServerID()) {
-
-                    if (game.account.getChangedServer()) {
-                        game.account.setError(100);
-                        Logger.log("Wrong Server, next account...");
-                        game.startEvent(GameStatus.initiate, "Oops, went to the wrong server.. lucky for them");
-                    } else {
-                        Logger.log("Start change server...");
-                        game.startEvent(GameStatus.change_server);
-                    }
-                } else {
-                    if (!game.account.getChangedServer()) {
-                        game.account.setChangedServer(true);
-                        Logger.log("Account completed migration");
-                        game.updateAccount();
-                    }
+                if (game.account.getChangedServer()) {
                     game.startEvent(GameStatus.when_start);
+                } else {
+                    Logger.log("Start change server...");
+                    game.startEvent(GameStatus.change_server);
+
                 }
             }
         }
@@ -202,7 +184,7 @@ public class LogProcess {
 
     private void handlePosModeStart() {
         if(!game.posTarget.containsKey("temp")) {
-            if (serverID != Integer.parseInt((String) game.posTarget.get("server"))) {
+        /*    if (serverID != Integer.parseInt((String) game.posTarget.get("server"))) {
                 if (game.status.isServerChanged()) {
                     System.out.println("Wrong Server, next account...");
                     game.startEvent(GameStatus.initiate, "Oops, went to the wrong server.. lucky for them");
@@ -214,7 +196,7 @@ public class LogProcess {
                 game.startEvent(GameStatus.world_map, "positioning");
             }else{
                 game.startEvent(GameStatus.when_start, "configuring");
-            }
+            }*/
         }else{
             game.startEvent(GameStatus.when_start, "configuring");
         }

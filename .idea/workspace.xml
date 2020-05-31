@@ -8,16 +8,24 @@
   <component name="ChangeListManager">
     <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/EventMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/EventMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/LogProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/LogProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/common/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/common/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/ChangeServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/ChangeServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/CityWork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/CityWork.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/Starting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/Starting.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WorldMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/ChangeServerEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ChangeServerEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/ClanEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ClanEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/OtherEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/OtherEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/TalentEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TalentEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/FeatureToggler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/FeatureToggler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/NumberFeaturer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/NumberFeaturer.java" afterDir="false" />
     </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,7 +70,7 @@
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="findjar.last.used.dir" value="$PROJECT_DIR$" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/start.jar" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -90,6 +98,18 @@
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources\res\tessdata" />
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
     </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager" selected="Application.Production">
     <configuration name="Debug" type="Application" factoryName="Application">
@@ -156,6 +176,7 @@
       <workItem from="1584946249282" duration="1182000" />
       <workItem from="1584979032329" duration="3115000" />
       <workItem from="1585104171227" duration="2057000" />
+      <workItem from="1590863578016" duration="18148000" />
     </task>
     <task id="LOCAL-00001" summary="changes">
       <created>1585185880759</created>
@@ -426,7 +447,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/dispatcher/EventDispatcher.java</url>
-          <line>337</line>
+          <line>340</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>

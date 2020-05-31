@@ -74,7 +74,7 @@ public class ClanEvents {
                             if (game.log.selectedTransportNum >= game.log.limitTransportNum - 10000) {
                                 game.dispatch("start_transport");
                                 game.log.marches--;
-                                return null;
+                                return Event.SUCCESS;
                             }
                         }
                     }else{
@@ -125,7 +125,7 @@ public class ClanEvents {
                     }else{
                         game.dispatch("top_left");
                     }
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
 
@@ -165,10 +165,11 @@ public class ClanEvents {
                     game.dispatch("top_left");
                     game.dispatch.staticDelay(2);
                     int redo = 0;
+                    game.log.isInCity = false;
                     while(!game.log.isInCity && redo++ < 4){
                         game.dispatch("bottom_left");
                     }
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
         Event.builder(_map, "apply_clan")
@@ -188,7 +189,7 @@ public class ClanEvents {
                         game.dispatch(Event.builder().setLoc(355, 880).setDelay(1.25));
                         game.dispatch(Event.builder().setLoc(666, 1211).setDelay(1.55));
                     }
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
 

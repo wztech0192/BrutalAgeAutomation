@@ -224,7 +224,12 @@ public class CityWork {
 
         bulkLevelUpBuilding(game, "stronghold", 3);
 
+        boolean dragTut = game.account.getBuildingLvl("portal") < 3;
         bulkLevelUpBuilding(game, "portal", 3);
+
+        if(dragTut){
+            game.dispatch("dragon_tutorial");
+        }
 
         game.dispatch("open_my_item");
         game.dispatch("use_all_resource");
@@ -328,15 +333,30 @@ public class CityWork {
     }
 
 
-    private static boolean buildingAction(GameInstance game, String building, String btn) throws Exception {
+    private static boolean buildingAction(GameInstance game, String building, String btn, int buyTime) throws Exception {
         game.dispatch(building);
-        return game.dispatch(btn);
+
+        for(int i=0;i<buyTime;i++){
+            game.dispatch(btn);
+        }
+        return game.dispatch("top_left");
     }
 
     private static void bulkLevelUpBuilding(GameInstance game, String building, int lvl) throws Exception {
+
+        if(game.account.getBuildingLvl(building) == 0){
+            game.dispatch(building);
+          if(  game.dispatch("upgrade_building_buy")){
+              game.account.levelUpBuilding(game, building);
+          }
+        }
+
         while (game.account.getBuildingLvl(building) < lvl) {
-            if (buildingAction(game, building, "upgrade_building_buy")) {
-                game.account.levelUpBuilding(game, building);
+            int levelTime = lvl - game.account.getBuildingLvl(building);
+            if (buildingAction(game, building, "upgrade_building_buy", levelTime)) {
+                for(int i=0;i<levelTime; i++){
+                    game.account.levelUpBuilding(game, building);
+                }
                 if (building.equalsIgnoreCase("golden_tree")) {
                     game.dispatch("golden_tree_access");
                 }
@@ -393,20 +413,15 @@ public class CityWork {
         game.dispatch.delay(2);
 
         game.posTarget.put("stronghold", true);
-        for (int i = 0; i < 2; i++) {
-            buildingAction(game, "stronghold", "upgrade_building_buy");
-        }
+            buildingAction(game, "stronghold", "upgrade_building_buy", 2);
 
         game.posTarget.put("portal", true);
-        for (int i = 0; i < 2; i++) {
-            buildingAction(game, "portal", "upgrade_building_buy");
-        }
+            buildingAction(game, "portal", "upgrade_building_buy", 2);
 
-        buildingAction(game, "warehouse", "upgrade_building_buy");
+        buildingAction(game, "warehouse", "upgrade_building_buy", 1);
         game.posTarget.put("warehouse", true);
-        for (int i = 0; i < 2; i++) {
-            buildingAction(game, "warehouse", "upgrade_building_buy");
-        }
+            buildingAction(game, "warehouse", "upgrade_building_buy", 2);
+
         game.dispatch("get_quest_gift_single");
         game.dispatch.staticDelay(0.5);
         game.dispatch("get_quest_gift_single");

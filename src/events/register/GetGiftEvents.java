@@ -17,17 +17,28 @@ public class GetGiftEvents {
                 .setTargetName("side_1:btn_mail")
                 .setDelay(1.5)
                 .setLoc(673, 1009)
-                .setChain(
-                        Event.builder()
-                                .setTargetName("mainpage:btn_markRead")
-                                .setDelay(1.5)
-                                .setLoc(351, 1184),
-                        Event.builder()
-                                .setTargetName("board:btn_collect")
-                                .setDelay(2.5)
-                                .setLoc(358, 907),
-                        _map.get("top_left")
-                );
+                .setListener(((event, game) -> {
+                    game.dispatch( Event.builder()
+                            .setDelay(1.5)
+                            .setLoc(376, 430));
+
+                    game.dispatch(Event.builder()
+                            .setDelay(1.5)
+                            .setLoc(351, 1184));
+
+                    if(game.log.btnName.contains(("edit"))){
+                        game.dispatch("top_left");
+                    }else{
+                       game.dispatch( Event.builder()
+                               .setTargetName("board:btn_collect")
+                               .setDelay(2.5)
+                               .setLoc(358, 907));
+                    }
+                    game.dispatch("top_left");
+                    game.dispatch("top_left");
+                    return Event.SUCCESS;
+                }));
+
 
         Event.builder(_map, "collect_workshop_gift")
                 .setDelay(1.5)
@@ -40,7 +51,7 @@ public class GetGiftEvents {
                     if (game.log.btnName.contains("btn_process")) {
                         game.dispatch("top_left");
                     }
-                    return null;
+                    return Event.SUCCESS;
                 })
                 .setChain(_map.get("top_left"));
 
@@ -60,7 +71,7 @@ public class GetGiftEvents {
                     }
 
                     game.dispatch("top_left");
-                    return null;
+                    return Event.SUCCESS;
 
                 }));
 

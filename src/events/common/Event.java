@@ -5,6 +5,9 @@ import org.opencv.core.Point;
 import store.MatchPoint;
 
 public class Event{
+
+    public static Event SUCCESS = null;
+
     public String targetName;
     public int maxRedo;
     public Event[] chain;

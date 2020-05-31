@@ -23,6 +23,16 @@ public class WorldMapEvents {
     }
 
 
+    public static int[] getRandomCoordinate(int minR, int maxR, int minD, int maxD) {
+        int cx = 512;
+        int cy = 512;
+        int randomR = (int) (Math.random() * ((maxR - minR) + 1)) + minR;
+        int randomD = (int) (Math.random() * ((maxD - minD) + 1)) + minD;
+        int pointX = (int) (cx + randomR * Math.cos(Math.toRadians(randomD)));
+        int pointY = (int) (cy + randomR * Math.sin(Math.toRadians(randomD)));
+        return new int[]{pointX, pointY};
+    }
+
     public static void register(HashMap<String, Event> _map) {
 
         Event.builder(_map, "change_name")
@@ -35,7 +45,7 @@ public class WorldMapEvents {
                     game.dispatch.delay(1);
                     game.dispatch(Event.builder().setLoc(365, 717).setDelay(1.5));
                     game.dispatch.delay(1.5);
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
         Event.builder(_map, "tel_confirm")
@@ -60,7 +70,7 @@ public class WorldMapEvents {
                         } else if (game.log.btnName.contains("bottom_panel:btn_right")) {
                             game.dispatch("top_left");
                         }
-                        return null;
+                        return Event.SUCCESS;
                     }
                     return event;
                 }));
@@ -76,7 +86,7 @@ public class WorldMapEvents {
                     } else if (game.log.btnName.contains("bottom_panel:btn_right")) {
                         game.dispatch("top_left");
                     }
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
         Event.builder(_map, "tap_build")
@@ -88,15 +98,52 @@ public class WorldMapEvents {
                         Event tapEvent = Event.builder().setDelay(1.5).setLoc(474, 1169);
                         game.dispatch(tapEvent);
                         game.dispatch(tapEvent);
-                        return null;
+                        return Event.SUCCESS;
                     }
                     game.dispatch(Event.builder().setLoc(349, 1008).setDelay(1.5));
                     return event;
                 });
 
+        Event.builder(_map, "build_empty_outpost")
+                .setDelay(1.5)
+                .setListener((event, game) -> {
+                    int minR, maxR, minD, maxD, outpostNum;
+                    if(game.log.emptyOutPost){
+                        if(game.account.getBuildingLvl("stronghold") >= 10){
+                            minR= 180;
+                            maxR= 230;
+                            minD= -100;
+                            maxD= 150;
+                            outpostNum= 2;
+                        }
+                        else{
+                            minR= 240;
+                            maxR= 400;
+                            minD= -180;
+                            maxD= 180;
+                            outpostNum=1;
+                        }
+                        int[] randomCoordinate;
+
+                        int redo = 10;
+                        for(int i=0; i<outpostNum;i++) {
+                            do {
+                                randomCoordinate = WorldMapEvents.getRandomCoordinate(minR, maxR, minD, maxD);
+                                game.dispatch.changePosition(randomCoordinate[0], randomCoordinate[1]);
+                                if (game.dispatch("tap_build")) {
+                                    return Event.SUCCESS;
+                                }
+                            } while (redo-- > 0);
+                        }
+                    }
+                    return Event.SUCCESS;
+                });
+
+
         Event.builder(_map, "build_init_outpost")
                 .setDelay(1.5)
                 .setListener((event, game) -> {
+                    game.dispatch("build_empty_outpost");
                     int[] tapLoc = new int[]{
                             427, 549,
                             226, 453,
@@ -107,7 +154,7 @@ public class WorldMapEvents {
                     for (int i = 0; i < tapLoc.length; i += 2) {
                         game.dispatch(tapEvent.setLoc(tapLoc[i], tapLoc[i + 1]));
                         if (game.dispatch("tap_build")) {
-                            return null;
+                            return Event.SUCCESS;
                         }
                     }
                     return event;
@@ -119,7 +166,7 @@ public class WorldMapEvents {
                     game.log.world_set[0] = ((game.log.world[0] + game.log.world[2]) / 2);
                     game.log.world_set[1] = ((game.log.world[1] + game.log.world[3]) / 2);
                     System.out.println("Set: " + game.log.world_set[0] + "," + game.log.world_set[1]);
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
         Event.builder(_map, "adjust_map")
@@ -145,7 +192,7 @@ public class WorldMapEvents {
                     }
 
                     System.out.println("***** Adjust zoom ended");
-                    return null;
+                    return Event.SUCCESS;
                 });
 
 
@@ -170,7 +217,7 @@ public class WorldMapEvents {
                     if (!game.log.btnName.contains("btn_go")) {
                         game.dispatch("top_left");
                     }
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
         Event.builder(_map, "attack_monster_test")
@@ -182,7 +229,7 @@ public class WorldMapEvents {
                         game.dispatch("top_left");
                     } else if (game.log.btnName.equalsIgnoreCase("buttons_1:btn_0")
                             || game.log.btnName.equalsIgnoreCase("buttons_1:btn_1")) {
-                        return null;
+                        return Event.SUCCESS;
                     }
                     return event;
                 }));
@@ -216,7 +263,7 @@ public class WorldMapEvents {
                     game.account.setTroops(leftTroops);
                     game.updateAccount();
 
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
         Event.builder(_map, "feedTemple")
@@ -241,7 +288,7 @@ public class WorldMapEvents {
                     game.dispatch("attackTemple");
 
 
-                    return null;
+                    return Event.SUCCESS;
                 }));
 
         Event.builder(_map, "auto_repair")
@@ -263,7 +310,7 @@ public class WorldMapEvents {
                     game.dispatch(Event.builder().setLoc(68, 291).setDelay(1.25));
 
                     game.dispatch("top_left");
-                    return null;
+                    return Event.SUCCESS;
                 });
 
     }
