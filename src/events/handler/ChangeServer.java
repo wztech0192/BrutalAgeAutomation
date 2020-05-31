@@ -74,11 +74,15 @@ public class ChangeServer {
             redoCount++;
         }
 
+        if(game.posTarget != null){
+            game.posTarget.put("changed_server", true);
+        }
 
         if(game.account != null) {
             game.account.setChangedServer(true);
             Logger.log("Account completed migration");
             game.updateAccount();
         }
+
     }
 }

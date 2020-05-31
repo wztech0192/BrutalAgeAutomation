@@ -61,6 +61,25 @@ public class BuildingEvents {
 
         Event.builder(_map, "close_speedup").setLoc(72, 301).setDelay(1.5);
 
+        Event.builder(_map, "use_train_speedup")
+                .setDelay(1.5) .setListener(((event, game) -> {
+
+            game.dispatch(Event.builder().setLoc(563, 361).setDelay(1.5));
+            game.dispatch(Event.builder().setLoc( 534, 900).setDelay(1.5));
+
+            if(game.log.btnName.contains("btn_use")){
+                game.dispatch.staticDelay(1.5);
+                game.dispatch("tap_building");
+                if(!game.log.btnName.contains("panel")){
+                    return Event.SUCCESS;
+                }
+            }else{
+                game.dispatch(Event.builder().setLoc(77, 298).setDelay(1));
+            }
+            game.dispatch("top_left");
+            return event;
+        }));
+
         Event.builder(_map, "use_speedup")
                 .setDelay(1.5)
                 .setListener(((event, game) -> {
@@ -281,24 +300,28 @@ public class BuildingEvents {
                 .isBuilding(true)
                 .setLoc(-545, -1802, 480, 500);
 
-        Event.builder(_map, "warrior_speedup")
+        Event.builder(_map, "speed_warrior")
                 .setTargetName("loc_16")
                 .isBuilding()
                 .setLoc(-991, -1379)
                 .setListener(((event, game) -> {
                     game.dispatch("tap_building");
-                    //641 749
-                    return Event.SUCCESS;
+                    game.dispatch(Event.builder().setLoc(643, 753));
+                    if(game.log.btnName.contains("btn_speed")){
+                        return game.dispatch("use_train_speedup") ? Event.SUCCESS : event;
+                    }
+                    game.dispatch("top_left");
+                    return event;
                 }));
 
         Event.builder(_map, "warrior")
                 .setTargetName("loc_16")
                 .isBuilding()
                 .setLoc(-991, -1379)
-                .setChain(
-                        _map.get("tap_building"),
-                        _map.get("train")
-                );
+                .setListener(((event, game) -> {
+                    game.dispatch("tap_building");
+                    return game.dispatch("train") ? Event.SUCCESS : event;
+                }));
         Event.builder(_map, "rider")
                 .setTargetName("loc_17")
                 .isBuilding()

@@ -45,8 +45,8 @@ public class WorldMapEvents {
                 .setDelay(1)
                 .setLoc(40, 56)
                 .setListener(((event, game) -> {
-                    game.dispatch(Event.builder().setLoc(360, 642).setDelay(1.5));
-                    game.dispatch(Event.builder().setLoc(600, 450).setDelay(1.5));
+                    game.dispatch(Event.builder().setLoc(360, 742).setDelay(1.5));
+                    game.dispatch(Event.builder().setLoc(384, 428).setDelay(1.5));
                     game.dispatch.enterText(encryptName(game.posTarget));
                     game.dispatch.delay(1);
                     game.dispatch(Event.builder().setLoc(365, 717).setDelay(1.5));
@@ -166,6 +166,9 @@ public class WorldMapEvents {
                     return event;
                 });
 
+        Event.builder(_map, "select_monster")
+                .setLoc(367, 615)
+                .setDelay(1.5);
 
         Event.builder(_map, "world_set")
                 .setListener(((event, game) -> {

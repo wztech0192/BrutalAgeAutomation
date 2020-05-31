@@ -27,6 +27,10 @@ public class MyDebugger {
             while(!(cmd = input.nextLine()).equalsIgnoreCase("exit")){
                 try {
 
+                    if(cmd.contains("search")){
+                        String[] split =  cmd.split(" ");
+                        game.dispatch.agathaSearchClick(split[1], Integer.parseInt(split[2]));
+                    }
                     if(cmd.contains("status-")){
                         game.startEvent(GameStatus.valueOf(cmd.split("-")[1]));
                     }

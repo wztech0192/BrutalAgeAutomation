@@ -1,16 +1,19 @@
 package dispatcher;
 
-import com.android.ddmlib.*;
-import events.common.Event;
+import com.android.ddmlib.AdbCommandRejectedException;
+import com.android.ddmlib.IShellOutputReceiver;
+import com.android.ddmlib.RawImage;
+import com.android.ddmlib.TimeoutException;
 import events.EventMap;
+import events.common.Event;
 import events.register.BuildingEvents;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
-import org.opencv.core.*;
 import org.opencv.core.Point;
+import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import store.MatchPoint;
@@ -21,12 +24,10 @@ import util.Logger;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -72,19 +73,19 @@ public class EventDispatcher implements IShellOutputReceiver {
 
         exec("content insert --uri content://settings/secure --bind name:s:android_id --bind value:s:" + uid);
 
-        if(stored) {
-            File sav = new File(game.store.accountPath + uid+"/LASTLOGIN_LOCAL_DATA.sav");
-            if(sav.exists()) {
-                execADBIP(game.store.metadata.getIp(), "push \"" + sav.getAbsolutePath() + "\" /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents", s->false);
-            }else{
+        if (stored) {
+            File sav = new File(game.store.accountPath + uid + "/LASTLOGIN_LOCAL_DATA.sav");
+            if (sav.exists()) {
+                execADBIP(game.store.metadata.getIp(), "push \"" + sav.getAbsolutePath() + "\" /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents", s -> false);
+            } else {
                 requirePullFile = true;
             }
         }
         //  adb shell "pm clear com.tap4fun.brutalage_test && content insert --uri content://settings/secure --bind name:s:android_id --bind value:s:wzz20200320212736
     }
 
-    public void pullAccountData(String uid){
-        execADBIP(game.store.metadata.getIp(), "pull /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/LASTLOGIN_LOCAL_DATA.sav \""+game.store.accountPath + uid+"\"", s->false);
+    public void pullAccountData(String uid) {
+        execADBIP(game.store.metadata.getIp(), "pull /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/LASTLOGIN_LOCAL_DATA.sav \"" + game.store.accountPath + uid + "\"", s -> false);
     }
 
     public void enterText(String str) throws Exception {
@@ -122,8 +123,8 @@ public class EventDispatcher implements IShellOutputReceiver {
     }
 
 
-    public void exec(String cmd) throws Exception{
-        if (!game.debug && game.account!=null && lastExecuteTime != null
+    public void exec(String cmd) throws Exception {
+        if (!game.debug && game.account != null && lastExecuteTime != null
                 && Duration.between(lastExecuteTime, LocalDateTime.now()).toMinutes()
                 > GameStatus.getTimeout(game.status.get())) {
             throw new GameException("Not responding, Stuck at " + game.status.get().name());
@@ -134,40 +135,41 @@ public class EventDispatcher implements IShellOutputReceiver {
 
     }
 
-    private String getInputEventFile(){
+    private String getInputEventFile() {
         return Global.config.getEventName();
     }
 
     public void mapzoom() throws Exception {
 
-        for(int i =0; i<5;i++) {
-            exec("su 0 cat /mnt/sdcard/baevents/map_out_event > /dev/input/"+getInputEventFile());
+        for (int i = 0; i < 5; i++) {
+            exec("su 0 cat /mnt/sdcard/baevents/map_out_event > /dev/input/" + getInputEventFile());
             game.dispatch.staticDelay(0.25);
         }
         mapzoomin();
     }
 
-    public void mapzoomin() throws Exception{
-        exec("su 0 cat /mnt/sdcard/baevents/map_in_event > /dev/input/"+getInputEventFile());
+    public void mapzoomin() throws Exception {
+        exec("su 0 cat /mnt/sdcard/baevents/map_in_event > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
-    public void deleteText()  throws Exception{
-        exec("su 0 cat /mnt/sdcard/baevents/delete_event > /dev/input/"+getInputEventFile());
+    public void deleteText() throws Exception {
+        exec("su 0 cat /mnt/sdcard/baevents/delete_event > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
-    public void cityZoom()  throws Exception{
-        exec("su 0 cat /mnt/sdcard/baevents/city_zoom_event > /dev/input/"+getInputEventFile());
+    public void cityZoom() throws Exception {
+        exec("su 0 cat /mnt/sdcard/baevents/city_zoom_event > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
+
     public void zoomout() throws Exception {
-        exec("su 0 cat /mnt/sdcard/baevents/zoomout_event > /dev/input/"+getInputEventFile());
+        exec("su 0 cat /mnt/sdcard/baevents/zoomout_event > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
     public void zoomin() throws Exception {
-        exec("su 0 cat /mnt/sdcard/baevents/zoomin_event > /dev/input/"+getInputEventFile());
+        exec("su 0 cat /mnt/sdcard/baevents/zoomin_event > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
@@ -265,23 +267,22 @@ public class EventDispatcher implements IShellOutputReceiver {
         double prevX = Double.MAX_VALUE, prevY = Double.MAX_VALUE;
         while (redo > 0) {
 
-            if(!game.log.isInCity){
+            if (!game.log.isInCity) {
                 game.dispatch("bottom_left");
             }
 
-            if(game.log.btnName.contains("monster_tip")){
+            if (game.log.btnName.contains("monster_tip")) {
                 exec("input swipe 400 1000 200 400 500");
                 staticDelay(0.5);
                 sendEvent("top_left");
-                if(game.log.btnName.contains("profile")){
+                if (game.log.btnName.contains("profile")) {
                     game.dispatch("top_left");
                 }
                 exec("input swipe 400 1000 200 400 500");
                 staticDelay(0.5);
-            }
-            else if (game.log.city.x == prevX && game.log.city.y == prevY) {
+            } else if (game.log.city.x == prevX && game.log.city.y == prevY) {
                 sendEvent("top_left");
-                if(otherRedo-- <= 0){
+                if (otherRedo-- <= 0) {
                     sendEvent("template_close");
                 }
             }
@@ -317,16 +318,16 @@ public class EventDispatcher implements IShellOutputReceiver {
             } else {
                 sendEvent(tapBuildingEvent);
 
-                if(event.isUpgrade){
-                    if(!game.log.btnName.contains("loc")){
+                if (event.isUpgrade) {
+                    if (!game.log.btnName.contains("loc")) {
                         game.dispatch("top_left");
-                        if(game.log.btnName.contains("profile")){
+                        if (game.log.btnName.contains("profile")) {
                             game.dispatch("top_left");
                         }
                         sendEvent(tapBuildingEvent);
                     }
                 }
-                if(!game.log.btnName.contains("loc_30")){
+                if (!game.log.btnName.contains("loc_30")) {
                     break;
                 }
             }
@@ -362,7 +363,7 @@ public class EventDispatcher implements IShellOutputReceiver {
                 int redo = 0;
                 int hx = event.loc[i];
 
-                if(game.account != null) {
+                if (game.account != null) {
                     if (event.getName().equalsIgnoreCase("stronghold")) {
                         if (game.account.getBuildingLvl("stronghold") >= 6) {
                             hx = 520;
@@ -370,22 +371,21 @@ public class EventDispatcher implements IShellOutputReceiver {
                     }
                 }
 
-                int hy = event.loc[i+1];
+                int hy = event.loc[i + 1];
                 String execStr = String.format("input tap %d %d", hx, hy);
 
                 exec(execStr);
                 delay(1);
-                while (!game.log.btnName.contains(verifyName) && !game.log.btnName.contains("buttons_1:btn_1") ) {
-                     if(redo > 14){
-                         return false;
-                     }
-                     else if(redo == 5 || redo == 11){
-                         game.dispatch("top_left");
-                         if(game.log.btnName.contains("profile")){
-                             game.dispatch("top_left");
-                         }
-                         exec("input swipe 337 834 600 1000 500");
-                         game.dispatch("login_zoom");
+                while (!game.log.btnName.contains(verifyName) && !game.log.btnName.contains("buttons_1:btn_1")) {
+                    if (redo > 14) {
+                        return false;
+                    } else if (redo == 5 || redo == 11) {
+                        game.dispatch("top_left");
+                        if (game.log.btnName.contains("profile")) {
+                            game.dispatch("top_left");
+                        }
+                        exec("input swipe 337 834 600 1000 500");
+                        game.dispatch("login_zoom");
                     }
 
                     locateBuidlingSwipe(event);
@@ -400,12 +400,12 @@ public class EventDispatcher implements IShellOutputReceiver {
     }
 
     private void execMiddleware(Event event) throws Exception {
-        if(game.store.isForceStop){
+        if (game.store.isForceStop) {
             throw new GameException("Force Stopped");
-        }else if(game.store.isClose){
+        } else if (game.store.isClose) {
             throw new Exception("Closed");
         }
-        if(!game.status.is(GameStatus.starting)) {
+        if (!game.status.is(GameStatus.starting)) {
             if (game.log.levelupDialog) {
                 game.log.levelupDialog = false;
                 if (game.account != null) {
@@ -417,7 +417,7 @@ public class EventDispatcher implements IShellOutputReceiver {
                 sendEvent("levelup_dialog");
             }
 
-            if(game.log.hasPopupWarning){
+            if (game.log.hasPopupWarning) {
                 game.log.hasPopupWarning = false;
                 sendEvent("close_warning");
             }
@@ -425,8 +425,7 @@ public class EventDispatcher implements IShellOutputReceiver {
             if (game.log.btnName.equalsIgnoreCase("main:")) {
                 staticDelay(1.5);
                 exec("input tap 362 1183");
-            }
-            else if(game.log.btnName.equalsIgnoreCase("popup:bg") ||game.log.btnName.contains("board:btn_chest") ){
+            } else if (game.log.btnName.equalsIgnoreCase("popup:bg") || game.log.btnName.contains("board:btn_chest")) {
                 exec("input tap 324 500");
             }
         }
@@ -480,21 +479,21 @@ public class EventDispatcher implements IShellOutputReceiver {
         return getMatch(100, 100, rawMat.width() - 100, rawMat.height() - 100, 0.25, 0, rawMat, templateFile + ".png", maxMatch);
     }
 
-    public List<MatchPoint> getMonsterMatch(int maxMatch, ArrayList<String> templates){
+    public List<MatchPoint> getMonsterMatch(int maxMatch, ArrayList<String> templates) {
         Mat rawMat = rawimg2Mat(getRaw());
         List<MatchPoint> matches = new ArrayList<>();
         double ratio;
-        for(String template: templates) {
-            if(template.contains("wood") || template.contains("meat")){
+        for (String template : templates) {
+            if (template.contains("wood") || template.contains("meat")) {
                 ratio = 0.25;
-            }else{
+            } else {
                 ratio = 0.5;
             }
             matches.addAll(
-                getMatch(100, 100, rawMat.width() - 100, rawMat.height() - 100, ratio, 0, rawMat, template + "_rss.png", maxMatch)
+                    getMatch(100, 100, rawMat.width() - 100, rawMat.height() - 100, ratio, 0, rawMat, template + "_rss.png", maxMatch)
             );
             matches.addAll(
-                getMatch(100, 100, rawMat.width() - 100, rawMat.height() - 100, ratio, 0, rawMat, template + ".png", maxMatch)
+                    getMatch(100, 100, rawMat.width() - 100, rawMat.height() - 100, ratio, 0, rawMat, template + ".png", maxMatch)
             );
         }
 
@@ -506,7 +505,7 @@ public class EventDispatcher implements IShellOutputReceiver {
             p = it.next();
             for (MatchPoint tp : matches) {
                 if (tp != p && (Math.sqrt((p.x - tp.x) * (p.x - tp.x) + (p.y - tp.y) * (p.y - tp.y))) < 20) {
-                    if(p.threshold < tp.threshold) {
+                    if (p.threshold < tp.threshold) {
                         shouldRemove = true;
                     }
                     break;
@@ -519,7 +518,6 @@ public class EventDispatcher implements IShellOutputReceiver {
     }
 
 
-
     public List<MatchPoint> getMatch(Mat source, String templateFile, int maxMatch) {
         return getMatch(0, 0, source.width(), source.height(), 0, 0, source, templateFile, maxMatch);
     }
@@ -528,7 +526,7 @@ public class EventDispatcher implements IShellOutputReceiver {
         Mat template = Imgcodecs.imread(FilePath.TEMPLATE_PATH + templateFile, CvType.CV_8U);
         Logger.log("**Trying to match " + templateFile);
 
-        return getMatch( x,  y,  x1,  y1,  adjustX,  adjustY,  source, template,  maxMatch);
+        return getMatch(x, y, x1, y1, adjustX, adjustY, source, template, maxMatch);
     }
 
     public List<MatchPoint> getMatch(int x, int y, int x1, int y1, double adjustX, double adjustY, Mat source, Mat template, int maxMatch) {
@@ -558,8 +556,8 @@ public class EventDispatcher implements IShellOutputReceiver {
 
             if (adjustX == 0) adjustX = 0.5;
             if (adjustY == 0) adjustY = 0.5;
-            MatchPoint p = new MatchPoint((int)(matchLoc.x + x + (template.width() * adjustX)), (int)(matchLoc.y + y + (template.height() * adjustY)), thres);
-           // p.setMat(source.submat((int)matchLoc.y  + y, (int)matchLoc.y+template.height(),(int)matchLoc.x+ x , (int)matchLoc.x+template.width()));
+            MatchPoint p = new MatchPoint((int) (matchLoc.x + x + (template.width() * adjustX)), (int) (matchLoc.y + y + (template.height() * adjustY)), thres);
+            // p.setMat(source.submat((int)matchLoc.y  + y, (int)matchLoc.y+template.height(),(int)matchLoc.x+ x , (int)matchLoc.x+template.width()));
             list.add(p);
             System.out.println(String.format("First match thredhold: %.4f loc: (%d, %d)", thres, p.x, p.y));
             count++;
@@ -581,8 +579,6 @@ public class EventDispatcher implements IShellOutputReceiver {
         Logger.log("Closest building not found!!");
         return "";
     }
-
-    ;
 
     @Override
     public void addOutput(byte[] bytes, int i, int i1) {
@@ -611,7 +607,7 @@ public class EventDispatcher implements IShellOutputReceiver {
         }
     }
 
-    public static void execADBIP(String ip, String cmd, IDispatcherReader reader){
+    public static void execADBIP(String ip, String cmd, IDispatcherReader reader) {
         exec("adb -s " + ip + " " + cmd, reader);
     }
 
@@ -622,7 +618,7 @@ public class EventDispatcher implements IShellOutputReceiver {
             Process proc = rt.exec(cmd);
             BufferedReader stdInput = new BufferedReader(new
                     InputStreamReader(proc.getInputStream()));
-            if(reader != null) {
+            if (reader != null) {
                 String s;
                 while (true) {
                     s = stdInput.readLine();
@@ -687,11 +683,11 @@ public class EventDispatcher implements IShellOutputReceiver {
     public String doOSR(Mat m) throws TesseractException, IOException {
         MatOfByte mob = new MatOfByte();
         Imgcodecs.imencode(".jpg", m, mob);
-        byte ba[] = mob.toArray();
+        byte[] ba = mob.toArray();
 
         BufferedImage bi = ImageIO.read(new ByteArrayInputStream(ba));
 
-        return doOSR(bi,0, 0,bi.getWidth(),bi.getHeight());
+        return doOSR(bi, 0, 0, bi.getWidth(), bi.getHeight());
     }
 
     public BufferedImage captureAsBI() throws AdbCommandRejectedException, IOException, TimeoutException {
@@ -731,4 +727,53 @@ public class EventDispatcher implements IShellOutputReceiver {
         }
     }
 
+
+    private String prevSearchOptions = "";
+
+    public void agathaSearchClick(String target, int lvl) throws Exception {
+
+        String currSearchOptions = target + lvl;
+        sendEvent(Event.builder().setLoc(40, 1000));
+        game.dispatch.staticDelay(1);
+
+        if (target.contains("_rss")) {
+            sendEvent(Event.builder().setLoc(548, 546));
+        } else {
+            sendEvent(Event.builder().setLoc(329, 549));
+        }
+
+        game.dispatch.delay(1);
+
+        if (!currSearchOptions.equalsIgnoreCase(prevSearchOptions)) {
+            int x, y = 1090;
+
+            if (target.contains("wood") || target.contains("mana")) {
+                x = 126;
+            } else if (target.contains("rock")) {
+                x = 283;
+            } else if (target.contains("ivory")) {
+                x = 439;
+            } else {
+                x = 588;
+            }
+
+            if (target.contains("mana")) {
+                y = 1213;
+            }
+
+            sendEvent(Event.builder().setLoc(x, y).setDelay(1));
+
+            sendEvent(Event.builder().setLoc(584, 845).setDelay(1));
+
+            enterText(lvl + "");
+        }
+
+        prevSearchOptions = currSearchOptions;
+        sendEvent(Event.builder().setLoc(353, 937));
+        game.dispatch.staticDelay(1.5);
+    }
+
+    public void resetAgathaSearch() {
+        prevSearchOptions = "";
+    }
 }

@@ -27,7 +27,7 @@ public class FeatureToggler {
         features.put("Gathering (6+)", true);
         features.put("Upgrade Building", true);
         features.put("Train Shaman (7+)", true);
-        features.put("Auto Repair", false);
+        features.put("!Speed Train!", false);
     }
 
     public void cloneFeature(FeatureToggler featureToggler){
@@ -41,9 +41,10 @@ public class FeatureToggler {
         if(globalFeatures == null){
             globalFeatures = new HashMap<>();
             globalFeatures.put("Transport At Start", false);
-            globalFeatures.put("Auto Use Speed up", true);
+            globalFeatures.put("Auto Repair", false);
             globalFeatures.put("Feed Temple", false);
             globalFeatures.put("No Clan", false);
+            globalFeatures.put("Agatha Search", true);
          }
         return globalFeatures;
     }

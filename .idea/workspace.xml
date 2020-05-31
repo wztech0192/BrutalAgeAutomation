@@ -6,8 +6,17 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="update">
+    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/LogProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/LogProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/ChangeServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/ChangeServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/CityWork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/CityWork.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WorldMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/FeatureToggler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/FeatureToggler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/MyDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/MyDebugger.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +91,19 @@
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Debug">
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.Production">
     <configuration name="Debug" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="BrutalAgeFarm" />
@@ -418,6 +439,11 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/com/android/tools/ddms/ddmlib/25.3.0/ddmlib-25.3.0.jar!/com/android/ddmlib/RawImage.class</url>
           <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/events/handler/WorldMap.java</url>
+          <line>158</line>
+          <option name="timeStamp" value="32" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

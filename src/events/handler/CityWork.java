@@ -46,7 +46,6 @@ public class CityWork {
                 if (game.account.getFeatureToggler().get("Heal Troops") && game.log.shouldHeal) {
                     game.dispatch("healing_spring_access");
                 }
-
                 if (game.log.shouldTrain) {
                     if (game.account.getFeatureToggler().get("Train Warrior")) {
                         game.dispatch("warrior");
@@ -58,6 +57,17 @@ public class CityWork {
                         game.dispatch("shaman");
                     }
                 }
+
+                if(game.account.getFeatureToggler().get("!Speed Train!")){
+                    for(int i=0;i<10;i++){
+                        if(!game.dispatch("speed_warrior") || !game.dispatch("warrior")){
+                            break;
+                        }
+                    }
+                    game.account.getFeatureToggler().set("!Speed Train!", false);
+                }
+
+
             } else if (game.account.getFeatureToggler().get("Train Warrior")) {
                 game.dispatch("warrior");
             }
@@ -75,7 +85,7 @@ public class CityWork {
             if (game.account.getBuildingLvl("stronghold") >= 6 &&
                     game.log.marches > 0 &&
                     game.log.idleTroops > 0 &&
-                    (game.account.getFeatureToggler().get("Gathering (6+)")  || game.account.getFeatureToggler().get("Auto Repair"))
+                    (game.account.getFeatureToggler().get("Gathering (6+)")  || game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Auto Repair"))
             ) {
                 game.startEvent(GameStatus.world_map);
             } else {
@@ -279,14 +289,17 @@ public class CityWork {
                     if (building.equalsIgnoreCase("stronghold")) {
                         if (game.account.getBuildingLvl("stronghold") == 5) {
                             game.dispatch("confirm_stronghold_6");
-                        } else if (game.account.getBuildingLvl("stronghold") == 7 || game.account.getBuildingLvl("stronghold") == 8 || game.account.getBuildingLvl("stronghold") == 11) {
-                            if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Auto Use Speed up")) {
-                                if (game.dispatch("stronghold_speed_up")) {
-                                    game.account.setBuildingLevel("stronghold", game.account.getBuildingLvl("stronghold") + 1);
-                                    game.updateAccount();
-                                    hammerAction(game);
-                                    return true;
-                                }
+                        } else if (
+                                game.account.getBuildingLvl("stronghold") == 6 ||
+                                game.account.getBuildingLvl("stronghold") == 7 ||
+                                game.account.getBuildingLvl("stronghold") == 8 ||
+                                game.account.getBuildingLvl("stronghold") == 11
+                        ) {
+                            if (game.dispatch("stronghold_speed_up")) {
+                                game.account.setBuildingLevel("stronghold", game.account.getBuildingLvl("stronghold") + 1);
+                                game.updateAccount();
+                                hammerAction(game);
+                                return true;
                             }
                         }
                     }
@@ -417,6 +430,8 @@ public class CityWork {
 
         game.posTarget.put("portal", true);
             buildingAction(game, "portal", "upgrade_building_buy", 2);
+
+        game.dispatch("dragon_tutorial");
 
         buildingAction(game, "warehouse", "upgrade_building_buy", 1);
         game.posTarget.put("warehouse", true);

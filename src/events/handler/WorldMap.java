@@ -16,7 +16,7 @@ public class WorldMap {
     public static void fire(GameInstance game) throws Exception {
         game.dispatch.delay(1);
 
-        if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")){
+        if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
             game.dispatch("feedTemple");
             game.startEvent(GameStatus.initiate);
             return;
@@ -35,18 +35,18 @@ public class WorldMap {
         game.dispatch.delay(2);
 
 
-        if (game.account.getFeatureToggler().get("Auto Repair")) {
-                int[] oldMap = game.log.worldCurr.clone();
+        if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Auto Repair")) {
+            int[] oldMap = game.log.worldCurr.clone();
+            game.dispatch("auto_repair");
+            game.dispatch("change_outpost");
+            if (!Arrays.equals(oldMap, game.log.worldCurr)) {
                 game.dispatch("auto_repair");
+            } else {
                 game.dispatch("change_outpost");
-                if(!Arrays.equals(oldMap, game.log.worldCurr)){
+                if (!Arrays.equals(oldMap, game.log.worldCurr)) {
                     game.dispatch("auto_repair");
-                }else{
-                    game.dispatch("change_outpost");
-                    if(!Arrays.equals(oldMap, game.log.worldCurr)){
-                        game.dispatch("auto_repair");
-                    }
                 }
+            }
         }
 
         if (game.account.getFeatureToggler().get("Gathering (6+)")) {
@@ -59,7 +59,7 @@ public class WorldMap {
                 int[] randomCoordinate;
                 int redo = 10;
                 do {
-                    randomCoordinate = WorldMapEvents.getRandomCoordinate(180,230,-100,150);
+                    randomCoordinate = WorldMapEvents.getRandomCoordinate(180, 230, -100, 150);
                     game.dispatch.changePosition(randomCoordinate[0], randomCoordinate[1]);
                     if (game.dispatch("safe_teleport")) {
                         game.account.setRandomized(true);
@@ -72,74 +72,142 @@ public class WorldMap {
 
             game.dispatch("world_set");
 
-            if (game.account.isRandomized()) {
-                for (int i = 0; i < 4; i++) {
-                    if (game.log.worldCurr[0] < 270 && game.log.worldCurr[1] < 500) {
-                        game.dispatch("change_outpost");
-                        game.dispatch("world_set");
-                    } else {
-                        break;
+            if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Agatha Search")) {
+                agathaSearch(game);
+            } else {
+                if (game.account.isRandomized()) {
+                    for (int i = 0; i < 4; i++) {
+                        if (game.log.worldCurr[0] < 270 && game.log.worldCurr[1] < 500) {
+                            game.dispatch("change_outpost");
+                            game.dispatch("world_set");
+                        } else {
+                            break;
+                        }
                     }
+                }
+                normalSearch(game);
+            }
+            game.startEvent(GameStatus.initiate);
+        }
+    }
+
+    public static SearchOptions createSearchOptions(GameInstance game){
+
+        SearchOptions searchOptions = new SearchOptions();
+        searchOptions.targets = game.account.getGatherPrioritiesArray();
+
+        if ( searchOptions.targets.isEmpty()) {
+            if (game.account.getResource("meat") < 100000) {
+                if (game.account.isRssLessThan("meat", "wood")) {
+                    if (game.log.idleTroops > 2500) {
+                        searchOptions.targets.add("meat3");
+                    } else {
+                        searchOptions.targets.add("meat2");
+                    }
+                    if (game.log.idleTroops > 4500) {
+                        searchOptions.targets.add("meat4");
+                    }
+
+                }
+            } else if (game.account.getBuildingLvl("stronghold") >= 8 && game.account.isRssLessThan("rock", "wood") && game.log.idleTroops > 2500) {
+                searchOptions.targets.add("rock");
+            } else {
+                if (game.log.idleTroops > 2500) {
+                    searchOptions.targets.add("wood3");
+                } else {
+                    searchOptions.targets.add("wood2");
+                }
+                if (game.log.idleTroops > 4500) {
+                    searchOptions.targets.add("wood4");
                 }
             }
 
+            if (game.log.idleTroops > 2500) {
+                searchOptions.maxLvl = 3;
+            } else {
+                searchOptions.maxLvl = 2;
+            }
+            if (game.log.idleTroops > 4500) {
+                searchOptions.maxLvl = 4;
+                searchOptions.minLvl = 2;
+            }
+        } else {
+            searchOptions.minLvl = game.account.getNumberFeaturer().getNumberSetting().get("Min Monster Level");
+            searchOptions.maxLvl = game.account.getNumberFeaturer().getNumberSetting().get("Max Monster Level");
+        }
+
+        return searchOptions;
+    }
+
+
+    public static void agathaSearch(GameInstance game) throws Exception{
+        int redo = 15;
+
+        ArrayList<String> temp = new ArrayList<>();
+        SearchOptions searchOptions = createSearchOptions(game);
+        for(String target:searchOptions.targets){
+            target = target.replaceAll("[0-9]", "").trim();
+            if(!temp.contains(target)){
+                temp.add(target+"_rss");
+                temp.add(target);
+            }
+        }
+        searchOptions.targets = temp;
+
+        game.dispatch.resetAgathaSearch();
+        ArrayList<String> prevSets = new ArrayList<>();
+        prevSets.add(game.log.worldCurr[0]+""+game.log.worldCurr[1]);
+
+        for(String target:searchOptions.targets){
+            if(game.log.idleTroops <= 0 || game.log.marches <= 0 || redo-- <= 0){
+                break;
+            }
+
+            String sets;
+            for(int lvl=searchOptions.maxLvl; lvl >= searchOptions.minLvl; lvl--){
+                for(int j =0; j<10; j++){
+                    game.dispatch.agathaSearchClick(target, lvl);
+                    game.dispatch("world_set");
+                    Logger.log("**Start search");
+                    sets = game.log.worldCurr[0]+""+game.log.worldCurr[1];
+                    if(prevSets.contains(sets)){
+                        Logger.log("** No match because not found");
+                        break;
+                    }else {
+                        game.dispatch("select_monster");
+                        if (game.dispatch("attack_monster_test")) {
+                            Logger.log("good, attack the monster");
+                            game.dispatch("attack_monster");
+                            game.log.marches--;
+                            game.log.idleTroops -= game.log.currTroops;
+                            Logger.log("After Deplay" + game.log.currTroops + " Now Idle Troops: " + game.log.idleTroops);
+                            if (game.log.marches <= 0 || game.log.idleTroops <= 0) {
+                                lvl = 0;
+                                break;
+                            }
+                        }
+                        prevSets.add(sets);
+                    }
+                    Logger.log("**Find match");
+                }
+            }
+        }
+    }
+
+    private static void normalSearch(GameInstance game) throws Exception {
 
             int loc = 0;
             int[] locArray = new int[]{20, -20, -20, 20, 35, 35, -35, -35};
             int[] setLoc = game.log.worldCurr.clone();
 
-            int maxLvl = 4;
-            int minLvl = 2;
-
-            ArrayList<String> targets;
+            SearchOptions searchOptions;
 
             while (game.log.idleTroops > 0 && game.log.marches > 0 && loc < locArray.length) {
                 game.dispatch("adjust_map");
 
-                targets = game.account.getGatherPrioritiesArray();
+                searchOptions = createSearchOptions(game);
 
-                if (targets.isEmpty()) {
-                    if (game.account.getResource("meat") < 100000) {
-                        if (game.account.isRssLessThan("meat", "wood")) {
-                            if (game.log.idleTroops > 2500) {
-                                targets.add("meat3");
-                            } else {
-                                targets.add("meat2");
-                            }
-                            if (game.log.idleTroops > 4500) {
-                                targets.add("meat4");
-                            }
-
-                        }
-                    } else if (game.account.getBuildingLvl("stronghold") >= 8 && game.account.isRssLessThan("rock", "wood") && game.log.idleTroops > 2500) {
-                        targets.add("rock");
-                    } else {
-                        if (game.log.idleTroops > 2500) {
-                            targets.add("wood3");
-                        } else {
-                            targets.add("wood2");
-                        }
-                        if (game.log.idleTroops > 4500) {
-                            targets.add("wood4");
-                        }
-                    }
-
-                    if (game.log.idleTroops > 2500) {
-                        maxLvl = 3;
-                    } else {
-                        maxLvl = 2;
-                    }
-                    if (game.log.idleTroops > 4500) {
-                        maxLvl = 4;
-                        minLvl = 2;
-                    }
-                } else {
-                    minLvl = game.account.getNumberFeaturer().getNumberSetting().get("Min Monster Level");
-                    maxLvl = game.account.getNumberFeaturer().getNumberSetting().get("Max Monster Level");
-                }
-
-
-                List<MatchPoint> matches = game.dispatch.getMonsterMatch(3, targets);
+                List<MatchPoint> matches = game.dispatch.getMonsterMatch(3, searchOptions.targets);
 
                 game.dispatch.delay(1);
                 for (int i = 0; i < matches.size(); i++) {
@@ -148,8 +216,8 @@ public class WorldMap {
                     if (game.dispatch("attack_monster_test")) {
 
                         int monsterLvl = TestEvent.getNumber(game.dispatch.doOSR(223, 504, 241, 522), true);
-                        Logger.log("Monster level " + monsterLvl + ": Range " + minLvl + " - " + maxLvl);
-                        if (monsterLvl >= minLvl && monsterLvl <= maxLvl) {
+                        Logger.log("Monster level " + monsterLvl + ": Range " + searchOptions.minLvl + " - " + searchOptions.maxLvl);
+                        if (monsterLvl >= searchOptions.minLvl && monsterLvl <= searchOptions.maxLvl) {
                             Logger.log("good, attack the monster");
                             game.dispatch("attack_monster");
                             game.log.marches--;
@@ -173,15 +241,9 @@ public class WorldMap {
             }
         }
 
-        game.startEvent(GameStatus.initiate);
-
-    }
-
-
 
 
     public static void firePosMode(GameInstance game) throws Exception {
-
         game.dispatch.staticDelay(2);
         for (int redo = 0; redo <= 15; redo++) {
             if (game.log.isInCity) {
@@ -213,9 +275,15 @@ public class WorldMap {
         }
         game.dispatch.delay(1.5);
         game.dispatch("change_name");
-
         game.posTarget.put("status", "complete");
         game.store.sendDataBack("update",  game.posTarget);
         game.startEvent(GameStatus.initiate, "complete");
     }
+}
+
+
+class SearchOptions{
+    ArrayList<String> targets;
+    int maxLvl = 4;
+    int minLvl = 2;
 }
