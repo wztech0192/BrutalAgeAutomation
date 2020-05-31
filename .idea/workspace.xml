@@ -6,19 +6,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="add feat">
+    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/EventMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/EventMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/LogProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/LogProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/CityWork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/CityWork.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WorldMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/ChangeServerEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ChangeServerEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/ClanEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ClanEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -237,7 +226,21 @@
       <option name="project" value="LOCAL" />
       <updated>1590080480341</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="update">
+      <created>1590909236294</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1590909236294</updated>
+    </task>
+    <task id="LOCAL-00013" summary="update">
+      <created>1590909369025</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1590909369025</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -296,7 +299,8 @@
     <MESSAGE value="add multi instance" />
     <MESSAGE value="fix feature" />
     <MESSAGE value="add feat" />
-    <option name="LAST_COMMIT_MESSAGE" value="add feat" />
+    <MESSAGE value="update" />
+    <option name="LAST_COMMIT_MESSAGE" value="update" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="177" key="#Notifications" timestamp="1586640866809">
@@ -315,38 +319,38 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="756" y="403" width="407" height="242" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1585432167723" />
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1590909341750">
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1590909375421">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590909341750" />
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590909375421" />
     <state width="451" height="466" key="DebuggerActiveHint" timestamp="1588364404829">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="451" height="466" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1588364404829" />
-    <state x="0" y="111" key="DiffContextDialog" timestamp="1590909314730">
+    <state x="0" y="111" width="1536" height="832" key="DiffContextDialog" timestamp="1590909404218">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="0" y="111" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1590909314730" />
+    <state x="0" y="111" width="1536" height="832" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1590909404218" />
     <state x="727" y="388" key="FileChooserDialogImpl" timestamp="1588480691384">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="727" y="388" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1588480691384" />
-    <state width="1876" height="236" key="GridCell.Tab.0.bottom" timestamp="1590909068537">
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom" timestamp="1590909377171">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590909068537" />
-    <state width="1876" height="236" key="GridCell.Tab.0.center" timestamp="1590909068537">
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590909377171" />
+    <state width="1876" height="236" key="GridCell.Tab.0.center" timestamp="1590909377171">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590909068537" />
-    <state width="1876" height="236" key="GridCell.Tab.0.left" timestamp="1590909068537">
+    <state width="1876" height="236" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590909377171" />
+    <state width="1876" height="236" key="GridCell.Tab.0.left" timestamp="1590909377171">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590909068537" />
-    <state width="1876" height="236" key="GridCell.Tab.0.right" timestamp="1590909068537">
+    <state width="1876" height="236" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590909377171" />
+    <state width="1876" height="236" key="GridCell.Tab.0.right" timestamp="1590909377171">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590909068537" />
+    <state width="1876" height="236" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590909377171" />
     <state width="1876" height="155" key="GridCell.Tab.1.bottom" timestamp="1588484753845">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
