@@ -17,21 +17,7 @@ public class WhenStart {
             game.dispatch.requirePullFile = false;
         }
 
-        if (game.account != null) {
-            game.dispatch.staticDelay(1.5);
-            if (game.account.getBuildingLvl("stronghold") >= 6) {
-                game.dispatch("top_left");
-                if (game.log.btnName.contains("profile")) {
-                    game.dispatch("top_left");
-                }
-            }
-            if (game.account.getBuildingLvl("stronghold") >= 10) {
-                game.dispatch("top_left");
-                if (game.log.btnName.contains("profile")) {
-                    game.dispatch("top_left");
-                }
-            }
-        }
+        game.dispatch.staticDelay(1.5);
 
         for (int redo = 0; redo < 5; redo++) {
             game.dispatch("login_test");

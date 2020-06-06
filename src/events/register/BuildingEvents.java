@@ -50,12 +50,20 @@ public class BuildingEvents {
                         game.log.btnName.contains("btn_buildnow") ? null : event);
 
         Event.builder(_map, "train")
-                .setLoc(520, 1141)
-                .setDelay(1.5)
                 .setListener(((event, game) -> {
-                    if (!game.log.btnName.contains("btn_train")) {
+                    game.log.isRssEnough = true;
+                    game.dispatch(Event.builder().setLoc(520, 1141).setDelay(1.5));
+                    if (!game.log.btnName.contains("btn_train")) { //70 250
                         game.dispatch("top_left");
+                        return event;
                     }
+
+                    if(!game.log.isRssEnough){
+                        game.dispatch(Event.builder().setLoc(90,250).setDelay(1.25));
+                        game.dispatch("top_left");
+                        return event;
+                    }
+
                     return Event.SUCCESS;
                 }));
 
@@ -262,7 +270,7 @@ public class BuildingEvents {
 
         Event.builder(_map, "daily_reward")
                 .setTargetName("loc_9")
-                .setLoc(-1739, -895, 229, 502)
+                .setLoc(-1739, -895, 300, 510)
                 .isAccess()
                 .isBuilding()
                 .setListener((event, game) -> {
@@ -277,9 +285,17 @@ public class BuildingEvents {
 
                     game.dispatch.staticDelay(1.2);
 
-                    game.dispatch(
-                            Event.builder().setDelay(1.5)
-                                    .setLoc(359, 564));
+                    if(game.account.getBuildingLvl("stronghold") < 6) {
+                        game.dispatch(
+                                Event.builder().setDelay(1.5)
+                                        .setLoc(359, 564));
+                    }
+                    else{
+                        game.dispatch(
+                                Event.builder().setDelay(1.5)
+                                        .setLoc(571, 564));
+                    }
+
 
                     game.dispatch(
                             Event.builder().setDelay(1.2)

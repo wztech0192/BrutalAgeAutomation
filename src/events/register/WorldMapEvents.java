@@ -268,6 +268,8 @@ public class WorldMapEvents {
 
         Event.builder(_map, "attackTemple")
                 .setListener(((event, game) -> {
+                    game.log.oops = false;
+
                     game.dispatch.staticDelay(1);
                     for (int redo =0 ; redo < 5; redo ++) {
                         if(game.log.currTroops > 0){
@@ -288,12 +290,18 @@ public class WorldMapEvents {
                         game.dispatch(Event.builder().setLoc(521, 1200));
                     }
                     game.dispatch.delay(1);
+
                     game.dispatch(Event.builder().setLoc(521, 1200));
-                    game.dispatch.delay(1);
-                    int leftTroops = game.account.getTroops() - game.log.currTroops;
-                    Logger.log("Left Troops: "+leftTroops);
-                    game.account.setTroops(leftTroops);
-                    game.updateAccount();
+                    game.dispatch.staticDelay(1.5);
+
+                    Logger.log("oops "+game.log.oops);
+                    if(!game.log.oops ){
+                        int leftTroops = game.account.getTroops() - game.log.currTroops;
+                        Logger.log("Left Troops: "+leftTroops);
+                        game.account.setTroops(leftTroops);
+                        game.updateAccount();
+                    }
+
 
                     return Event.SUCCESS;
                 }));
