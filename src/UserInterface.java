@@ -27,7 +27,7 @@ public class UserInterface extends JPanel {
     private JPanel globalFeaturePane;
     private JPanel numberPaneWrapper;
     private JPanel priorityPaneWrapper;
-
+    private JComboBox<String> emulatorSelect;
     private Store store;
     private boolean debug;
     private GameInstance gameInstance;
@@ -38,10 +38,7 @@ public class UserInterface extends JPanel {
     private String tag;
     private boolean isPosMode = Global.OnlyPosMode;
 
-    private ArrayList<String> noxInstances;
-
-    public UserInterface(JFrame owner, boolean debug, AndroidDebugBridge bridge, String tag, ArrayList<String> noxInstances) {
-        this.noxInstances = noxInstances;
+    public UserInterface(JFrame owner, boolean debug, AndroidDebugBridge bridge, String tag) {
         this.tag = tag;
         this.owner = owner;
         this.debug = debug;
@@ -88,22 +85,57 @@ public class UserInterface extends JPanel {
         }).start();
     }
 
-    ;
+
+
+    private JComboBox<String> getEmulatorSelectBox (){
+        ArrayList<String> noxes = null;
+        if(store.metadata.isUseNox()){
+             noxes = Global.FindNoxes();
+        }
+
+        if(noxes != null){
+            return new JComboBox<>(noxes.toArray(new String[0]));
+        }else{
+            ArrayList<String> devices = new ArrayList<>();
+            for(IDevice device: bridge.getDevices()){
+                devices.add(device.getName());
+            }
+            return new JComboBox<>(devices.toArray(new String[0]));
+        }
+    };
 
     private boolean connectToDevice() {
         try {
             store = new Store(tag, bridge);
 
-            final JComboBox<String> noxSelect = new JComboBox<>(noxInstances.toArray(new String[0]));
-            noxSelect.setSelectedItem(this.store.metadata.getNox());
 
+            emulatorSelect = getEmulatorSelectBox();
+
+            emulatorSelect.setSelectedItem(this.store.metadata.getSelectedEmulator());
 
             JPanel myPanel = new JPanel(new BorderLayout());
             myPanel.setLayout(new BorderLayout());
 
-            JPanel emulatorPanel = new JPanel(new GridLayout(1, 1));
-            emulatorPanel.add(noxSelect);
+            JPanel emulatorPanel = new JPanel(new GridLayout(2, 1));
+
+            JButton useEmulatorBtn = new JButton("Use Other");
+
+            useEmulatorBtn.addActionListener(e->{
+                if(store.metadata.isUseNox()){
+                    useEmulatorBtn.setText("Use Nox");
+                }else{
+                    useEmulatorBtn.setText("Use Other");
+                }
+                store.metadata.setUseNox(!store.metadata.isUseNox());
+                emulatorPanel.remove(emulatorSelect);
+                emulatorSelect = getEmulatorSelectBox();
+                emulatorPanel.add(emulatorSelect);
+            });
+
+            emulatorPanel.add(useEmulatorBtn);
+            emulatorPanel.add(emulatorSelect);
             emulatorPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Emulator"));
+
             JFileChooser chooser = null;
             if (!Global.OnlyPosMode) {
                 JPanel chooserPanel = new JPanel();
@@ -127,48 +159,66 @@ public class UserInterface extends JPanel {
                 return false;
             }
 
-            String selectedNox = (String) noxSelect.getSelectedItem();
-            EventDispatcher.exec(Global.config.getNoxPath() + "/Nox.exe -clone:" + selectedNox, null);
+            String selectedEmulator = (String) emulatorSelect.getSelectedItem();
+            String ip = "";
 
+            if(store.metadata.isUseNox()){
+                EventDispatcher.exec(Global.config.getNoxPath() + "/Nox.exe -clone:" + selectedEmulator, null);
 
-            int redo = 0;
-            String port = Global.getNoxPort(selectedNox);
+                int redo = 0;
+                String port = Global.getNoxPort(selectedEmulator);
 
-            if (port.equalsIgnoreCase("")) {
-                JOptionPane.showMessageDialog(owner, "Device not found! Retry");
-                closeInstance();
-                return false;
-            }
-
-            String ip = "127.0.0.1:" + port;
-            while (true) {
-                Logger.log("Trying to connected to " + ip + "...attempt " + redo);
-                EventDispatcher.exec("adb connect " + ip, null);
-                Thread.sleep(1500);
-                if (bridge.hasInitialDeviceList()) {
-                    for (IDevice tempDevice : bridge.getDevices()) {
-                        if (tempDevice.getName().contains(ip)) {
-                            Logger.log("Connected!");
-                            device = tempDevice;
-                            if (redo > 1) {
-                                Logger.log("Wait for 12 sec....................");
-                                Thread.sleep(12000);
-                            }
-                            break;
-                        }
-                    }
-                }
-                if (device != null) {
-                    break;
-                }
-
-                redo++;
-                if (redo > 8) {
+                if (port.equalsIgnoreCase("")) {
                     JOptionPane.showMessageDialog(owner, "Device not found! Retry");
                     closeInstance();
                     return false;
                 }
-                Thread.sleep(3000);
+
+                ip = "127.0.0.1:" + port;
+                while (true) {
+                    Logger.log("Trying to connected to " + ip + "...attempt " + redo);
+                    EventDispatcher.exec("adb connect " + ip, null);
+                    Thread.sleep(1500);
+                    if (bridge.hasInitialDeviceList()) {
+                        for (IDevice tempDevice : bridge.getDevices()) {
+                            if (tempDevice.getName().contains(ip)) {
+                                Logger.log("Connected!");
+                                device = tempDevice;
+                                if (redo > 1) {
+                                    Logger.log("Wait for 12 sec....................");
+                                    Thread.sleep(12000);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    if (device != null) {
+                        break;
+                    }
+
+                    redo++;
+                    if (redo > 8) {
+                        JOptionPane.showMessageDialog(owner, "Device not found! Retry");
+                        closeInstance();
+                        return false;
+                    }
+                    Thread.sleep(3000);
+                }
+            }else{
+                ip = selectedEmulator;
+                for (IDevice tempDevice : bridge.getDevices()) {
+                    if (tempDevice.getName().contains(ip)) {
+                        Logger.log("Connected!");
+                        device = tempDevice;
+                        break;
+                    }
+                }
+
+                if(device == null){
+                    JOptionPane.showMessageDialog(owner, "Device not found! Retry");
+                    closeInstance();
+                    return false;
+                }
             }
 
             EventDispatcher.execADBIP(ip, "logcat -c", s -> false);
@@ -178,7 +228,7 @@ public class UserInterface extends JPanel {
                 this.store.metadata.setAccountPath(chooser.getCurrentDirectory().getAbsolutePath() + "\\");
             }
             this.store.metadata.setIp(ip);
-            this.store.metadata.setNox(selectedNox);
+            this.store.metadata.setSelectedEmulator(selectedEmulator);
             this.store.marshellMetadata();
             System.out.println("push event");
             EventDispatcher.execADBIP(store.metadata.getIp(), "push \"" + FilePath.EVENTS_PATH + "\" /sdcard/", s -> {

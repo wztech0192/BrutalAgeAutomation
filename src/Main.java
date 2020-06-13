@@ -52,31 +52,19 @@ public class Main {
             Runtime.getRuntime().addShutdownHook(new Thread(AndroidDebugBridge::disconnectBridge));
 
 
-            File noxBin = new File(Global.config.getNoxPath());
-            if (!noxBin.exists()) {
-                JOptionPane.showMessageDialog(null, "Nox doesnt exist! Please set the config path");
-                System.exit(0);
-            }
-
-            File noxVMs = new File(Global.config.getNoxPath() + "/BignoxVMS");
-
-            ArrayList<String> noxInstances = new ArrayList<>();
-            for(File file: Objects.requireNonNull(noxVMs.listFiles())){
-                noxInstances.add(file.getName());
-            }
 
 
             JFrame mFrame = new JFrame();
             JTabbedPane tabbedPane = new JTabbedPane();
 
-            tabbedPane.addTab("One", new UserInterface(mFrame, debug, bridge, "One", noxInstances));
+            tabbedPane.addTab("One", new UserInterface(mFrame, debug, bridge, "One"));
             tabbedPane.setSelectedIndex(0);
 
-            tabbedPane.addTab("Two", new UserInterface(mFrame, debug, bridge, "Two", noxInstances));
+            tabbedPane.addTab("Two", new UserInterface(mFrame, debug, bridge, "Two"));
 
-            tabbedPane.addTab("Three", new UserInterface(mFrame, debug, bridge, "Three", noxInstances));
+            tabbedPane.addTab("Three", new UserInterface(mFrame, debug, bridge, "Three"));
 
-            tabbedPane.addTab("Four", new UserInterface(mFrame, debug, bridge, "Four",noxInstances ));
+            tabbedPane.addTab("Four", new UserInterface(mFrame, debug, bridge, "Four" ));
 
             mFrame.add(tabbedPane);
             mFrame.setTitle("Brutal Age Controller");

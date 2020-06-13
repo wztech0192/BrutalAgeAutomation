@@ -10,6 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,6 +68,23 @@ public class Global {
     public static final Pattern NoxPortRegex = Pattern.compile("<Forwarding name=\"port2\" proto=\"1\" hostip=\"127.0.0.1\" hostport=\"(\\d*)\".* ");
 
 
+
+    public static ArrayList<String> FindNoxes(){
+        File noxBin = new File(Global.config.getNoxPath());
+        if (!noxBin.exists()) {
+            JOptionPane.showMessageDialog(null, "Nox doesnt exist! Please set the config path");
+            return null;
+        }
+
+        File noxVMs = new File(Global.config.getNoxPath() + "/BignoxVMS");
+
+        ArrayList<String> noxInstances = new ArrayList<>();
+        for(File file: Objects.requireNonNull(noxVMs.listFiles())){
+            noxInstances.add(file.getName());
+        }
+
+        return noxInstances;
+    }
 
     public static String getNoxPort(String instanceName) throws IOException {
         File vbox = new File( config.getNoxPath() + "/BignoxVMS/" +instanceName + "/"+instanceName+ ".vbox");

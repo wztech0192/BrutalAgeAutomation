@@ -4,23 +4,22 @@ import util.FilePath;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.TreeMap;
 
 @XmlRootElement(name = "Metadata")
 public class Metadata {
     private String accountPath = FilePath.ACCOUNT_PATH;
-    private String ip = "127.0.0.1:62001";
-    private String nox = "";
+    private String selectedEmulator = "";
     private FeatureToggler featureToggler;
     private int delay = 600;
+    private String ip = "";
     private NumberFeaturer numberFeaturer;
     private LinkedList<String> SavedPosAcc = new LinkedList<>();
     private int maxPosAcc = 5;
     private String clan = "";
     private int server = 519;
     private int horde = 0;
+    private boolean isUseNox = true;
 
     public Metadata(){
         featureToggler = new FeatureToggler();
@@ -71,12 +70,12 @@ public class Metadata {
         this.server = server;
     }
 
-    public String getNox() {
-        return nox;
+    public String getSelectedEmulator() {
+        return selectedEmulator;
     }
     @XmlElement
-    public void setNox(String nox) {
-        this.nox = nox;
+    public void setSelectedEmulator(String selectedEmulator) {
+        this.selectedEmulator = selectedEmulator;
     }
 
     @XmlElement
@@ -130,4 +129,14 @@ public class Metadata {
     public void resetFeatureToggler() {
         this.featureToggler = new FeatureToggler();
     }
+
+    public boolean isUseNox() {
+        return isUseNox;
+    }
+    @XmlElement
+    public void setUseNox(boolean useNox) {
+        isUseNox = useNox;
+    }
+
+
 }

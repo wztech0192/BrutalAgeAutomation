@@ -12,7 +12,6 @@ import util.FilePath;
 import util.Global;
 import util.Logger;
 
-import javax.swing.*;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
@@ -106,7 +105,7 @@ public class Store extends WebSocketAdapter {
             JsonObject payload = new JsonObject();
             payload.put("max",metadata.getMaxPosAcc());
             payload.put("current", metadata.getSavedPosAcc().size());
-            payload.put("executorID", Global.config.getOwnerName()+"-"+metadata.getNox());
+            payload.put("executorID", Global.config.getOwnerName()+"-"+metadata.getSelectedEmulator());
             sendDataBack("receiver", payload);
             System.out.println("Connect to server...");
         } catch (WebSocketException | IOException e) {
@@ -272,11 +271,11 @@ public class Store extends WebSocketAdapter {
     }
 
     public boolean restartEmulator() {
-        EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getNox()+" -quit", null);
+        EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getSelectedEmulator()+" -quit", null);
         try {
             Thread.sleep(2000);
 
-            EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getNox(), null);
+            EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getSelectedEmulator(), null);
             Thread.sleep(25000);
 
             return true;
