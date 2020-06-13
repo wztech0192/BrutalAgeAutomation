@@ -17,21 +17,7 @@ public class WhenStart {
             game.dispatch.requirePullFile = false;
         }
 
-        if (game.account != null) {
-            game.dispatch.staticDelay(1.5);
-            if (game.account.getBuildingLvl("stronghold") >= 6) {
-                game.dispatch("top_left");
-                if (game.log.btnName.contains("profile")) {
-                    game.dispatch("top_left");
-                }
-            }
-            if (game.account.getBuildingLvl("stronghold") >= 10) {
-                game.dispatch("top_left");
-                if (game.log.btnName.contains("profile")) {
-                    game.dispatch("top_left");
-                }
-            }
-        }
+        game.dispatch.staticDelay(1.5);
 
         for (int redo = 0; redo < 5; redo++) {
             game.dispatch("login_test");
@@ -61,6 +47,20 @@ public class WhenStart {
 
 
         if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+
+            if (!game.account.isJoinClan()) {
+                game.dispatch("apply_clan");
+                if (game.account.getClan() != null && !game.account.getClan().equalsIgnoreCase("")) {
+                    game.dispatch("search_clan");
+                    game.dispatch.enterText(game.account.getClan());
+                    game.dispatch("confirm_search_clan");
+                }
+                game.dispatch("join_clan");
+                game.dispatch("back_from_clan");
+                game.account.setJoinClan(true);
+                game.updateAccount();
+            }
+
             if (game.account.getTroops() < game.account.getNumberFeaturer().getNumberSetting().get("Min Troop")) {
                 game.startEvent(GameStatus.initiate);
             } else {

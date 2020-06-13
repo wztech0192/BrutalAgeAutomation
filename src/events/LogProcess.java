@@ -33,6 +33,7 @@ public class LogProcess {
     public boolean shouldHeal;
     public int marches;
     public double talentScroll = 0;
+    public boolean oops = false;
     public boolean hasPopupWarning;
     public int transportIndex = 0;
     public int[] transportRss = new int[5];
@@ -47,6 +48,7 @@ public class LogProcess {
     public int idleTroops;
     public int currTroops;
     public boolean emptyOutPost;
+    public boolean isRssEnough;
     private GameInstance game;
     public int maxTransportNum = 0;
     public int selectedTransportNum = 0;
@@ -131,6 +133,12 @@ public class LogProcess {
         }
         else if(str.contains("setAllianceWarNumber")){
             hasClan = true;
+        }
+        else if (str.contains("sound/sfx_event_oops_window.ogg")){
+             oops = true;
+        }
+        else if (str.contains("m_rssneedtoby")){
+            isRssEnough = false;
         }
 
 

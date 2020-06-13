@@ -5,23 +5,37 @@
       <artifact name="BrutalAgeFarm" />
     </artifacts-to-build>
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/Metadata.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Metadata.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/ClanEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ClanEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/Global.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Global.java" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FavoritesManager">
-    <favorites_list name="BrutalAgeFarm" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -41,7 +55,6 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -53,6 +66,7 @@
     <property name="Repository.Attach.Annotations" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -61,7 +75,7 @@
     <property name="findjar.last.used.dir" value="$PROJECT_DIR$" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.12298851" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
@@ -87,18 +101,6 @@
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources\res\tessdata" />
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="Application.Production">
     <configuration name="Debug" type="Application" factoryName="Application">
@@ -166,7 +168,6 @@
       <workItem from="1584979032329" duration="3115000" />
       <workItem from="1585104171227" duration="2057000" />
       <workItem from="1590863578016" duration="18148000" />
-      <workItem from="1592082887792" duration="3144000" />
     </task>
     <task id="LOCAL-00001" summary="changes">
       <created>1585185880759</created>
@@ -260,17 +261,27 @@
       <updated>1590909369025</updated>
     </task>
     <task id="LOCAL-00014" summary="update">
-      <created>1590967660589</created>
+      <created>1590909413881</created>
       <option name="number" value="00014" />
       <option name="presentableId" value="LOCAL-00014" />
       <option name="project" value="LOCAL" />
-      <updated>1590967660589</updated>
+      <updated>1590909413881</updated>
     </task>
     <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -302,18 +313,17 @@
         </entry>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
-    <option name="OPEN_TABS">
-      <set>
-        <option value="1" />
-      </set>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="1" value="TOOL_WINDOW" />
+      </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
@@ -333,6 +343,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="177" key="#Notifications/0.0.1920.1040@0.0.1920.1040" timestamp="1586640866809" />
+    <state x="440" y="93" key="#Project_Structure" timestamp="1591880154513">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="440" y="93" key="#Project_Structure/0.0.1920.1040@0.0.1920.1040" timestamp="1591880154513" />
     <state x="713" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1588484051125">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -345,10 +359,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="756" y="403" width="407" height="242" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1585432167723" />
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1590909375421">
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1590909412934">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590909375421" />
+    <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590909412934" />
     <state width="451" height="466" key="DebuggerActiveHint" timestamp="1588364404829">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -361,22 +375,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="727" y="388" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1588480691384" />
-    <state width="1876" height="236" key="GridCell.Tab.0.bottom" timestamp="1590909377171">
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom" timestamp="1591338405519">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1590909377171" />
-    <state width="1876" height="236" key="GridCell.Tab.0.center" timestamp="1590909377171">
+    <state width="1876" height="236" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1591338405519" />
+    <state width="1876" height="236" key="GridCell.Tab.0.center" timestamp="1591338405519">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1590909377171" />
-    <state width="1876" height="236" key="GridCell.Tab.0.left" timestamp="1590909377171">
+    <state width="1876" height="236" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1591338405519" />
+    <state width="1876" height="236" key="GridCell.Tab.0.left" timestamp="1591338405519">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1590909377171" />
-    <state width="1876" height="236" key="GridCell.Tab.0.right" timestamp="1590909377171">
+    <state width="1876" height="236" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1591338405519" />
+    <state width="1876" height="236" key="GridCell.Tab.0.right" timestamp="1591338405519">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="236" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1590909377171" />
+    <state width="1876" height="236" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1591338405519" />
     <state width="1876" height="155" key="GridCell.Tab.1.bottom" timestamp="1588484753845">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -397,10 +411,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="446" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1588480692477" />
-    <state x="558" y="251" key="Vcs.Push.Dialog.v2" timestamp="1590909240067">
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2" timestamp="1590909417071">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1590909240067" />
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1590909417071" />
     <state x="92" y="92" width="1736" height="862" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1590082182986">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -409,14 +423,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="106" y="100" width="1720" height="840" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587230186741" />
-    <state x="661" y="342" key="com.intellij.ide.util.TipDialog" timestamp="1582345705897">
+    <state x="775" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590976315354">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="661" y="342" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582345705897" />
-    <state x="775" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590080439694">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="775" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1590080439694" />
+    <state x="775" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1590976315354" />
     <state x="0" y="0" width="1639" height="749" key="dock-window-1" timestamp="1585636534264">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

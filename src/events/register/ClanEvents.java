@@ -58,7 +58,7 @@ public class ClanEvents {
                     Logger.log("*** Max Transport: "+game.log.limitTransportNum);
                     if(game.log.maxTransportNum >= game.log.limitTransportNum) {
                         for (int i = 311; i <= 711; i += 100) {
-                            if(i == 311 && game.log.transportRss[0] < 250000){ //dont transport wood if rss is < 250000
+                            if(i == 311 && game.log.transportRss[0] < 500000){ //dont transport wood if rss is < 250000
                                 /*
                                 * 0 wood  -0
                                     1 rock  -3
@@ -66,6 +66,9 @@ public class ClanEvents {
                                     3 meat -1
                                     4 mana -2
                                 * */
+                                continue;
+                            }
+                            else if(i == 411 && game.log.transportRss[3] < 750000){
                                 continue;
                             }
                             game.dispatch.exec(String.format("input swipe 539 %d 579 %d", i, i));
@@ -78,7 +81,7 @@ public class ClanEvents {
                             }
                         }
                     }else{
-                        game.dispatch.staticDelay(1);
+                        game.dispatch.staticDelay(2);
                         game.dispatch("top_left");
                     }
                     return event;
@@ -117,7 +120,7 @@ public class ClanEvents {
                             break;
                         }
                     }
-                    game.dispatch.staticDelay(1.5);
+                    game.dispatch.staticDelay(2);
                     game.dispatch("top_left");
 
                     if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")){
