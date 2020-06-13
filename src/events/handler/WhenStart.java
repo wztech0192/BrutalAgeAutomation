@@ -47,6 +47,20 @@ public class WhenStart {
 
 
         if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+
+            if (!game.account.isJoinClan()) {
+                game.dispatch("apply_clan");
+                if (game.account.getClan() != null && !game.account.getClan().equalsIgnoreCase("")) {
+                    game.dispatch("search_clan");
+                    game.dispatch.enterText(game.account.getClan());
+                    game.dispatch("confirm_search_clan");
+                }
+                game.dispatch("join_clan");
+                game.dispatch("back_from_clan");
+                game.account.setJoinClan(true);
+                game.updateAccount();
+            }
+
             if (game.account.getTroops() < game.account.getNumberFeaturer().getNumberSetting().get("Min Troop")) {
                 game.startEvent(GameStatus.initiate);
             } else {

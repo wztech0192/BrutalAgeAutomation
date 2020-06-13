@@ -115,6 +115,14 @@ public class TestEvent {
                 .setDelay(1.5)
                 .setLoc(362, 1183)
                 .setListener((event, game) -> {
+
+                    if(game.log.btnName.contains("make:btn_2")){
+                        game.dispatch.staticDelay(1.5);
+                        game.dispatch(Event.builder().setLoc(74,242).setDelay(1.5));
+                        game.dispatch("top_left");
+                        game.dispatch("test_click");
+                    }
+
                     if (!game.log.btnName.contains("hud:") &&
                             !game.dispatch("test_click") &&
                             !game.dispatch("template_close")) {

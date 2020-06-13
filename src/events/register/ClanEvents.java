@@ -81,7 +81,7 @@ public class ClanEvents {
                             }
                         }
                     }else{
-                        game.dispatch.staticDelay(1);
+                        game.dispatch.staticDelay(2);
                         game.dispatch("top_left");
                     }
                     return event;
@@ -120,7 +120,7 @@ public class ClanEvents {
                             break;
                         }
                     }
-                    game.dispatch.staticDelay(1.5);
+                    game.dispatch.staticDelay(2);
                     game.dispatch("top_left");
 
                     if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")){

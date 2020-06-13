@@ -5,22 +5,37 @@
       <artifact name="BrutalAgeFarm" />
     </artifacts-to-build>
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/LogProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/LogProcess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/BuildingEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/ClanEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ClanEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Global.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Global.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FavoritesManager">
-    <favorites_list name="BrutalAgeFarm" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -40,7 +55,6 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -52,6 +66,7 @@
     <property name="Repository.Attach.Annotations" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -60,7 +75,7 @@
     <property name="findjar.last.used.dir" value="$PROJECT_DIR$" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.12298851" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
@@ -298,18 +313,17 @@
         </entry>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
-    <option name="OPEN_TABS">
-      <set>
-        <option value="1" />
-      </set>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="1" value="TOOL_WINDOW" />
+      </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
@@ -329,6 +343,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="177" key="#Notifications/0.0.1920.1040@0.0.1920.1040" timestamp="1586640866809" />
+    <state x="440" y="93" key="#Project_Structure" timestamp="1591880154513">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="440" y="93" key="#Project_Structure/0.0.1920.1040@0.0.1920.1040" timestamp="1591880154513" />
     <state x="713" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1588484051125">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
