@@ -24,14 +24,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/ClanEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ClanEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Global.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Global.java" afterDir="false" />
-    </list>
+    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,6 +96,18 @@
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
     </key>
   </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
   <component name="RunManager" selected="Application.Production">
     <configuration name="Debug" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -168,6 +174,7 @@
       <workItem from="1584979032329" duration="3115000" />
       <workItem from="1585104171227" duration="2057000" />
       <workItem from="1590863578016" duration="18148000" />
+      <workItem from="1592086110674" duration="348000" />
     </task>
     <task id="LOCAL-00001" summary="changes">
       <created>1585185880759</created>
@@ -267,7 +274,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590909413881</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="update">
+      <created>1592086132973</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1592086132973</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -313,17 +327,13 @@
         </entry>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
-    <option name="OPEN_GENERIC_TABS">
-      <map>
-        <entry key="1" value="TOOL_WINDOW" />
-      </map>
-    </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
