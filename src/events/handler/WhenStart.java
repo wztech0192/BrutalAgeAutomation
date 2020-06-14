@@ -34,12 +34,12 @@ public class WhenStart {
             }
 
             if (
-                    Math.abs(game.log.city.x - -2477) + Math.abs(game.log.city.y - -1625) < 10 ||
-                    Math.abs(game.log.city.x - -3222) + Math.abs(game.log.city.y - -1600) < 10 ||
-                    Math.abs(game.log.city.x - -3407) + Math.abs(game.log.city.y - -730) < 10 ||
-                    Math.abs(game.log.city.x - -1532) + Math.abs(game.log.city.y - -427) < 10 ||
-                    Math.abs(game.log.city.x - -340) + Math.abs(game.log.city.y - -268) < 10 ||
-                    Math.abs(game.log.city.x - -2484) + Math.abs(game.log.city.y - -1677) < 10
+                    Math.abs(game.log.city.x - -2477) + Math.abs(game.log.city.y - -1625) < 50 ||
+                    Math.abs(game.log.city.x - -3222) + Math.abs(game.log.city.y - -1600) < 50 ||
+                    Math.abs(game.log.city.x - -3407) + Math.abs(game.log.city.y - -730) < 50 ||
+                    Math.abs(game.log.city.x - -1532) + Math.abs(game.log.city.y - -427) < 50 ||
+                    Math.abs(game.log.city.x - -340) + Math.abs(game.log.city.y - -268) < 50 ||
+                    Math.abs(game.log.city.x - -2484) + Math.abs(game.log.city.y - -1677) < 50
             ) {
                 break;
             }

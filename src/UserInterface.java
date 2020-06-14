@@ -231,7 +231,12 @@ public class UserInterface extends JPanel {
             this.store.metadata.setSelectedEmulator(selectedEmulator);
             this.store.marshellMetadata();
             System.out.println("push event");
-            EventDispatcher.execADBIP(store.metadata.getIp(), "push \"" + FilePath.EVENTS_PATH + "\" /sdcard/", s -> {
+            EventDispatcher.execADBIP(store.metadata.getIp(), "shell rm -r /sdcard/"+Global.config.getEventFolder(), s -> {
+                Logger.log(s);
+                return false;
+            });
+
+            EventDispatcher.execADBIP(store.metadata.getIp(), "push \"" + Global.config.getEventFolderPath() + "\" /sdcard/", s -> {
                 Logger.log(s);
                 return false;
             });

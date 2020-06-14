@@ -24,7 +24,22 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="" />
+    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/res/baevents_ld/city_zoom_event" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/res/baevents_ld/delete_event" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/res/baevents_ld/map_in_event" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/res/baevents_ld/map_out_event" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/res/baevents_ld/zoomout_event" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/FilePath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/FilePath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Global.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Global.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/MyDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/MyDebugger.java" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +53,7 @@
         <option value="Interface" />
         <option value="Enum" />
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
@@ -67,7 +83,7 @@
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="findjar.last.used.dir" value="$PROJECT_DIR$" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/res/baevents_ld" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
@@ -75,25 +91,26 @@
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="events" />
-      <recent name="" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Wei Zheng\Desktop\BrutalAgeFarm" />
-      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
-      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources" />
-      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\src\resources" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="events.handler" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeAutomation\resources\res\baevents_ld" />
       <recent name="C:\Users\Wei Zheng\Desktop\BrutalAgeFarm" />
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources" />
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources\res" />
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources\res\tessdata" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="events" />
+      <recent name="" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="events.handler" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeAutomation\resources\res\baevents_ld" />
+      <recent name="C:\Users\Wei Zheng\Desktop\BrutalAgeFarm" />
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\resources" />
+      <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\src\resources" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -175,6 +192,7 @@
       <workItem from="1585104171227" duration="2057000" />
       <workItem from="1590863578016" duration="18148000" />
       <workItem from="1592086110674" duration="348000" />
+      <workItem from="1592162589550" duration="9125000" />
     </task>
     <task id="LOCAL-00001" summary="changes">
       <created>1585185880759</created>
@@ -281,7 +299,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592086132973</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="update">
+      <created>1592162601156</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1592162601156</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

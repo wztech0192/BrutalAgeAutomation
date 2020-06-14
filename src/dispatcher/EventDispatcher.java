@@ -142,37 +142,31 @@ public class EventDispatcher implements IShellOutputReceiver {
     public void mapzoom() throws Exception {
 
         for (int i = 0; i < 5; i++) {
-            exec("su 0 cat /mnt/sdcard/baevents/map_out_event > /dev/input/" + getInputEventFile());
+            exec("su 0 cat /mnt/sdcard/"+Global.config.getEventFolder()+"/map_out_event > /dev/input/" + getInputEventFile());
             game.dispatch.staticDelay(0.25);
         }
         mapzoomin();
     }
 
     public void mapzoomin() throws Exception {
-        exec("su 0 cat /mnt/sdcard/baevents/map_in_event > /dev/input/" + getInputEventFile());
+        exec("su 0 cat /mnt/sdcard/"+Global.config.getEventFolder()+"/map_in_event > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
     public void deleteText() throws Exception {
-        exec("su 0 cat /mnt/sdcard/baevents/delete_event > /dev/input/" + getInputEventFile());
+        exec("su 0 cat /mnt/sdcard/"+Global.config.getEventFolder()+"/delete_event > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
     public void cityZoom() throws Exception {
-        exec("su 0 cat /mnt/sdcard/baevents/city_zoom_event > /dev/input/" + getInputEventFile());
+        exec("su 0 cat /mnt/sdcard/"+Global.config.getEventFolder()+"/city_zoom_event > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
     public void zoomout() throws Exception {
-        exec("su 0 cat /mnt/sdcard/baevents/zoomout_event > /dev/input/" + getInputEventFile());
+        exec("su 0 cat /mnt/sdcard/"+Global.config.getEventFolder()+"/zoomout_event > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
-
-    public void zoomin() throws Exception {
-        exec("su 0 cat /mnt/sdcard/baevents/zoomin_event > /dev/input/" + getInputEventFile());
-        game.dispatch.staticDelay(0.25);
-    }
-
 
     public void selectMonster(int x, int y) throws Exception {
         double prevScale;

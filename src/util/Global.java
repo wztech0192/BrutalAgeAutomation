@@ -4,6 +4,7 @@ import store.Config;
 
 import javax.swing.*;
 import javax.xml.bind.JAXBException;
+import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -104,4 +105,42 @@ public class Global {
         }
     }
 
+    public static void SettingGUI() {
+
+        final JPanel myPanel = new JPanel(new GridLayout(4,2));
+
+        final JTextField noxPathField= new JTextField(config.getNoxPath());
+        final JTextField eventField= new JTextField(config.getEventName());
+        final JTextField instanceField= new JTextField(String.valueOf(config.getInstanceNumber()));
+        final JTextField eventFolderField = new JTextField(config.getEventFolder());
+
+        myPanel.add(new JLabel("Nox Path"));
+        myPanel.add(noxPathField);
+
+        myPanel.add(new JLabel("Event Name"));
+        myPanel.add(eventField);
+
+        myPanel.add(new JLabel("Event Folder"));
+        myPanel.add(eventFolderField);
+
+        myPanel.add(new JLabel("Total Tab"));
+        myPanel.add(instanceField);
+
+        int result = JOptionPane.showConfirmDialog(myPanel, myPanel,
+                "Setting", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            try{
+                config.setNoxPath(noxPathField.getText());
+                config.setEventName(eventField.getText());
+                config.setEventFolder(eventFolderField.getText());
+                config.setInstanceNumber(Integer.parseInt(instanceField.getText()));
+                util.Marshaller.marshell(config, FilePath.CONFIG_PATH);
+            }catch(Exception e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null,"Invalid input");
+            }
+        }
+
+    }
 }

@@ -55,9 +55,6 @@ public class MyDebugger {
                             case "ls":
                                 EventMap.printAll();
                                 break;
-                            case "zoomin":
-                                game.dispatch.zoomin();
-                                break;
                             case "zoomout":
                                 game.dispatch.zoomout();
                                 break;

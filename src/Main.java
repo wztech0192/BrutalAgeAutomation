@@ -11,6 +11,7 @@ import util.FilePath;
 import util.Global;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
@@ -57,16 +58,19 @@ public class Main {
             JFrame mFrame = new JFrame();
             JTabbedPane tabbedPane = new JTabbedPane();
 
-            tabbedPane.addTab("One", new UserInterface(mFrame, debug, bridge, "One"));
+            tabbedPane.addTab("0", new UserInterface(mFrame, debug, bridge, "0"));
             tabbedPane.setSelectedIndex(0);
 
-            tabbedPane.addTab("Two", new UserInterface(mFrame, debug, bridge, "Two"));
+            for(int i=1; i<Global.config.getInstanceNumber();i++){
+                String si = String.valueOf(i);
+                tabbedPane.addTab(si, new UserInterface(mFrame, debug, bridge, si));
+            }
 
-            tabbedPane.addTab("Three", new UserInterface(mFrame, debug, bridge, "Three"));
 
-            tabbedPane.addTab("Four", new UserInterface(mFrame, debug, bridge, "Four" ));
-
-            mFrame.add(tabbedPane);
+            final JButton settingButton = new JButton("Setting");
+            settingButton.addActionListener(e-> Global.SettingGUI());
+            mFrame.add(settingButton, BorderLayout.SOUTH);
+            mFrame.add(tabbedPane, BorderLayout.CENTER);
             mFrame.setTitle("Brutal Age Controller");
             mFrame.pack();
             mFrame.setLocationRelativeTo(null);

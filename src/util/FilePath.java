@@ -18,7 +18,6 @@ public class FilePath {
     public static final String RootPath = Store.class.getResource("")
             .getPath().substring(1).replace("%20"," ")+"../res";
 
-    public static final String EVENTS_PATH = RootPath + "/baevents";
     public final static String LOG_FILE_PATH = RootPath + "/files/log";
     public final static String CONFIG_PATH = System.getProperty("user.home")+ "/ba_config";
     public final static String METADATA_PATH = RootPath + "/files/metadata";
