@@ -94,7 +94,7 @@ public class WorldMap {
     public static SearchOptions createSearchOptions(GameInstance game){
 
         SearchOptions searchOptions = new SearchOptions();
-        searchOptions.targets = game.account.getGatherPrioritiesArray();
+        searchOptions.targets = game.account.getGatherPrioritiesArray(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Prioritize Growth"));
 
         if ( searchOptions.targets.isEmpty()) {
             if (game.account.getResource("meat") < 100000) {

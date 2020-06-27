@@ -72,6 +72,11 @@ public class WhenStart {
         game.dispatch("get_rss_info");
 
 
+        if(game.account.getBuildingLvl("stronghold")>=13 && game.account.getResource("meat") < 200000){
+            game.dispatch("buy_meat");
+        }
+
+
         if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Transport At Start")) {
             int transportRound = game.account.getNumberFeaturer().getNumberSetting().get("Transport Round");
             if (game.account.getBuildingLvl("stronghold") >= 9 && transportRound > 0

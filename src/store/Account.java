@@ -55,6 +55,7 @@ public class Account {
     private boolean changedServer = false;
     private boolean finishInit;
     private int troops = 0;
+    private boolean isThirtyDay = false;
 
     private String id = "";
 
@@ -134,6 +135,14 @@ public class Account {
         }
     }
 
+    @XmlElement
+    public void setThirtyDay(boolean thirtyDay) {
+        isThirtyDay = thirtyDay;
+    }
+
+    public boolean isThirtyDay() {
+        return isThirtyDay;
+    }
 
     public int getTroops() {
         return troops;
@@ -410,15 +419,28 @@ public class Account {
     public void resetNumberFeaturer() {
         this.numberFeaturer = new NumberFeaturer();
     }
-    public ArrayList<String> getGatherPrioritiesArray() {
+
+    public ArrayList<String> getGatherPrioritiesArray(boolean isPriorityGrowth) {
         HashMap<String, Integer> priorityTree = new HashMap<>();
         for(Map.Entry<String, Integer> entry : getNumberFeaturer().getGatherPriorities().entrySet()){
-            if(entry.getValue() != 0 && !entry.getKey().equalsIgnoreCase("a_maxLevel") && !entry.getKey().equalsIgnoreCase("a_minLevel")){
+
+            int value = entry.getValue();
+
+            if(isPriorityGrowth && getBuildingLvl("stronghold") >= 9){
                 if(entry.getKey().equalsIgnoreCase("meat") || entry.getKey().equalsIgnoreCase("wood")){
-                    priorityTree.put(entry.getKey()+"3", entry.getValue());
-                    priorityTree.put(entry.getKey()+"4", entry.getValue());
+                    if(getResource(entry.getKey()) < 300000){
+                        value = 999;
+                    }
+                }
+            }
+
+            if(value != 0){
+                if(entry.getKey().equalsIgnoreCase("meat") || entry.getKey().equalsIgnoreCase("wood")){
+
+                    priorityTree.put(entry.getKey()+"3",value);
+                    priorityTree.put(entry.getKey()+"4", value);
                 }else{
-                    priorityTree.put(entry.getKey(), entry.getValue());
+                    priorityTree.put(entry.getKey(), value);
                 }
             }
         }

@@ -58,8 +58,8 @@ public class BuildingEvents {
                         return event;
                     }
 
-                    if(!game.log.isRssEnough){
-                        game.dispatch(Event.builder().setLoc(90,250).setDelay(1.25));
+                    if (!game.log.isRssEnough) {
+                        game.dispatch(Event.builder().setLoc(90, 250).setDelay(1.25));
                         game.dispatch("top_left");
                         return event;
                     }
@@ -70,18 +70,18 @@ public class BuildingEvents {
         Event.builder(_map, "close_speedup").setLoc(72, 301).setDelay(1.5);
 
         Event.builder(_map, "use_train_speedup")
-                .setDelay(1.5) .setListener(((event, game) -> {
+                .setDelay(1.5).setListener(((event, game) -> {
 
             game.dispatch(Event.builder().setLoc(563, 361).setDelay(1.5));
-            game.dispatch(Event.builder().setLoc( 534, 900).setDelay(1.5));
+            game.dispatch(Event.builder().setLoc(534, 900).setDelay(1.5));
 
-            if(game.log.btnName.contains("btn_use")){
+            if (game.log.btnName.contains("btn_use")) {
                 game.dispatch.staticDelay(1.5);
                 game.dispatch("tap_building");
-                if(!game.log.btnName.contains("panel")){
+                if (!game.log.btnName.contains("panel")) {
                     return Event.SUCCESS;
                 }
-            }else{
+            } else {
                 game.dispatch(Event.builder().setLoc(77, 298).setDelay(1));
             }
             game.dispatch("top_left");
@@ -93,21 +93,21 @@ public class BuildingEvents {
                 .setListener(((event, game) -> {
 
                     game.dispatch(Event.builder().setLoc(563, 361).setDelay(1.5));
-                    game.dispatch(Event.builder().setLoc( 534, 900).setDelay(1.5));
+                    game.dispatch(Event.builder().setLoc(534, 900).setDelay(1.5));
 
-                    if(game.log.btnName.contains("btn_use")){
+                    if (game.log.btnName.contains("btn_use")) {
 
-                        for(int i=0;i<10;i++){
-                            game.dispatch( Event.builder().setLoc(580, 200, 580, 250, 200).setDelay(1));
-                            if(game.log.btnName.contains("topbar1")){
+                        for (int i = 0; i < 10; i++) {
+                            game.dispatch(Event.builder().setLoc(580, 200, 580, 250, 200).setDelay(1));
+                            if (game.log.btnName.contains("topbar1")) {
                                 break;
                             }
                         }
-                        if(game.log.btnName.contains("btn_free")){
-                            game.dispatch( Event.builder().setLoc(580, 200).setDelay(1));
+                        if (game.log.btnName.contains("btn_free")) {
+                            game.dispatch(Event.builder().setLoc(580, 200).setDelay(1));
                             return Event.SUCCESS;
                         }
-                    }else{
+                    } else {
                         game.dispatch(Event.builder().setLoc(77, 298).setDelay(1));
                     }
 
@@ -158,11 +158,11 @@ public class BuildingEvents {
                 .isBuilding()
                 .setLoc(-1591, -306, 595, 400)
                 .setListener(((event, game) -> {
-                    for(int i =0; i<10; i++){
-                        if(game.log.btnName.contains("speedup")){
+                    for (int i = 0; i < 10; i++) {
+                        if (game.log.btnName.contains("speedup")) {
                             game.dispatch.staticDelay(1.5);
                             return game.dispatch("use_speedup") ? Event.SUCCESS : event;
-                        }else{
+                        } else {
                             game.dispatch(Event.builder().isBuilding()
                                     .setLoc(-1591, -306, 595, 400));
                         }
@@ -236,12 +236,11 @@ public class BuildingEvents {
                                 .setListener((event, game) -> {
                                             while (game.log.btnName.contains("BODY:btn_rss")) {
 
-                                                if(game.account.getBuildingLvl("stronghold") >= 10 && game.account.isRssLessThan("meat", "wood")){
+                                                if (game.account.getBuildingLvl("stronghold") >= 10 && game.account.isRssLessThan("meat", "wood")) {
                                                     game.dispatch(Event.builder()
                                                             .setLoc(535, 635)
                                                             .setDelay(1.2));
-                                                }
-                                                else if (game.account.getBuildingLvl("stronghold") >= 8 && game.account.isRssLessThan("rock", "wood")) {
+                                                } else if (game.account.getBuildingLvl("stronghold") >= 8 && game.account.isRssLessThan("rock", "wood")) {
                                                     game.dispatch(Event.builder()
                                                             .setLoc(520, 812)
                                                             .setDelay(1.2));
@@ -256,7 +255,7 @@ public class BuildingEvents {
                                                     .setDelay(1.5)
                                             );
                                             game.dispatch("top_left");
-                                    return Event.SUCCESS;
+                                            return Event.SUCCESS;
                                         }
                                 )
                 );
@@ -283,28 +282,32 @@ public class BuildingEvents {
                             Event.builder().setDelay(1.5)
                                     .setLoc(84, 247));
 
-                    game.dispatch.staticDelay(1.2);
+                    if (!game.account.isThirtyDay()) {
 
-                    if(game.account.getBuildingLvl("stronghold") < 6) {
+                        game.dispatch.staticDelay(1.2);
+
+                        if (game.account.getBuildingLvl("stronghold") < 6) {
+                            game.dispatch(
+                                    Event.builder().setDelay(1.5)
+                                            .setLoc(359, 564));
+                        } else {
+                            game.dispatch(
+                                    Event.builder().setDelay(1.5)
+                                            .setLoc(571, 564));
+                        }
+
                         game.dispatch(
-                                Event.builder().setDelay(1.5)
-                                        .setLoc(359, 564));
-                    }
-                    else{
+                                Event.builder().setDelay(1.2)
+                                        .setLoc(358, 1122));
                         game.dispatch(
-                                Event.builder().setDelay(1.5)
-                                        .setLoc(571, 564));
+                                Event.builder().setDelay(1.2)
+                                        .setLoc(358, 1122));
+
+                        game.dispatch("top_left");
+                        game.dispatch("top_left");
                     }
 
 
-                    game.dispatch(
-                            Event.builder().setDelay(1.2)
-                                    .setLoc(358, 1122));
-                    game.dispatch(
-                            Event.builder().setDelay(1.2)
-                                    .setLoc(358, 1122));
-
-                    game.dispatch("top_left");
                     game.dispatch("top_left");
 
                     return Event.SUCCESS;
@@ -323,7 +326,7 @@ public class BuildingEvents {
                 .setListener(((event, game) -> {
                     game.dispatch("tap_building");
                     game.dispatch(Event.builder().setLoc(643, 753));
-                    if(game.log.btnName.contains("btn_speed")){
+                    if (game.log.btnName.contains("btn_speed")) {
                         return game.dispatch("use_train_speedup") ? Event.SUCCESS : event;
                     }
                     game.dispatch("top_left");
@@ -406,11 +409,11 @@ public class BuildingEvents {
 
         Event.builder(_map, "defense_hall")
                 .isBuilding(true)
-                .setLoc(-583,-1553, 450, 485);
+                .setLoc(-583, -1553, 450, 485);
 
         Event.builder(_map, "war_hall")
                 .isBuilding(true)
-                .setLoc(-259,-1628,467, 475);
+                .setLoc(-259, -1628, 467, 475);
 
         Event.builder(_map, "squirrel")
                 .setTargetName("loc_28")
@@ -419,9 +422,9 @@ public class BuildingEvents {
                 .setListener(((event, game) -> {
 
                     Event use = Event.builder().setLoc(350, 630).setDelay(1.25);
-                    game.dispatch( use);
-                    game.dispatch( use);
-                    if(!game.account.isFinishInit()){
+                    game.dispatch(use);
+                    game.dispatch(use);
+                    if (!game.account.isFinishInit()) {
                         game.dispatch.staticDelay(2.5);
                         game.dispatch(Event.builder().setLoc(156, 768).setDelay(1));
                     }
@@ -430,7 +433,7 @@ public class BuildingEvents {
 
         Event.builder(_map, "pig")
                 .isBuilding()
-                .setLoc(-2281,-1951)
+                .setLoc(-2281, -1951)
                 .setChain(
                         Event.builder().setLoc(337, 490).setDelay(1.5),
                         Event.builder().setLoc(337, 517).setDelay(1.5),

@@ -4,7 +4,6 @@ import game.GameInstance;
 import store.Account;
 import store.BuildHammer;
 import store.Store;
-import util.FilePath;
 import util.Global;
 import util.Logger;
 
@@ -20,6 +19,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 public class UserInterface extends JPanel {
@@ -719,6 +721,10 @@ public class UserInterface extends JPanel {
         priorityPaneWrapper = createPriorityPane(table, model);
 
         final JButton resetAll = new JButton("Reset All");
+        final JPanel northPanel = new JPanel(new GridLayout(2,1));
+        northPanel.add(resetAll, BorderLayout.NORTH);
+        northPanel.add(getBulkSettingDialog(table));
+
         resetAll.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to reset all?",null, JOptionPane.OK_CANCEL_OPTION);
             if (confirm == JOptionPane.OK_OPTION) {
@@ -736,7 +742,8 @@ public class UserInterface extends JPanel {
             featureCBPane = createCBFeaturePane(table, model);
             numberPaneWrapper = createNumberPane(table, model);
             priorityPaneWrapper = createPriorityPane(table, model);
-            botPane.add(resetAll, BorderLayout.NORTH);
+
+            botPane.add(northPanel, BorderLayout.NORTH);
             botPane.add(featureCBPane, BorderLayout.WEST);
             botPane.add(numberPaneWrapper, BorderLayout.CENTER);
             botPane.add(priorityPaneWrapper, BorderLayout.EAST);
@@ -745,7 +752,7 @@ public class UserInterface extends JPanel {
             owner.pack();
         });
 
-        botPane.add(resetAll, BorderLayout.NORTH);
+        botPane.add(northPanel, BorderLayout.NORTH);
         botPane.add(featureCBPane, BorderLayout.WEST);
         botPane.add(numberPaneWrapper, BorderLayout.CENTER);
         botPane.add(priorityPaneWrapper, BorderLayout.EAST);
@@ -763,6 +770,104 @@ public class UserInterface extends JPanel {
         }
         System.out.println("interface added");
         return panel;
+    }
+
+    private void AddSingleBulkSetting(String type, JPanel container, String label, JTable table, BiFunction<Account, String, Boolean> func){
+        JPanel singlePanel = new JPanel(new GridLayout(1,4));
+        container.add(singlePanel);
+        final JTextField textfield = new JTextField();
+        final JCheckBox checkbox = new JCheckBox();
+        singlePanel.add(new JLabel(label));
+
+        if(type.equalsIgnoreCase("tf")){
+            singlePanel.add(textfield);
+        }else{
+            singlePanel.add( checkbox );
+        }
+
+        JButton setSelectedBtn = new JButton("Set Selected");
+        JButton setAllBtn = new JButton("Set All");
+
+        singlePanel.add(setSelectedBtn);
+        singlePanel.add(setAllBtn);
+        setSelectedBtn.addActionListener(e -> {
+            String value;
+            if(type.equalsIgnoreCase("tf") ){
+                value = textfield.getText();
+            }else{
+                value = checkbox.isSelected() ? "checked" : "unchecked";
+            }
+            int start = table.getSelectedRow();
+            int end = table.getSelectionModel().getMaxSelectionIndex();
+            if (start != -1) {
+                for (; start <= end; start++) {
+                    Account acc = store.getAccountGroup().getAccount(start);
+                    if(!func.apply(acc,value )){
+                        JOptionPane.showMessageDialog(owner, "Validation Failed");
+                        return;
+                    }
+                    store.updateAccount(acc);
+                }
+                JOptionPane.showMessageDialog(owner, "Completed");
+            }
+        });
+
+        setAllBtn.addActionListener(e -> {
+            String value;
+            if(type.equalsIgnoreCase("tf") ){
+                value = textfield.getText();
+            }else{
+                value = checkbox.isSelected() ? "y" : "n";
+            }
+            for (Account acc : store.getAccountGroup().getAccounts()) {
+                if(!func.apply(acc, value)){
+                    JOptionPane.showMessageDialog(owner, "Validation Failed");
+                    return;
+                }
+                store.updateAccount(acc);
+            }
+            JOptionPane.showMessageDialog(owner, "Completed");
+
+        });
+
+    }
+
+    private JButton getBulkSettingDialog(JTable table) {
+        final JButton bulkBtn = new JButton("Bulk Account Setting");
+
+        bulkBtn.addActionListener(e->{
+            JPanel panel = new JPanel(new GridLayout(6, 1));
+            AddSingleBulkSetting("cb",panel, "Changed Server", table, (acc, value) -> {
+                acc.setChangedServer(value.equalsIgnoreCase("y"));
+                return true;
+            });
+            AddSingleBulkSetting("cb",panel, "Finished Init", table, (acc, value) -> {
+                acc.setFinishInit(value.equalsIgnoreCase("y"));
+                return true;
+            });
+            AddSingleBulkSetting("cb",panel, "Joined Clan", table, (acc, value) -> {
+                acc.setJoinClan(value.equalsIgnoreCase("y"));
+                return true;
+            });
+            AddSingleBulkSetting("cb",panel, "Is Randomized", table, (acc, value) -> {
+                acc.setRandomized(value.equalsIgnoreCase("y"));
+                return true;
+            });
+            AddSingleBulkSetting("cb",panel, "Is 30 Days", table, (acc, value) -> {
+                acc.setThirtyDay(value.equalsIgnoreCase("y"));
+                return true;
+            });
+
+            AddSingleBulkSetting("tf",panel, "Clan", table, (acc, value) -> {
+                acc.setClan(value);
+                return true;
+            });
+
+            JOptionPane.showConfirmDialog(panel, panel,
+                    "Bulk Setting", JOptionPane.CLOSED_OPTION);
+
+        });
+        return bulkBtn;
     }
 
 
@@ -825,6 +930,7 @@ public class UserInterface extends JPanel {
             final JCheckBox finishInitCB = new JCheckBox("Finished Init", acc.isFinishInit());
             final JCheckBox joinedClanCB = new JCheckBox("Joined Clan", acc.isJoinClan());
             final JCheckBox isRandomizeCB = new JCheckBox("Is Randomized", acc.isRandomized());
+            final JCheckBox isThirtyDayCB = new JCheckBox("Is 30 Days", acc.isThirtyDay());
             final JTextField serverIDField = NullableTextField(acc.getServerID());
             final JTextField nameField = NullableTextField( acc.getName());
             final JTextField hordeField = NullableTextField(acc.getHordeLabel());
@@ -835,12 +941,14 @@ public class UserInterface extends JPanel {
             final JTextField lastGiftTimeField = NullableTextField(acc.getLastGiftTime());
             final JTextField lastRoundField = NullableTextField(acc.getLastRound());
 
-            final JPanel metaPanel = new JPanel(new GridLayout(11, 2));
+            final JPanel metaPanel = new JPanel(new GridLayout(12, 2));
             metaPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Account Data"));
             metaPanel.add(changedServerCB);
             metaPanel.add(finishInitCB);
             metaPanel.add(joinedClanCB);
             metaPanel.add(isRandomizeCB);
+            metaPanel.add(isThirtyDayCB);
+            metaPanel.add(new JTextField(""));
             addLabelTextField("Server ID: ", serverIDField, metaPanel);
             addLabelTextField("Horde: ", hordeField, metaPanel);
             addLabelTextField("Clan: ", clanField, metaPanel);

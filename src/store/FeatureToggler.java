@@ -45,6 +45,7 @@ public class FeatureToggler {
             globalFeatures.put("Feed Temple", false);
             globalFeatures.put("No Clan", false);
             globalFeatures.put("Agatha Search", true);
+            globalFeatures.put("Prioritize Growth", true);
          }
         return globalFeatures;
     }

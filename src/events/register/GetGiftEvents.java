@@ -9,6 +9,18 @@ public class GetGiftEvents {
     public static void register(HashMap<String, Event> _map) {
 
 
+        Event.builder(_map, "buy_meat")
+                .setDelay(1)
+                .setListener(((event, game) -> {
+                    game.dispatch.delay(1);
+                    game.dispatch(Event.builder().setLoc(285, 85).setDelay(1.5));
+                    game.dispatch(Event.builder().setLoc(485, 711).setDelay(1.5));
+                    game.dispatch(Event.builder().setLoc(485, 711).setDelay(1.5));
+                    game.dispatch("top_left");
+                    return Event.SUCCESS;
+                }));
+
+
         Event.builder(_map, "help")
                 .setDelay(1)
                 .setLoc(675, 742);
