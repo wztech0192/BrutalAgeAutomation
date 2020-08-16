@@ -49,13 +49,15 @@ public class WhenStart {
         if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
 
             if (!game.account.isJoinClan()) {
-                game.dispatch("apply_clan");
-                if (game.account.getClan() != null && !game.account.getClan().equalsIgnoreCase("")) {
-                    game.dispatch("search_clan");
-                    game.dispatch.enterText(game.account.getClan());
-                    game.dispatch("confirm_search_clan");
+
+                if(game.dispatch("apply_clan")){
+                    if (game.account.getClan() != null && !game.account.getClan().equalsIgnoreCase("")) {
+                        game.dispatch("search_clan");
+                        game.dispatch.enterText(game.account.getClan());
+                        game.dispatch("confirm_search_clan");
+                    }
+                    game.dispatch("join_clan");
                 }
-                game.dispatch("join_clan");
                 game.dispatch("back_from_clan");
                 game.account.setJoinClan(true);
                 game.updateAccount();
@@ -72,7 +74,7 @@ public class WhenStart {
         game.dispatch("get_rss_info");
 
 
-        if(game.account.getBuildingLvl("stronghold")>=13 && game.account.getResource("meat") < 200000){
+        if(game.account.getBuildingLvl("stronghold")>=13 && game.account.getResource("meat") < 500000){
             game.dispatch("buy_meat");
         }
 
@@ -129,6 +131,12 @@ public class WhenStart {
                 (game.account.getLevel() >= 10 && game.account.getLevel() <= 12 && game.account.getPreviousLevel() != game.account.getLevel())) {
             game.dispatch("open_talent");
             game.dispatch("use_talent");
+            game.account.setPreviousLevel(game.account.getLevel());
+            game.updateAccount();
+        }
+        else if(game.account.getLevel() >= 29 && game.account.getPreviousLevel() < 28){
+            game.dispatch("open_talent");
+            game.dispatch("use_growth_talent");
             game.account.setPreviousLevel(game.account.getLevel());
             game.updateAccount();
         }

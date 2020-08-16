@@ -14,7 +14,7 @@ public class Initiate {
 
     public static void fire(GameInstance game) throws Exception {
         game.dispatch.stopGame();
-
+        game.log.reset();
         game.account = null;
         game.posTarget = null;
 

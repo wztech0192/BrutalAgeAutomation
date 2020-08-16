@@ -293,7 +293,7 @@ public class WorldMapEvents {
 
                     game.dispatch(Event.builder().setLoc(521, 1200));
                     game.dispatch.staticDelay(1.5);
-
+                    game.dispatch(Event.builder().setLoc(381, 650));
                     Logger.log("oops "+game.log.oops);
                     if(!game.log.oops ){
                         int leftTroops = game.account.getTroops() - game.log.currTroops;
@@ -318,12 +318,12 @@ public class WorldMapEvents {
 
                     for(int i=0;i<3;i++){
                         game.dispatch.staticDelay(2.5);
-                        game.dispatch(Event.builder().setLoc(500, 620).setDelay(1.25));
+                        game.dispatch(Event.builder().setLoc(471, 634).setDelay(1.25));
                         if(game.log.btnName.contains("buttons_5:btn_5")){
+                            game.dispatch(Event.builder().setLoc(471, 634).setDelay(1.25));
                             break;
                         }
                     }
-
 
                     game.dispatch("attackTemple");
 

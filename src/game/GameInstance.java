@@ -1,6 +1,7 @@
 package game;
 
 import com.android.ddmlib.AdbCommandRejectedException;
+import com.android.ddmlib.ShellCommandUnresponsiveException;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import dispatcher.EventDispatcher;
 import events.LogProcess;
@@ -12,6 +13,7 @@ import store.Store;
 import util.Logger;
 import util.MyDebugger;
 
+import javax.crypto.AEADBadTagException;
 import java.net.ConnectException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -105,7 +107,7 @@ public class GameInstance {
                     }
                 }
             }
-            catch(AdbCommandRejectedException | ConnectException e){
+            catch(AdbCommandRejectedException | ConnectException | ShellCommandUnresponsiveException e){
                 if(restarting == 0 || restarting == 2) {
                     restarting += 1;
                     Logger.log("Emulator Stopped!! Attempt to restart..");

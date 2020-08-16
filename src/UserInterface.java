@@ -940,8 +940,8 @@ public class UserInterface extends JPanel {
             final JTextField errorField = NullableTextField(acc.getError());
             final JTextField lastGiftTimeField = NullableTextField(acc.getLastGiftTime());
             final JTextField lastRoundField = NullableTextField(acc.getLastRound());
-
-            final JPanel metaPanel = new JPanel(new GridLayout(12, 2));
+            final JTextField troopsField = NullableTextField(acc.getTroops());
+            final JPanel metaPanel = new JPanel(new GridLayout(13, 2));
             metaPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Account Data"));
             metaPanel.add(changedServerCB);
             metaPanel.add(finishInitCB);
@@ -956,6 +956,7 @@ public class UserInterface extends JPanel {
             addLabelTextField("Level: ", levelField, metaPanel);
             addLabelTextField("Name: ", nameField, metaPanel);
             addLabelTextField("Error: ", errorField, metaPanel);
+            addLabelTextField("Troops: ", troopsField, metaPanel);
             addLabelTextField("Last Gift Time: ", lastGiftTimeField, metaPanel);
             addLabelTextField("Last Round Time: ", lastRoundField, metaPanel);
 
@@ -1035,6 +1036,7 @@ public class UserInterface extends JPanel {
                     acc.setError(Integer.parseInt(errorField.getText()));
                     acc.setLastGiftTime(LocalDateTime.parse(lastGiftTimeField.getText()));
                     acc.setLastRound(LocalDateTime.parse(lastRoundField.getText()));
+                    acc.setTroops(Integer.parseInt(troopsField.getText()));
 
                     for (Map.Entry<String, JTextField> entry : priorityTextfield.entrySet()) {
                         acc.getNumberFeaturer().setGatherPriority(entry.getKey(), Integer.parseInt(entry.getValue().getText()));

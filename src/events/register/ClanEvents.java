@@ -58,7 +58,7 @@ public class ClanEvents {
                     Logger.log("*** Max Transport: "+game.log.limitTransportNum);
                     if(game.log.maxTransportNum >= game.log.limitTransportNum) {
                         for (int i = 311; i <= 711; i += 100) {
-                            if(i == 311 && game.log.transportRss[0] < 500000){ //dont transport wood if rss is < 250000
+                            if(i == 311 && game.log.transportRss[0] < 2000000){ //dont transport wood if rss is < 250000
                                 /*
                                 * 0 wood  -0
                                     1 rock  -3
@@ -68,7 +68,7 @@ public class ClanEvents {
                                 * */
                                 continue;
                             }
-                            else if(i == 411 && game.log.transportRss[3] < 750000){
+                            else if(i == 411 && game.log.transportRss[3] < 2000000){
                                 continue;
                             }
                             game.dispatch.exec(String.format("input swipe 539 %d 579 %d", i, i));
@@ -135,7 +135,16 @@ public class ClanEvents {
         Event.builder(_map, "quit_clan")
                 .setDelay(1.5)
                 .setListener(((event, game) -> {
+
                     game.dispatch(Event.builder().setLoc(370, 1175,370, 560, 500 ));
+                    for(int i=0; i<3; i++){
+                        if(!game.log.btnName.contains("listBoxItem")){
+                            game.dispatch("top_left");
+                            game.dispatch(Event.builder().setLoc(370, 1175,370, 560, 500 ));
+                        }else{
+                            break;
+                        }
+                    }
                     game.dispatch.staticDelay(1.5);
                     game.dispatch(Event.builder().setLoc(370, 1100).setDelay(1.25));
                     game.dispatch(Event.builder().setLoc(370, 704).setDelay(1.25));
@@ -184,6 +193,9 @@ public class ClanEvents {
                         game.dispatch("confirm_clan");
                     }
                     else{
+                        if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+                            return event;
+                        }
                         game.dispatch("quit_clan");
                         game.dispatch("apply_clan");
                     }

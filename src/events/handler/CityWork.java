@@ -120,7 +120,7 @@ public class CityWork {
                         nextBuildingTarget(game.account, game.account.getSecondaryHammer()),
                         game.account.getSecondaryHammer().getBuildingName())) {
 
-                    if( game.account.getBuildingLvl("stronghold") >= 10 ){
+                    if( game.account.getBuildingLvl("stronghold") >= 10 &&  game.account.getBuildingLvl("stronghold") < 14 ){
                         hammerBuild(game, game.account.getPrimaryHammer(), "stronghold", game.account.getSecondaryHammer().getBuildingName());
                     }
                     // game.account.getPrimaryHammer().setHammer(LocalDateTime.now().plusMinutes(30));
@@ -214,6 +214,9 @@ public class CityWork {
             } else if (buildingCondition(account, "tower", 12, hammer)) {
                 return "tower";
             }
+            else if (buildingCondition(account, "research", 13, hammer)) {
+                return "research";
+            }
         }
 
         return lowest;
@@ -285,44 +288,53 @@ public class CityWork {
 
                 game.log.buildingCompleteLevel = 1;
                 if (game.dispatch("upgrade_building")) {
-                    game.dispatch.delay(2);
-                    if (building.equalsIgnoreCase("stronghold")) {
-                        if (game.account.getBuildingLvl("stronghold") == 5) {
-                            game.dispatch("confirm_stronghold_6");
-                        } else if (
-                                game.account.getBuildingLvl("stronghold") == 6 ||
-                                game.account.getBuildingLvl("stronghold") == 7 ||
-                                game.account.getBuildingLvl("stronghold") == 8 ||
-                                game.account.getBuildingLvl("stronghold") == 11
-                        ) {
-                            if (game.dispatch("stronghold_speed_up")) {
-                                game.account.setBuildingLevel("stronghold", game.account.getBuildingLvl("stronghold") + 1);
-                                game.updateAccount();
-                                hammerAction(game);
-                                return true;
+                    game.log.needRss = 0;
+                    game.dispatch.staticDelay(2);
+                    if(game.log.needRss >= 0){
+                        game.dispatch(Event.builder().setTargetName("close dialog").setLoc(72, 246));
+                        game.dispatch("top_left");
+                        Logger.log("No Resource, try next time");
+                        return false;
+                    }else{
+                        if (building.equalsIgnoreCase("stronghold")) {
+                            if (game.account.getBuildingLvl("stronghold") == 5) {
+                                game.dispatch("confirm_stronghold_6");
+                            } else if (
+                                    game.account.getBuildingLvl("stronghold") == 6 ||
+                                            game.account.getBuildingLvl("stronghold") == 7 ||
+                                            game.account.getBuildingLvl("stronghold") == 8 ||
+                                            game.account.getBuildingLvl("stronghold") == 11
+                            ) {
+                                if (game.dispatch("stronghold_speed_up")) {
+                                    game.account.setBuildingLevel("stronghold", game.account.getBuildingLvl("stronghold") + 1);
+                                    game.updateAccount();
+                                    hammerAction(game);
+                                    return true;
+                                }
                             }
                         }
+
+                        if (hammer == game.account.getSecondaryHammer()) {
+                            if (!game.dispatch("test_upgrade_secondary")) {
+                                if (game.account.getFeatureToggler().get("Second Hammer")) {
+                                    game.dispatch(Event.builder().setLoc(359, 890).setDelay(1.5));
+                                    hammer.resetExpiration();
+                                    game.dispatch("upgrade_building");
+                                } else {
+                                    game.dispatch(Event.builder().setLoc(80, 250).setDelay(1.5));
+                                    return false;
+                                }
+                            }
+                        }
+                        if (game.log.buildingCompleteLevel != 1) {
+                            game.dispatch("tap_building");
+                            hammer.setHammer(game.log.buidlingCompleteTime);
+                            hammer.setBuildingName(building);
+                            hammer.setNextBuildingLevel(game.log.buildingCompleteLevel);
+                        }
+                        return true;
                     }
 
-                    if (hammer == game.account.getSecondaryHammer()) {
-                        if (!game.dispatch("test_upgrade_secondary")) {
-                            if (game.account.getFeatureToggler().get("Second Hammer")) {
-                                game.dispatch(Event.builder().setLoc(359, 890).setDelay(1.5));
-                                hammer.resetExpiration();
-                                game.dispatch("upgrade_building");
-                            } else {
-                                game.dispatch(Event.builder().setLoc(80, 250).setDelay(1.5));
-                                return false;
-                            }
-                        }
-                    }
-                    if (game.log.buildingCompleteLevel != 1) {
-                        game.dispatch("tap_building");
-                        hammer.setHammer(game.log.buidlingCompleteTime);
-                        hammer.setBuildingName(building);
-                        hammer.setNextBuildingLevel(game.log.buildingCompleteLevel);
-                    }
-                    return true;
                     //game.account.setBuildingLevel(game, building, game.log.buildingCompleteLevel);
                 } else {
                     game.dispatch("test_upgrade_building");
@@ -410,6 +422,7 @@ public class CityWork {
             if(game.account.getBuildingLvl("defense_hall") == 0){
                 game.account.setBuildingLevel("defense_hall", 1);
             }
+
         }
 
         if (game.account.getBuildingLvl("defense_hall") >= 3) {

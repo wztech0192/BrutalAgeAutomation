@@ -29,6 +29,8 @@ public class LogProcess {
     private final static Pattern regexGetText = Pattern.compile("showText = (.*) textLength");
     private final static Pattern regexLimitTransport = Pattern.compile("limit (\\d*)");
     private final static DateTimeFormatter buildTimePattern = DateTimeFormatter.ofPattern("MMM d, yyyy h:m:s a");
+    private final static Pattern regexNeedRss = Pattern.compile("enter max : (\\d*) m_rssneedtoby: (.*)$");
+
     public boolean shouldTrain;
     public boolean shouldHeal;
     public int marches;
@@ -49,14 +51,17 @@ public class LogProcess {
     public int currTroops;
     public boolean emptyOutPost;
     public boolean isRssEnough;
-    private GameInstance game;
     public int maxTransportNum = 0;
     public int selectedTransportNum = 0;
     public int limitTransportNum = 0;
     public boolean hasClan = false;
     public boolean isInCity = true;
     public String text;
-    LogCatReceiverTask lcrt;
+    public int needRss = 0;
+    public String needRsstype = "";
+    private GameInstance game;
+    private LogCatReceiverTask lcrt;
+
 
     public LogProcess(GameInstance game) {
         this.game = game;
@@ -65,7 +70,7 @@ public class LogProcess {
     public void startLog() {
         lcrt = new LogCatReceiverTask(game.store.device);
         lcrt.addLogCatListener(msgList -> {
-            if(game.store.isClose){
+            if (game.store.isClose) {
                 lcrt.stop();
             }
             try {
@@ -96,9 +101,8 @@ public class LogProcess {
         Matcher m;
 
 
-
         if ((m = regexWorldScale.matcher(str)).find()) {
-            if(!m.group(1).trim().equalsIgnoreCase("")){
+            if (!m.group(1).trim().equalsIgnoreCase("")) {
                 worldScale = Double.parseDouble(m.group(1));
                 Logger.log("world scale " + worldScale);
             }
@@ -122,22 +126,17 @@ public class LogProcess {
             city.y = Double.parseDouble(m.group(2));
         } else if (str.contains("sfx_event_level_up.ogg")) {
             levelupDialog = true;
-        }else if(str.contains("playEffectL filename sound/sfx_event_notice_window.ogg")){
+        } else if (str.contains("playEffectL filename sound/sfx_event_notice_window.ogg")) {
             hasPopupWarning = true;
-        }
-        else if(str.contains("SaveRawData successs CITYMAP_LOCAL_DATA")){
+        } else if (str.contains("SaveRawData successs CITYMAP_LOCAL_DATA")) {
             isInCity = true;
-        }
-        else if(str.contains("initTiles =====>")){
+        } else if (str.contains("initTiles =====>")) {
             isInCity = false;
-        }
-        else if(str.contains("setAllianceWarNumber")){
+        } else if (str.contains("setAllianceWarNumber")) {
             hasClan = true;
-        }
-        else if (str.contains("sound/sfx_event_oops_window.ogg")){
-             oops = true;
-        }
-        else if (str.contains("m_rssneedtoby")){
+        } else if (str.contains("sound/sfx_event_oops_window.ogg")) {
+            oops = true;
+        } else if (str.contains("m_rssneedtoby")) {
             isRssEnough = false;
         }
 
@@ -154,11 +153,9 @@ public class LogProcess {
             case when_start:
                 if ((m = regexTalentScroll.matcher(str)).find()) {
                     talentScroll = Double.parseDouble(m.group(1));
-                }
-                else if((m = regexGetText.matcher((str))).find()){
+                } else if ((m = regexGetText.matcher((str))).find()) {
                     text = m.group(1);
-                }
-                else{
+                } else {
                     handleCityWork(str);
                 }
                 break;
@@ -185,7 +182,7 @@ public class LogProcess {
         if (str.contains("_offsetCityMap")) {
             if (game.posTarget != null) {
                 handlePosModeStart();
-            } else if(game.account != null) {
+            } else if (game.account != null) {
                 if (game.account.getChangedServer()) {
                     game.startEvent(GameStatus.when_start);
                 } else {
@@ -203,15 +200,15 @@ public class LogProcess {
     }
 
     private void handlePosModeStart() {
-        if(!game.posTarget.containsKey("temp")) {
+        if (!game.posTarget.containsKey("temp")) {
             if (!game.posTarget.containsKey("changed_server")) {
                 game.startEvent(GameStatus.change_server, "change_server");
-            } else if(game.posTarget.containsKey("exist")){
+            } else if (game.posTarget.containsKey("exist")) {
                 game.startEvent(GameStatus.world_map, "positioning");
-            }else{
+            } else {
                 game.startEvent(GameStatus.when_start, "configuring");
             }
-        }else{
+        } else {
             game.startEvent(GameStatus.when_start, "configuring");
         }
     }
@@ -248,31 +245,67 @@ public class LogProcess {
                             buildTimePattern)));
             Logger.log("Some building complete lvl " + buildingCompleteLevel + " at: " + buidlingCompleteTime);
         }
-        else{
+        else if ((m = regexNeedRss.matcher(str)).find()){
+            needRss = Integer.parseInt(m.group(1));
+
+            switch(m.group(2)){
+                case "rss_a" :
+                    needRsstype = "wood";
+                case "rss_d" :
+                    needRsstype = "meat";
+                    break;
+            }
+        }
+        else {
             handleTransport(str);
         }
     }
 
-    private void handleTransport(String str){
+    private void handleTransport(String str) {
         Matcher m;
 
-         if((m= regexTransportIndex.matcher(str)).find()){
+        if ((m = regexTransportIndex.matcher(str)).find()) {
             transportIndex = Integer.parseInt(m.group(1));
-        }
-        else if((m=regexMaxRss.matcher(str)).find()){
-            transportRss[transportIndex] =  Integer.parseInt(m.group(1));
-        }
-        else if((m= regexTransportSelected.matcher(str)).find()){
+        } else if ((m = regexMaxRss.matcher(str)).find()) {
+            transportRss[transportIndex] = Integer.parseInt(m.group(1));
+        } else if ((m = regexTransportSelected.matcher(str)).find()) {
             selectedTransportNum = Integer.parseInt(m.group(1));
-        }
-        else if((m=regexMaxTransport.matcher(str)).find()){
+        } else if ((m = regexMaxTransport.matcher(str)).find()) {
             maxTransportNum += Integer.parseInt(m.group(1));
-        }
-        else if((m=regexLimitTransport.matcher(str)).find()){
+        } else if ((m = regexLimitTransport.matcher(str)).find()) {
             limitTransportNum = Integer.parseInt(m.group(1));
         }
     }
 
+
+    public void reset() {
+        shouldTrain = false;
+        shouldHeal = false;
+        marches = 0;
+        talentScroll = 0;
+        oops = false;
+        hasPopupWarning = false;
+        transportIndex = 0;
+        transportRss = new int[5];
+        buildingCompleteLevel = 0;
+        buidlingCompleteTime = LocalDateTime.now();
+        touchPoint = new int[2];
+        city = new Point();
+        worldScale = 0;
+        worldCurr = new int[4];
+        levelupDialog = false;
+        btnName = "";
+        int idleTroops = 0;
+        int currTroops = 0;
+        emptyOutPost = false;
+        isRssEnough = false;
+        maxTransportNum = 0;
+        selectedTransportNum = 0;
+        limitTransportNum = 0;
+        hasClan = false;
+        isInCity = true;
+        String text = "";
+    }
 
     /**
      * Utility

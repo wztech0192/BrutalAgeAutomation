@@ -11,10 +11,19 @@ public class Config {
     private String NoxPath = System.getenv("ProgramFiles(X86)")+"/Nox/bin";
     private String EventFolder = "baevents";
     private String OwnerName = "";
+    private boolean SaveErrorScreenshot = false;
     private int instanceNumber = 4;
 
     public String getOwnerName() {
         return OwnerName;
+    }
+    @XmlElement
+    public void setSaveErrorScreenshot(boolean saveErrorScreenshot) {
+        SaveErrorScreenshot = saveErrorScreenshot;
+    }
+
+    public boolean isSaveErrorScreenshot() {
+        return SaveErrorScreenshot;
     }
 
     public void setOwnerName(String ownerName) {

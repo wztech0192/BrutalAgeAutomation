@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @XmlRootElement(name = "Account")
 public class Account {
 
-    public static String[] Columns = { "ID", "Name", "Error", "Stronghold",  "P) Meat", "P) Wood", "P) Rock","P) Ivory", "P) Mana", "Troops"};
+    public static String[] Columns = { "ID", "Name", "Error", "Stronghold",  "P) Meat", "P) Wood", "Troops", "Wounded"};
 
     //"Wood", "Ivory", "Mana", "Rock", "Meat"
     public String[] getColumnData(){
@@ -28,10 +28,8 @@ public class Account {
                 String.valueOf(getBuildingLvl("stronghold")),
                 getNumberFeaturer().getGatherPriorities().get("meat")+") "+df2.format(resources.get("meat") / K) +" K",
                 getNumberFeaturer().getGatherPriorities().get("wood")+") "+df2.format(resources.get("wood") / K) +" K",
-                getNumberFeaturer().getGatherPriorities().get("rock")+") "+df2.format( resources.get("rock") / K )+" K",
-                getNumberFeaturer().getGatherPriorities().get("ivory")+") "+df2.format(resources.get("ivory") / K )+" K",
-                getNumberFeaturer().getGatherPriorities().get("mana")+") "+df2.format( resources.get("mana") / K) +" K",
-                String.valueOf(getTroops())
+                String.valueOf(getTroops()),
+                getWounded()
         };
     }
 
@@ -70,6 +68,7 @@ public class Account {
     private String clan = "";
     private int level = 1;
     private int error = 0;
+    private String wounded = "";
     private boolean isJoinClan = false;
     private boolean isRandomized = false;
     private int previousLevel = 0;
@@ -428,7 +427,7 @@ public class Account {
 
             if(isPriorityGrowth && getBuildingLvl("stronghold") >= 9){
                 if(entry.getKey().equalsIgnoreCase("meat") || entry.getKey().equalsIgnoreCase("wood")){
-                    if(getResource(entry.getKey()) < 300000){
+                    if(getResource(entry.getKey()) < 1500000){
                         value = 999;
                     }
                 }
@@ -466,5 +465,12 @@ public class Account {
     @XmlElement
     public void setName(String name) {
         this.name  = name;
+    }
+    @XmlElement
+    public void setWounded(String wounded) {
+    }
+
+    public String getWounded() {
+        return wounded;
     }
 }

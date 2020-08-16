@@ -164,7 +164,7 @@ public class TestEvent {
                         int maxTroop = 0;
                         if(game.account != null) {
                              maxTroop = game.account.getNumberFeaturer().getNumberSetting().get("Max Troop");
-
+                             game.account.setWounded(wounded);
                              if(troops > -1){
                                  game.account.setTroops(troops);
                                  game.updateAccount();

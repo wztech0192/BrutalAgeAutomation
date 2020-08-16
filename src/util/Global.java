@@ -107,12 +107,14 @@ public class Global {
 
     public static void SettingGUI() {
 
-        final JPanel myPanel = new JPanel(new GridLayout(4,2));
+        final JPanel myPanel = new JPanel(new GridLayout(5,2));
 
         final JTextField noxPathField= new JTextField(config.getNoxPath());
         final JTextField eventField= new JTextField(config.getEventName());
         final JTextField instanceField= new JTextField(String.valueOf(config.getInstanceNumber()));
         final JTextField eventFolderField = new JTextField(config.getEventFolder());
+        final JCheckBox saveErrorCB = new JCheckBox();
+        saveErrorCB.setSelected(config.isSaveErrorScreenshot());
 
         myPanel.add(new JLabel("Nox Path"));
         myPanel.add(noxPathField);
@@ -126,6 +128,9 @@ public class Global {
         myPanel.add(new JLabel("Total Tab"));
         myPanel.add(instanceField);
 
+        myPanel.add(new JLabel("Save Error"));
+        myPanel.add(saveErrorCB);
+
         int result = JOptionPane.showConfirmDialog(myPanel, myPanel,
                 "Setting", JOptionPane.OK_CANCEL_OPTION);
 
@@ -135,6 +140,7 @@ public class Global {
                 config.setEventName(eventField.getText());
                 config.setEventFolder(eventFolderField.getText());
                 config.setInstanceNumber(Integer.parseInt(instanceField.getText()));
+                config.setSaveErrorScreenshot(saveErrorCB.isSelected());
                 util.Marshaller.marshell(config, FilePath.CONFIG_PATH);
             }catch(Exception e){
                 e.printStackTrace();

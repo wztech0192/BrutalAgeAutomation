@@ -15,6 +15,38 @@ public class TalentEvents {
                 .setChain(
                         Event.builder().setLoc(229,1126).setDelay(1.5)
                 );
+
+        Event.builder(_map, "use_growth_talent")
+                .setDelay(1.5)
+                .setListener((event, game)->{
+
+                    game.dispatch(Event.builder().setTargetName("Growth tab").setLoc( 528, 210).setDelay(1.5));
+                    int[] buttons = new int[]{
+                            356, 437,
+                            151, 672,
+                            604, 691,
+                            152, 904,
+                            590, 933
+                    };
+
+                    Event clickLearn = Event.builder().setLoc(373, 723).setDelay(1);
+                    Event closeEvent = Event.builder().setLoc(61, 287).setDelay(1.5);
+
+                    for(int btnIndex=0; btnIndex<buttons.length;btnIndex+=2){
+                        game.dispatch(Event.builder().setLoc(buttons[btnIndex], buttons[btnIndex + 1]).setDelay(1.25));
+
+                        for(int i=0;i<11;i++){
+                            game.dispatch.sendEvent(clickLearn);
+                        }
+
+                        game.dispatch.sendEvent(closeEvent);
+
+                        game.dispatch.staticDelay(1.5);
+                    }
+
+                    return Event.SUCCESS;
+                });
+
         Event.builder(_map, "use_talent")
                 .setDelay(1.5)
                 .setListener(((event, game) -> {

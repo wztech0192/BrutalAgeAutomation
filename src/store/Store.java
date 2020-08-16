@@ -273,31 +273,14 @@ public class Store extends WebSocketAdapter {
     public boolean restartEmulator() {
         EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getSelectedEmulator()+" -quit", null);
         try {
-            Thread.sleep(2000);
+            Logger.log("Start emulator in 5 second");
+            Thread.sleep(5000);
 
             EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getSelectedEmulator(), null);
             Thread.sleep(25000);
 
             return true;
-           /* while (true) {
-                Logger.log("Trying to connected to " + ip + "...attempt " + redo);
-                EventDispatcher.exec("adb connect " + ip, s -> false);
-                if (bridge.hasInitialDeviceList()) {
-                    for (IDevice tempDevice : bridge.getDevices()) {
-                        if (tempDevice.getName().contains(ip)) {
-                            Logger.log("Connected!");
-                            device = tempDevice;
-                            return true;
-                        }
-                    }
-                }
-                redo++;
-                if (redo > 3) {
-                    Logger.log("No device find");
-                    return false;
-                }
-                Thread.sleep(3000);
-            }*/
+
         }
         catch(Exception e){
             e.printStackTrace();
