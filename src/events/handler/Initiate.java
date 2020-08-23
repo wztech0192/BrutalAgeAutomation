@@ -85,5 +85,6 @@ public class Initiate {
 
             game.dispatch.changeAccount(newID,false);
         }
+
     }
 }

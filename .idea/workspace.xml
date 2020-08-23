@@ -25,22 +25,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="update">
+      <change afterPath="$PROJECT_DIR$/src/ui/AccountDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/BulkSettingDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/CBFeaturePane.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/GlobalFeaturePane.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/NumberPane.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/PriorityPane.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/SearchOptions.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/LogProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/LogProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/CityWork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/CityWork.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/Initiate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/Initiate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/handler/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WorldMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/ClanEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/ClanEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/TalentEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TalentEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/GetGiftEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/TestEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/TestEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/WorldMapEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/GameException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/GameInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameInstance.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/NumberFeaturer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/NumberFeaturer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Global.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Global.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/FilePath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/FilePath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/MyDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/MyDebugger.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,6 +110,7 @@
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm\src\resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="ui" />
       <recent name="events.handler" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -112,7 +121,7 @@
       <recent name="C:\Users\Wei Zheng\Desktop\Project\BrutalAgeFarm" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Production">
+  <component name="RunManager" selected="Application.Debug">
     <configuration name="Debug" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="BrutalAgeFarm" />
@@ -291,7 +300,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593234492707</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="update">
+      <created>1597554276098</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1597554276098</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -367,6 +383,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="440" y="93" key="#Project_Structure/0.0.1920.1040@0.0.1920.1040" timestamp="1591880154513" />
+    <state x="743" y="413" width="433" height="222" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1598164989604">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="743" y="413" width="433" height="222" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1598164989604" />
     <state x="228" y="68" width="1071" height="957" key="CommitChangelistDialog2" timestamp="1590909412934">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -379,22 +399,38 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="727" y="388" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1592190880556" />
-    <state width="1876" height="213" key="GridCell.Tab.0.bottom" timestamp="1597553859047">
+    <state width="1876" height="213" key="GridCell.Tab.0.bottom" timestamp="1598166047098">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="213" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597553859047" />
-    <state width="1876" height="213" key="GridCell.Tab.0.center" timestamp="1597553859047">
+    <state width="1876" height="213" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1598166047098" />
+    <state width="1876" height="213" key="GridCell.Tab.0.center" timestamp="1598166047098">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="213" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597553859047" />
-    <state width="1876" height="213" key="GridCell.Tab.0.left" timestamp="1597553859046">
+    <state width="1876" height="213" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1598166047098" />
+    <state width="1876" height="213" key="GridCell.Tab.0.left" timestamp="1598166047098">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="213" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597553859046" />
-    <state width="1876" height="213" key="GridCell.Tab.0.right" timestamp="1597553859047">
+    <state width="1876" height="213" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1598166047098" />
+    <state width="1876" height="213" key="GridCell.Tab.0.right" timestamp="1598166047098">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="213" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597553859047" />
+    <state width="1876" height="213" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1598166047098" />
+    <state width="1876" height="342" key="GridCell.Tab.1.bottom" timestamp="1598166038867">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="342" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1598166038867" />
+    <state width="1876" height="342" key="GridCell.Tab.1.center" timestamp="1598166038867">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="342" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1598166038867" />
+    <state width="1876" height="342" key="GridCell.Tab.1.left" timestamp="1598166038867">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="342" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1598166038867" />
+    <state width="1876" height="342" key="GridCell.Tab.1.right" timestamp="1598166038867">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="342" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1598166038867" />
     <state x="184" y="84" key="MergeDialog" timestamp="1592190430764">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -403,22 +439,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="446" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1592190881911" />
-    <state x="558" y="251" key="Vcs.Push.Dialog.v2" timestamp="1593234495282">
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2" timestamp="1597554277943">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1593234495282" />
-    <state x="92" y="92" width="1736" height="862" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1590082182986">
+    <state x="558" y="251" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1597554277943" />
+    <state x="92" y="92" width="1736" height="862" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1598153949506">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="92" y="92" width="1736" height="862" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1590082182986" />
+    <state x="92" y="92" width="1736" height="862" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1598153949506" />
     <state x="775" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1592190411745">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="775" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1592190411745" />
-    <state x="1184" y="236" width="736" height="804" key="find.popup" timestamp="1597553320312">
+    <state x="1108" y="230" width="736" height="804" key="find.popup" timestamp="1598162958910">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1184" y="236" width="736" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1597553320312" />
+    <state x="1108" y="230" width="736" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1598162958910" />
     <state x="616" y="235" key="run.anything.popup" timestamp="1590907055240">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -430,6 +466,21 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$MAVEN_REPOSITORY$/com/android/tools/ddms/ddmlib/25.3.0/ddmlib-25.3.0.jar!/com/android/ddmlib/RawImage.class</url>
           <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/dispatcher/EventDispatcher.java</url>
+          <line>627</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/dispatcher/EventDispatcher.java</url>
+          <line>631</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/dispatcher/EventDispatcher.java</url>
+          <line>635</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

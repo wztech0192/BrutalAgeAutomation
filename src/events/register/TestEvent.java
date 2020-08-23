@@ -165,10 +165,11 @@ public class TestEvent {
                         if(game.account != null) {
                              maxTroop = game.account.getNumberFeaturer().getNumberSetting().get("Max Troop");
                              game.account.setWounded(wounded);
-                             if(troops > -1){
+                             if(troops > -1 & troops < 200000){
                                  game.account.setTroops(troops);
-                                 game.updateAccount();
+
                              }
+                             game.updateAccount();
                         }
 
                         game.log.shouldTrain = troops < maxTroop;

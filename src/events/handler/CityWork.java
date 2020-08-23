@@ -264,12 +264,15 @@ public class CityWork {
         game.dispatch("build_init_outpost");
         game.account.setFinishInit(true);
     }
+    private static boolean hammerBuild(GameInstance game, BuildHammer hammer, String building, String ignoreBuilding) throws Exception{
+        return hammerBuild(game, hammer, building, ignoreBuilding, false);
+    }
 
-    private static boolean hammerBuild(GameInstance game, BuildHammer hammer, String building, String ignoreBuilding) throws Exception {
+    private static boolean hammerBuild(GameInstance game, BuildHammer hammer, String building, String ignoreBuilding, boolean alreadyOpen) throws Exception {
         Logger.log("Trying to upgrade " + building);
         if (!building.equalsIgnoreCase(ignoreBuilding)) {
-            if (game.dispatch(building)) {
-                if (game.log.btnName.contains("buttons_1:btn_1")) return true;
+            if (alreadyOpen || game.dispatch(building)) {
+                if (!alreadyOpen && game.log.btnName.contains("buttons_1:btn_1")) return true;
                 game.dispatch.staticDelay(1.25);
                 //221 301 256 333
                 int level = Math.abs(TestEvent.getNumber(game.dispatch.doOSR(221, 301, 256, 333), true));
@@ -342,7 +345,7 @@ public class CityWork {
                         game.dispatch.delay(3);
                         building = game.dispatch.findClosestBuilding(game);
                         Logger.log("require " + building + " to upgrade!!!!");
-                        return hammerBuild(game, hammer, building, ignoreBuilding);
+                        return hammerBuild(game, hammer, building, ignoreBuilding, true);
                     } else if (game.log.btnName.contains("add")) {
                         game.dispatch.delay(1.5);
                         //   hammer.setHammer(LocalDateTime.now().plusMinutes(30));
@@ -446,9 +449,10 @@ public class CityWork {
 
         game.dispatch("dragon_tutorial");
 
-        buildingAction(game, "warehouse", "upgrade_building_buy", 1);
+     /*   buildingAction(game, "warehouse", "upgrade_building_buy", 1);
         game.posTarget.put("warehouse", true);
             buildingAction(game, "warehouse", "upgrade_building_buy", 2);
+*/
 
         game.dispatch("get_quest_gift_single");
         game.dispatch.staticDelay(0.5);

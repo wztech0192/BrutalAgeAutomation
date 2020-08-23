@@ -55,6 +55,7 @@ public class Account {
     private int troops = 0;
     private boolean isThirtyDay = false;
 
+
     private String id = "";
 
     private BuildHammer primaryHammer = new BuildHammer(false);
@@ -419,7 +420,7 @@ public class Account {
         this.numberFeaturer = new NumberFeaturer();
     }
 
-    public ArrayList<String> getGatherPrioritiesArray(boolean isPriorityGrowth) {
+    public ArrayList<String> getGatherPrioritiesArray(boolean isPriorityGrowth, int minFoodWood) {
         HashMap<String, Integer> priorityTree = new HashMap<>();
         for(Map.Entry<String, Integer> entry : getNumberFeaturer().getGatherPriorities().entrySet()){
 
@@ -427,7 +428,7 @@ public class Account {
 
             if(isPriorityGrowth && getBuildingLvl("stronghold") >= 9){
                 if(entry.getKey().equalsIgnoreCase("meat") || entry.getKey().equalsIgnoreCase("wood")){
-                    if(getResource(entry.getKey()) < 1500000){
+                    if(getResource(entry.getKey()) <  minFoodWood/2  ){
                         value = 999;
                     }
                 }
@@ -468,6 +469,7 @@ public class Account {
     }
     @XmlElement
     public void setWounded(String wounded) {
+        this.wounded = wounded;
     }
 
     public String getWounded() {

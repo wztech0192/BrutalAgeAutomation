@@ -5,9 +5,13 @@ import events.register.WorldMapEvents;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
+import store.Account;
 import store.MatchPoint;
+import ui.SearchOptions;
+import util.FilePath;
 import util.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,7 +98,9 @@ public class WorldMap {
     public static SearchOptions createSearchOptions(GameInstance game){
 
         SearchOptions searchOptions = new SearchOptions();
-        searchOptions.targets = game.account.getGatherPrioritiesArray(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Prioritize Growth"));
+        searchOptions.targets = game.account.getGatherPrioritiesArray(
+                game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Prioritize Growth"),
+                game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood"));
 
         if ( searchOptions.targets.isEmpty()) {
             if (game.account.getResource("meat") < 100000) {
@@ -174,7 +180,8 @@ public class WorldMap {
                         Logger.log("** No match because not found");
                         break;
                     }else {
-                        game.dispatch("select_monster");
+                        game.dispatch.staticDelay(2);
+                        //game.dispatch("select_monster");
                         if (game.dispatch("attack_monster_test")) {
                             Logger.log("good, attack the monster");
                             game.dispatch("attack_monster");
@@ -274,6 +281,21 @@ public class WorldMap {
             game.dispatch("tap_build");
         }
         game.dispatch.delay(1.5);
+
+
+        //save account
+        String id = game.store.createShortID();
+        String fileName =  id+".txt";
+        File directory = new File(FilePath.STORE_ACCOUNT_PATH);
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+        Account acc = new Account();
+        acc.setId(id);
+        game.posTarget.put("id", id);
+        String resultPath = game.store.updateAccount(acc, directory+"/"+id);
+        game.dispatch.pullAccountDataTo(resultPath);
+
         game.dispatch("change_name");
         game.posTarget.put("status", "complete");
         game.store.sendDataBack("update",  game.posTarget);
@@ -282,8 +304,3 @@ public class WorldMap {
 }
 
 
-class SearchOptions{
-    ArrayList<String> targets;
-    int maxLvl = 4;
-    int minLvl = 2;
-}

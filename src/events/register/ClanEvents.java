@@ -58,7 +58,7 @@ public class ClanEvents {
                     Logger.log("*** Max Transport: "+game.log.limitTransportNum);
                     if(game.log.maxTransportNum >= game.log.limitTransportNum) {
                         for (int i = 311; i <= 711; i += 100) {
-                            if(i == 311 && game.log.transportRss[0] < 2000000){ //dont transport wood if rss is < 250000
+                            if(i == 311 && game.log.transportRss[0] < game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood")){
                                 /*
                                 * 0 wood  -0
                                     1 rock  -3
@@ -68,7 +68,7 @@ public class ClanEvents {
                                 * */
                                 continue;
                             }
-                            else if(i == 411 && game.log.transportRss[3] < 2000000){
+                            else if(i == 411 && game.log.transportRss[3] < game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood")){
                                 continue;
                             }
                             game.dispatch.exec(String.format("input swipe 539 %d 579 %d", i, i));

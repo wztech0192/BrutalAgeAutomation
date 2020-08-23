@@ -1,12 +1,6 @@
 import com.android.ddmlib.*;
-import com.android.utils.FileUtils;
-import dispatcher.EventDispatcher;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
-import sun.util.resources.cldr.el.TimeZoneNames_el;
+import ui.UserInterface;
 import util.FilePath;
 import util.Global;
 
@@ -14,15 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.*;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class Main {

@@ -195,15 +195,22 @@ public class Store extends WebSocketAdapter {
         }
     }
 
-    public void updateAccount(Account acc) {
+    public String updateAccount(Account acc, String path) {
         if(!acc.getId().equalsIgnoreCase("")) {
             System.out.println("update "+acc.getId());
-            File file = new File(accountPath + acc.getId());
+            File file = new File(path);
             if(!file.exists()){
                 file.mkdir();
             }
             util.Marshaller.marshell(acc, file.getAbsolutePath()+"/setting");
+
+            return file.getAbsolutePath();
         }
+        return "";
+    }
+
+    public String updateAccount(Account acc) {
+        return updateAccount(acc, accountPath + acc.getId());
     }
 
     public void updateAccount(int i) {
@@ -223,6 +230,13 @@ public class Store extends WebSocketAdapter {
         String currentDatedTime = sdf.format(new Date());
         return "wzz"+currentDatedTime;
     }
+
+    public String createShortID() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
+        String currentDatedTime = sdf.format(new Date());
+        return currentDatedTime;
+    }
+
 
     public void setDelay(int delay) {
         this.metadata.setDelay(delay);

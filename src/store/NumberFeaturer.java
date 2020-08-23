@@ -42,6 +42,7 @@ public class NumberFeaturer {
         numberSetting.put("Max Troop", 300000);
         numberSetting.put("Min Troop", 30000);
         numberSetting.put("Transport Round", 0);
+        numberSetting.put("Min Food Wood", 0);
     }
 
     public TreeMap<String, Integer> getGatherPriorities() {

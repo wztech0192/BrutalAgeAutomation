@@ -17,13 +17,16 @@ public class WorldMapEvents {
 
     private static String encryptName(JsonObject json) {
         if (json != null) {
-            StringBuffer str = new StringBuffer();
+
+            if(json.containsKey("id"))
+                return (String)json.get("id");
+          /*  StringBuffer str = new StringBuffer();
             str.append(json.get("buiX"));
             str.append(json.get("buiY"));
             str.append(0);
             str.append(json.get("telX"));
             str.append(json.get("telY"));
-            return str.reverse().toString();
+             return str.reverse().toString();*/
         }
         return Math.random() + "";
     }

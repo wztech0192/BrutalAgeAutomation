@@ -20,6 +20,7 @@ public class FilePath {
 
     public final static String LOG_FILE_PATH = RootPath + "/files/log";
     public final static String CONFIG_PATH = System.getProperty("user.home")+ "/ba_config";
+    public final static String STORE_ACCOUNT_PATH = System.getProperty("user.home")+ "/ba_temp_accounts";
     public final static String METADATA_PATH = RootPath + "/files/metadata";
     public final static String TASK_LIST_PATH = RootPath + "/files/taskList";
     public final static String USER_LOG_PATH = RootPath + "/files/userLog";
@@ -31,7 +32,6 @@ public class FilePath {
     public final static String TRAIN_DATA_PATH  = RootPath+"/tessdata/";
 
     public static final String TIME_FILE_PATH = RootPath + "/files/time" ;
-
 
 
 }

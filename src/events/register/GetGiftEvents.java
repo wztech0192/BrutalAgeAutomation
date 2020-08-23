@@ -70,9 +70,9 @@ public class GetGiftEvents {
 
         Event.builder(_map, "get_workshop_gift")
                 .setDelay(1.5)
-                .setLoc(406, 615)
                 .setListener(((event, game) -> {
-                    game.dispatch.delay(1);
+                    game.dispatch.delay(2);
+                    game.dispatch(Event.builder().setTargetName("click question 1").setLoc(406, 615).setDelay(1.5));
                     game.dispatch("collect_workshop_gift");
 
                     if(!game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")){

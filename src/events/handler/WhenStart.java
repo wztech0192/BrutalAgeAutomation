@@ -2,7 +2,9 @@ package events.handler;
 
 import game.GameInstance;
 import game.GameStatus;
+import util.FilePath;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -105,7 +107,6 @@ public class WhenStart {
         }
 
         if (!game.account.isJoinClan()) {
-
             if(!game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")) {
                 game.dispatch("apply_clan");
                 if (game.account.getClan() != null && !game.account.getClan().equalsIgnoreCase("")) {
@@ -208,6 +209,7 @@ public class WhenStart {
     public static void firePosMode(GameInstance game) throws Exception {
 
         game.dispatch.staticDelay(2);
+
         game.dispatch("login_test");
         game.dispatch("login_zoom");
         game.startEvent(GameStatus.city_work);

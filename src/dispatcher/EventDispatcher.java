@@ -85,7 +85,11 @@ public class EventDispatcher implements IShellOutputReceiver {
     }
 
     public void pullAccountData(String uid) {
-        execADBIP(game.store.metadata.getIp(), "pull /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/LASTLOGIN_LOCAL_DATA.sav \"" + game.store.accountPath + uid + "\"", s -> false);
+        pullAccountDataTo( game.store.accountPath + uid);
+    }
+
+    public void pullAccountDataTo(String path) {
+        execADBIP(game.store.metadata.getIp(), "pull /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/LASTLOGIN_LOCAL_DATA.sav \"" +path + "\"", s -> false);
     }
 
     public void enterText(String str) throws Exception {
@@ -93,6 +97,16 @@ public class EventDispatcher implements IShellOutputReceiver {
         exec("input text \"" + str + "\"");
         staticDelay(0.25);
     }
+
+    public void enterSpecialText(String str) throws Exception {
+        game.dispatch.deleteText();
+        execADBIP(game.store.metadata.getIp(),"shell am broadcast -a ADB_INPUT_TEXT --es msg '" + str + "'" ,s ->{
+            System.out.println(s);
+            return false;
+        });
+        staticDelay(0.25);
+    }
+
 
     public void swipeServer(int diff) throws Exception {
 

@@ -50,7 +50,7 @@ public class MyDebugger {
                     else {
                         switch (cmd) {
                             case "test":
-                                game.dispatch.enterText("\t٩(◕‿◕)۶");
+                                game.dispatch.enterSpecialText("你好嗎? Hello?");
                                 break;
                             case "ls":
                                 EventMap.printAll();
