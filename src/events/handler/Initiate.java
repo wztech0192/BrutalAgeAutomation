@@ -22,11 +22,17 @@ public class Initiate {
         game.account = null;
         game.posTarget = null;
 
+
         if(game.store.isPositionMode()){
             game.store.sendPing();
         }
         int waitTime = 0;
         while (true) {
+            if(game.store.isBotMode()){
+                game.startEvent(GameStatus.starting);
+                game.dispatch.startGame();
+                return;
+            }
             if(game.store.isClose) return;
             if(game.store.isPositionMode()){
                 if(!game.store.positionQueue.isEmpty() || game.store.metadata.getSavedPosAcc().size() < Global.config.getMaxStorePos()){
@@ -62,14 +68,16 @@ public class Initiate {
                         game.store.metadata.getFeatureToggler().getGlobalFeatures().put("Feed Temple", false);
                         game.store.marshellMetadata();
                     }
-
                 }
                 game.account = account;
+
                 Logger.log("Get Account Index: " + game.store.getAccountGroup().getIndex());
                 String tempID = game.account.getId();
                 game.dispatch.delay(1);
                 Logger.log("---------------- start " + tempID);
                 game.dispatch.changeAccount(tempID, true);
+
+                Chat.setLastRoundTime();
                 game.updateAccount();
                 break;
             }

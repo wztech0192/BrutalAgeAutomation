@@ -7,16 +7,19 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 import com.neovisionaries.ws.client.*;
 import dispatcher.EventDispatcher;
+import events.handler.Chat;
 import org.apache.commons.io.FileUtils;
 import util.FilePath;
 import util.Global;
 import util.Logger;
 
 import javax.xml.bind.JAXBException;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 
 public class Store extends WebSocketAdapter {
@@ -32,6 +35,7 @@ public class Store extends WebSocketAdapter {
     public boolean isClose;
     public String tag;
     public JsonObject currentPosItem = null;
+    private boolean botMode;
 
     public Store(String tag, AndroidDebugBridge bridge){
         this.tag = tag;
@@ -143,6 +147,21 @@ public class Store extends WebSocketAdapter {
             System.out.println("Received: " + message);
 
             switch ((String) data.get("type")) {
+
+                case "add_clear":{
+                    JsonObject payload = (JsonObject) data.get("payload");
+                    int x = Integer.parseInt((String) payload.get("x"));
+                    int y = Integer.parseInt((String) payload.get("y"));
+                    Chat.enqueueClearList(new Point(x, y));
+                    break;
+                }
+                case "remove_clear":{
+                    JsonObject payload = (JsonObject) data.get("payload");
+                    int x = Integer.parseInt((String) payload.get("x"));
+                    int y = Integer.parseInt((String) payload.get("y"));
+                    Chat.removeFromClearList(new Point(x, y));
+                    break;
+                }
                 case "queue":
                     JsonObject payload = (JsonObject) data.get("payload");
                     sendDataBack("queueSuccess", payload);
@@ -314,6 +333,14 @@ public class Store extends WebSocketAdapter {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public boolean isBotMode() {
+        return botMode;
+    }
+
+    public void toggleBotMode() {
+        botMode = !botMode;
     }
 }
 

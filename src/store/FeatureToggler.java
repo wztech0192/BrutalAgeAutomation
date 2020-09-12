@@ -27,7 +27,7 @@ public class FeatureToggler {
         features.put("Gathering (6+)", true);
         features.put("Upgrade Building", true);
         features.put("Train Shaman (7+)", true);
-        features.put("!Speed Train!", false);
+        features.put("Clear Monster", false);
     }
 
     public void cloneFeature(FeatureToggler featureToggler){

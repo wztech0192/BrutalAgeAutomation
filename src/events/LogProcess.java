@@ -115,10 +115,7 @@ public class LogProcess {
             handleChat(str);
         }
 
-
         Matcher m;
-
-
         if ((m = regexWorldScale.matcher(str)).find()) {
             if (!m.group(1).trim().equalsIgnoreCase("")) {
                 worldScale = Double.parseDouble(m.group(1));
@@ -160,9 +157,11 @@ public class LogProcess {
 
 
         switch (game.status.get()) {
-
             case tutorial:
                 handleTutorial(str);
+                break;
+            case chatting:
+                handleChat(str);
                 break;
             case change_server:
                 break;
@@ -237,7 +236,10 @@ public class LogProcess {
     private void handleStart(String str) throws Exception {
 
         if (str.contains("_offsetCityMap")) {
-            if (game.posTarget != null) {
+            if(game.store.isBotMode()){
+                game.startEvent(GameStatus.when_start);
+            }
+            else if (game.posTarget != null) {
                 handlePosModeStart();
             } else if (game.account != null) {
                 if (game.account.getChangedServer()) {

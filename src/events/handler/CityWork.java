@@ -487,4 +487,14 @@ public class CityWork {
         }
 
     }
+
+    public static void fireBotMode(GameInstance game) throws  Exception {
+         if(game.dispatch("open_chat")){
+             game.dispatch.sendChat("Im Online!");
+             game.status.set(GameStatus.chatting);
+         }else{
+             Logger.log("Open Chat failed");
+             game.startEvent(GameStatus.initiate);
+         }
+    }
 }

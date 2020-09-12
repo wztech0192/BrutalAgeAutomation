@@ -8,7 +8,7 @@ public enum GameStatus {
     change_server, // change server
     when_start,  // test login dialog
     city_work,  // upgrade building etc...
-    world_map;  //  start gathering
+    world_map, chatting;  //  start gathering
 
 
     public static long getTimeout(GameStatus game) {

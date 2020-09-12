@@ -209,10 +209,41 @@ public class WhenStart {
     public static void firePosMode(GameInstance game) throws Exception {
 
         game.dispatch.staticDelay(2);
-
         game.dispatch("login_test");
         game.dispatch("login_zoom");
         game.startEvent(GameStatus.city_work);
+    }
 
+    public static void fireBotMode(GameInstance game) throws Exception {
+
+        game.dispatch.staticDelay(1.25);
+
+        for (int redo = 0; redo < 5; redo++) {
+            game.dispatch("login_test");
+
+            game.dispatch.staticDelay(1.25);
+
+            game.dispatch("login_test");
+
+            game.dispatch("login_zoom");
+            game.dispatch.staticDelay(1);
+
+            if (Math.abs(game.log.city.x - -1540) + Math.abs(game.log.city.y - -889.15002441406) < 5){
+                game.dispatch("dragon_tutorial");
+            }
+
+            if (
+                    Math.abs(game.log.city.x - -2477) + Math.abs(game.log.city.y - -1625) < 50 ||
+                            Math.abs(game.log.city.x - -3222) + Math.abs(game.log.city.y - -1600) < 50 ||
+                            Math.abs(game.log.city.x - -3407) + Math.abs(game.log.city.y - -730) < 50 ||
+                            Math.abs(game.log.city.x - -1532) + Math.abs(game.log.city.y - -427) < 50 ||
+                            Math.abs(game.log.city.x - -340) + Math.abs(game.log.city.y - -268) < 50 ||
+                            Math.abs(game.log.city.x - -2484) + Math.abs(game.log.city.y - -1677) < 50
+            ) {
+                break;
+            }
+        }
+
+        game.startEvent(GameStatus.city_work);
     }
 }

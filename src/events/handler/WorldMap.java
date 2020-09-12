@@ -13,6 +13,7 @@ import ui.SearchOptions;
 import util.FilePath;
 import util.Logger;
 
+import java.awt.*;
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -58,6 +59,7 @@ public class WorldMap {
             }
         }*/
 
+
         if (game.account.getFeatureToggler().get("Gathering (6+)")) {
             if (game.account.getBuildingLvl("stronghold") < 10) {
                 game.dispatch("get_rss_info");
@@ -79,6 +81,10 @@ public class WorldMap {
             }
 
 
+            if(game.account.getFeatureToggler().get("Clear Monster")){
+                clearMonster(game);
+            }
+
             if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Agatha Search")) {
                 agathaSearch(game);
             } else {
@@ -99,8 +105,7 @@ public class WorldMap {
         }
     }
 
-    public static SearchOptions createSearchOptions(GameInstance game){
-
+    private static SearchOptions createSearchOptions(GameInstance game){
         SearchOptions searchOptions = new SearchOptions();
         searchOptions.targets = game.account.getGatherPrioritiesArray(
                 game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood"));
@@ -149,7 +154,29 @@ public class WorldMap {
     }
 
 
-    public static void agathaSearch(GameInstance game) throws Exception{
+    private static void clearMonster(GameInstance game) throws Exception{
+
+        Point p;
+        while (game.log.idleTroops > 0 && game.log.marches > 0 && (p = Chat.dequeueClearList()) != null) {
+            Logger.log("Start clear monster at "+p.x+", "+p.y);
+            game.dispatch.changePosition(p.x, p.y);
+
+            if (game.dispatch("attack_monster_test")) {
+                Logger.log("good, attack the monster");
+                game.dispatch("attack_monster");
+                game.log.marches--;
+                game.log.idleTroops -= game.log.currTroops;
+                Logger.log("After Deplay" + game.log.currTroops + " Now Idle Troops: " + game.log.idleTroops);
+            }else {
+                Logger.log("** No match because not found");
+                //hide box
+                game.dispatch(Event.builder().setLoc(691, 470).setDelay(1.5));
+                break;
+            }
+        }
+    }
+
+    private static void agathaSearch(GameInstance game) throws Exception{
         int redo = 15;
 
         ArrayList<String> temp = new ArrayList<>();
@@ -166,7 +193,7 @@ public class WorldMap {
 
         game.dispatch.resetAgathaSearch();
 
-        HashSet<String> prevSets = new HashSet<String>();
+        HashSet<String> prevSets = new HashSet<>();
 
         String sets;
         for(String target:searchOptions.targets){

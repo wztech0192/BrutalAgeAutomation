@@ -82,7 +82,10 @@ public class GameInstance {
                     Initiate.fire(this);
                 }
 
-                if(posTarget != null){
+                if(store.isBotMode()){
+                    startBotModeEvent();
+                }
+                else if(posTarget != null){
                     startPosModeEvent();
                 }else{
                     switch (status.get()) {
@@ -146,14 +149,14 @@ public class GameInstance {
         dispatch.startGame();
     }
 
-    public void sendPosStatus(String finishStatus){
+    private void sendPosStatus(String finishStatus){
         if(posTarget != null &&  finishStatus != null && !finishStatus.equalsIgnoreCase("") && !posTarget.containsKey("temp")) {
             posTarget.put("status", finishStatus);
             store.sendDataBack("update", posTarget);
         }
     }
 
-    public void startPosModeEvent() throws Exception {
+    private void startPosModeEvent() throws Exception {
         updateListener.onUpdate(null);
         switch (status.get()) {
             case starting:
@@ -171,6 +174,24 @@ public class GameInstance {
             case world_map:
                 WorldMap.firePosMode(this);
                 break;
+            default:
+                break;
+        }
+    }
+
+    private void startBotModeEvent() throws Exception {
+        updateListener.onUpdate(null);
+        switch (status.get()) {
+            case starting:
+                Starting.fire(this);
+                break;
+            case when_start:
+                WhenStart.fireBotMode(this);
+                break;
+            case city_work:
+                CityWork.fireBotMode(this);
+                break;
+
             default:
                 break;
         }

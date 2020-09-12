@@ -282,7 +282,7 @@ public class UserInterface extends JPanel {
     private JPanel createFarmPanel() {
         final JPanel panel = new JPanel(new BorderLayout());
 
-        final JPanel actionPane = new JPanel(new GridLayout(2, 4));
+        final JPanel actionPane = new JPanel(new GridLayout(2, 6));
         final JPanel topPane = new JPanel(new BorderLayout());
         final JButton actionBtn = new JButton("Start");
 
@@ -300,6 +300,11 @@ public class UserInterface extends JPanel {
             }else{
                 store.closeRemoteWS();
             }
+        });
+
+        final JCheckBox botModeCB = new JCheckBox("Bot Mode", store.isBotMode());
+        botModeCB.addActionListener(e->{
+            store.toggleBotMode();
         });
 
 
@@ -460,8 +465,13 @@ public class UserInterface extends JPanel {
                         model.setValueAt(newData[i], index, i);
                     }
                 }else{
-                    topPane.setBorder(BorderFactory.createTitledBorder("Pending "+store.positionQueue.size()+
-                            ", stored account "+store.metadata.getSavedPosAcc().size()+"/"+Global.config.getMaxStorePos()));
+                    if(store.isBotMode()){
+                        topPane.setBorder(BorderFactory.createTitledBorder("Bot Mode"));
+                    }else{
+                        topPane.setBorder(BorderFactory.createTitledBorder("Pending "+store.positionQueue.size()+
+                                ", stored account "+store.metadata.getSavedPosAcc().size()+"/"+Global.config.getMaxStorePos()));
+                    }
+
                 }
             }
 
@@ -546,9 +556,11 @@ public class UserInterface extends JPanel {
         actionPane.add(createBtn);
         actionPane.add(deleteBtn);
         actionPane.add(gotoBtn);
+        actionPane.add(posModeCB);
         actionPane.add(currBtn);
         actionPane.add(delay);
         actionPane.add(resetError);
+        actionPane.add(botModeCB);
 
 
         actionBtn.setBackground(Color.DARK_GRAY);
@@ -557,7 +569,7 @@ public class UserInterface extends JPanel {
         actionBtn.setPreferredSize(new Dimension(100, 60));
         topPane.setBorder(BorderFactory.createTitledBorder("Current: "+currID));
         topPane.add(actionBtn, BorderLayout.WEST);
-        topPane.add(posModeCB, BorderLayout.EAST);
+       // topPane.add(posModeCB, BorderLayout.EAST);
         topPane.add(actionPane, BorderLayout.CENTER);
 
         JScrollPane sp = new JScrollPane(table);

@@ -138,7 +138,7 @@ public class EventDispatcher implements IShellOutputReceiver {
 
 
     public void exec(String cmd) throws Exception {
-        if (!Global.DEBUG && game.account != null && lastExecuteTime != null
+        if (!game.store.isBotMode() && !Global.DEBUG && game.account != null && lastExecuteTime != null
                 && Duration.between(lastExecuteTime, LocalDateTime.now()).toMinutes()
                 > GameStatus.getTimeout(game.status.get())) {
             throw new GameException("Not responding, Stuck at " + game.status.get().name());
@@ -785,11 +785,20 @@ public class EventDispatcher implements IShellOutputReceiver {
         prevSearchOptions = "";
     }
 
+    private int chatErrorCount = 0;
     public void sendChat(String s) throws Exception  {
         sendEvent("click_chat_input");
         if(game.log.btnName.contains("inputBox:input_zone")){
+            chatErrorCount = 0;
             enterText(s);
             sendEvent("send_chat");
+        }else{
+            chatErrorCount++;
+            if(chatErrorCount == 4){
+                chatErrorCount = 0;
+                Logger.log("Chat error, restart!");
+                game.startEvent(GameStatus.initiate);
+            }
         }
     }
 }
