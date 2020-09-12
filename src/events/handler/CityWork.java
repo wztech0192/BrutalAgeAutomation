@@ -46,28 +46,32 @@ public class CityWork {
                 if (game.account.getFeatureToggler().get("Heal Troops") && game.log.shouldHeal) {
                     game.dispatch("healing_spring_access");
                 }
-                if (game.log.shouldTrain) {
-                    if (game.account.getFeatureToggler().get("Train Warrior")) {
-                        game.dispatch("warrior");
-                    }
-                    if (game.account.getFeatureToggler().get("Train Rider (7+)")) {
-                        game.dispatch("rider");
-                    }
-                    if (game.account.getFeatureToggler().get("Train Shaman (7+)")) {
-                        game.dispatch("shaman");
-                    }
-                }
 
-                if(game.account.getFeatureToggler().get("!Speed Train!")){
-                    for(int i=0;i<10;i++){
-                        if(!game.dispatch("speed_warrior") || !game.dispatch("warrior")){
-                            break;
+                long trainingCompleteMinute = Duration.between(LocalDateTime.now(), game.log.trainingCompleteTime).toMinutes();
+                if(trainingCompleteMinute <= 1){
+                    if (game.log.shouldTrain) {
+                        if (game.account.getFeatureToggler().get("Train Warrior")) {
+                            game.dispatch("warrior");
+                        }
+                        if (game.account.getFeatureToggler().get("Train Rider (7+)")) {
+                            game.dispatch("rider");
+                        }
+                        if (game.account.getFeatureToggler().get("Train Shaman (7+)")) {
+                            game.dispatch("shaman");
                         }
                     }
-                    game.account.getFeatureToggler().set("!Speed Train!", false);
+
+                    if(game.account.getFeatureToggler().get("!Speed Train!")){
+                        for(int i=0;i<10;i++){
+                            if(!game.dispatch("speed_warrior") || !game.dispatch("warrior")){
+                                break;
+                            }
+                        }
+                        game.account.getFeatureToggler().set("!Speed Train!", false);
+                    }
+                }else{
+                    Logger.log("Need "+trainingCompleteMinute+" minutes to complete training!");
                 }
-
-
             } else if (game.account.getFeatureToggler().get("Train Warrior")) {
                 game.dispatch("warrior");
             }
@@ -95,11 +99,13 @@ public class CityWork {
     }
 
     static void transport(GameInstance game) throws Exception {
-        int transportRound = game.account.getNumberFeaturer().getNumberSetting().get("Transport Round");
-        if (game.account.getBuildingLvl("stronghold") >= 9 && game.log.marches > 0 && transportRound > 0
-                && game.account.doInRound(transportRound)) {
-            game.dispatch("transport");
-            game.dispatch("squirrel");
+        if(!game.account.isDuringTemplate()) {
+            int transportRound = game.account.getNumberFeaturer().getNumberSetting().get("Transport Round");
+            if (game.account.getBuildingLvl("stronghold") >= 9 && game.log.marches > 0 && transportRound > 0
+                    && game.account.doInRound(transportRound)) {
+                game.dispatch("transport");
+                game.dispatch("squirrel");
+            }
         }
     }
 
@@ -108,7 +114,7 @@ public class CityWork {
             Logger.log("Use primary hammer");
             boolean isBuild = false;
 
-            if (game.account.getBuildingLvl("portal") < game.account.getBuildingLvl("stronghold")) {
+            if (game.account.getBuildingLvl("portal") < 14 && game.account.getBuildingLvl("portal") < game.account.getBuildingLvl("stronghold")) {
                 isBuild = hammerBuild(game, game.account.getPrimaryHammer(), "portal", game.account.getSecondaryHammer().getBuildingName());
             } else if( game.account.getBuildingLvl("stronghold") < 10 ){
                 isBuild = hammerBuild(game, game.account.getPrimaryHammer(), "stronghold", game.account.getSecondaryHammer().getBuildingName());
@@ -186,12 +192,12 @@ public class CityWork {
 
         int lowestLvl = 50;
         String lowest = "";
-        if (buildingCondition(account, "war_camp", 13, hammer)) {
+        if (buildingCondition(account, "war_camp", 15, hammer)) {
             lowest = "war_camp";
             lowestLvl = account.getBuildingLvl("war_camp");
         }
         for (int i = 1; i <= 5; i++) {
-            if (buildingCondition(account, "well" + i, 10, hammer)) {
+            if (buildingCondition(account, "well" + i, 15, hammer)) {
                 if (account.getBuildingLvl("well" + i) < lowestLvl) {
                     lowest = "well" + i;
                     lowestLvl = account.getBuildingLvl("well" + i);
@@ -214,7 +220,7 @@ public class CityWork {
             } else if (buildingCondition(account, "tower", 12, hammer)) {
                 return "tower";
             }
-            else if (buildingCondition(account, "research", 13, hammer)) {
+            else if (buildingCondition(account, "research", 12, hammer)) {
                 return "research";
             }
         }
@@ -237,15 +243,23 @@ public class CityWork {
 
         bulkLevelUpBuilding(game, "stronghold", 3);
 
+        game.dispatch("get_quest_gift_single");
+        game.dispatch.staticDelay(0.5);
+        game.dispatch("get_quest_gift_single");
+        game.dispatch.staticDelay(0.5);
+
         boolean dragTut = game.account.getBuildingLvl("portal") < 3;
         bulkLevelUpBuilding(game, "portal", 3);
 
         if(dragTut){
             game.dispatch("dragon_tutorial");
+            game.dispatch.staticDelay(2);
         }
 
-        game.dispatch("open_my_item");
-        game.dispatch("use_all_resource");
+        if(game.dispatch("open_my_item")){
+            game.dispatch("use_all_resource");
+        }
+
 
         game.dispatch("get_quest_gift");
 
@@ -292,8 +306,8 @@ public class CityWork {
                 game.log.buildingCompleteLevel = 1;
                 if (game.dispatch("upgrade_building")) {
                     game.log.needRss = 0;
-                    game.dispatch.staticDelay(2);
-                    if(game.log.needRss >= 0){
+                    game.dispatch.staticDelay(1.5);
+                    if(game.log.needRss > 0){
                         game.dispatch(Event.builder().setTargetName("close dialog").setLoc(72, 246));
                         game.dispatch("top_left");
                         Logger.log("No Resource, try next time");
@@ -345,7 +359,7 @@ public class CityWork {
                         game.dispatch.delay(3);
                         building = game.dispatch.findClosestBuilding(game);
                         Logger.log("require " + building + " to upgrade!!!!");
-                        return hammerBuild(game, hammer, building, ignoreBuilding, true);
+                        return hammerBuild(game, hammer, building, ignoreBuilding, false);
                     } else if (game.log.btnName.contains("add")) {
                         game.dispatch.delay(1.5);
                         //   hammer.setHammer(LocalDateTime.now().plusMinutes(30));
@@ -467,7 +481,7 @@ public class CityWork {
             game.store.marshellMetadata();
             game.store.updatePosSavedAcc();
 
-            game.startEvent(GameStatus.initiate, "positioning");
+            game.startEvent(GameStatus.initiate);
         } else {
             game.startEvent(GameStatus.world_map, "positioning");
         }

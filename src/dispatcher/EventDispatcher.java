@@ -61,7 +61,7 @@ public class EventDispatcher implements IShellOutputReceiver {
     }
 
     public void startGame() throws Exception {
-        exec("monkey -p com.tap4fun.brutalage_test 1");
+        exec("am start -n com.tap4fun.brutalage_test/com.tap4fun.project.CustomGameActivity");
     }
 
     public void changeAccount(String uid, boolean stored) throws Exception {
@@ -94,7 +94,7 @@ public class EventDispatcher implements IShellOutputReceiver {
 
     public void enterText(String str) throws Exception {
         game.dispatch.deleteText();
-        exec("input text \"" + str + "\"");
+        exec("input text \"" + str.replaceAll(" ", "%s") + "\"");
         staticDelay(0.25);
     }
 
@@ -138,7 +138,7 @@ public class EventDispatcher implements IShellOutputReceiver {
 
 
     public void exec(String cmd) throws Exception {
-        if (!game.debug && game.account != null && lastExecuteTime != null
+        if (!Global.DEBUG && game.account != null && lastExecuteTime != null
                 && Duration.between(lastExecuteTime, LocalDateTime.now()).toMinutes()
                 > GameStatus.getTimeout(game.status.get())) {
             throw new GameException("Not responding, Stuck at " + game.status.get().name());
@@ -189,12 +189,12 @@ public class EventDispatcher implements IShellOutputReceiver {
         do {
             prevScale = game.log.worldScale;
             exec(tapStr + "&" + tapStr + "&" + tapStr);
-            staticDelay(1.5);
+            staticDelay(1.25);
         } while (game.log.btnName.contains("tiles") && prevScale == game.log.worldScale && redo-- > 0);
 
         if (redo > 0) {
             game.dispatch.exec(tapStr);
-            delay(1.5);
+            delay(1.25);
         }
     }
 
@@ -210,7 +210,7 @@ public class EventDispatcher implements IShellOutputReceiver {
         enterText(String.valueOf(y));
         delay(1);
         exec("input tap 358 646");
-        staticDelay(1.25);
+        staticDelay(1.0);
     }
 
 
@@ -636,7 +636,7 @@ public class EventDispatcher implements IShellOutputReceiver {
                 proc.destroy();
             }
             stdInput.close();
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -778,10 +778,18 @@ public class EventDispatcher implements IShellOutputReceiver {
 
         prevSearchOptions = currSearchOptions;
         sendEvent(Event.builder().setLoc(353, 937));
-        game.dispatch.staticDelay(1.5);
+        game.dispatch.delay(1.5);
     }
 
     public void resetAgathaSearch() {
         prevSearchOptions = "";
+    }
+
+    public void sendChat(String s) throws Exception  {
+        sendEvent("click_chat_input");
+        if(game.log.btnName.contains("inputBox:input_zone")){
+            enterText(s);
+            sendEvent("send_chat");
+        }
     }
 }

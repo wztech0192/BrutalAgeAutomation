@@ -137,11 +137,50 @@ public class GetGiftEvents {
                         }
                 );
 
+        Event.builder(_map, "use_resource")
+                .setTargetName("reward:btn_reward")
+                .setDelay(1.25)
+                .setLoc(600, 300)
+                .setListener(
+                        (event, game) -> {
+                            if (game.log.btnName.contains("btn_use")) {
+                                game.dispatch("use_all");
+                                return null;
+                            }
+                            else if(game.log.btnName.contains("main:ui_mb")){
+                                game.dispatch(Event.builder().setLoc(370, 636).setDelay(1));
+                            }
+                            return event;
+                        }
+                );
+
+        Event.builder(_map, "use_gem_brutal_season")
+                .setTargetName("reward:btn_reward")
+                .setDelay(1.25)
+                .setLoc(600, 450)
+                .setListener(
+                        (event, game) -> {
+                            if (game.log.btnName.contains("btn_use")) {
+                                game.dispatch("use_all");
+                                return null;
+                            }
+                            else if(game.log.btnName.contains("main:ui_mb")){
+                                game.dispatch(Event.builder().setLoc(370, 636).setDelay(1));
+                            }
+                            return event;
+                        }
+                );
+
         Event.builder(_map, "use_all_resource")
                 .setDelay(1.25)
                 .setListener(
                         (event, game) -> {
-                            while (game.dispatch("use_resource")) ;
+                            if(game.account.getBuildingLvl("stronghold") > 4 &&
+                                    game.store.metadata.getFeatureToggler().getGlobalFeatures().getOrDefault("Brutal Season", false)){
+                                while (game.dispatch("use_gem_brutal_season")) ;
+                            }else{
+                                while (game.dispatch("use_resource")) ;
+                            }
                             game.dispatch(Event.builder().setLoc(600, 300, 140, 300, 500).setDelay(1.25));
                             while (game.dispatch("use_resource")) ;
                             game.dispatch("top_left");

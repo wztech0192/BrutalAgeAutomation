@@ -12,19 +12,19 @@ public class WhenStart {
 
     public static void fire(GameInstance game) throws Exception {
 
-        game.dispatch.staticDelay(2);
+        game.dispatch.staticDelay(1.5);
 
         if (game.dispatch.requirePullFile) {
             game.dispatch.pullAccountData(game.account.getId());
             game.dispatch.requirePullFile = false;
         }
 
-        game.dispatch.staticDelay(1.5);
+        game.dispatch.staticDelay(1.25);
 
         for (int redo = 0; redo < 5; redo++) {
             game.dispatch("login_test");
 
-            game.dispatch.staticDelay(1.5);
+            game.dispatch.staticDelay(1.25);
 
             game.dispatch("login_test");
 
@@ -48,7 +48,7 @@ public class WhenStart {
         }
 
 
-        if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+        if (game.account.isDuringTemplate()  && game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
 
             if (!game.account.isJoinClan()) {
 
@@ -65,11 +65,8 @@ public class WhenStart {
                 game.updateAccount();
             }
 
-            if (game.account.getTroops() < game.account.getNumberFeaturer().getNumberSetting().get("Min Troop")) {
-                game.startEvent(GameStatus.initiate);
-            } else {
-                game.startEvent(GameStatus.world_map);
-            }
+            game.startEvent(GameStatus.world_map);
+
             return;
         }
 
@@ -106,24 +103,26 @@ public class WhenStart {
             game.dispatch("assign_id");
         }
 
-        if (!game.account.isJoinClan()) {
-            if(!game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")) {
-                game.dispatch("apply_clan");
-                if (game.account.getClan() != null && !game.account.getClan().equalsIgnoreCase("")) {
-                    game.dispatch("search_clan");
-                    game.dispatch.enterText(game.account.getClan());
-                    game.dispatch("confirm_search_clan");
+        if(!game.account.isDuringTemplate()) {
+            if (!game.account.isJoinClan()) {
+                if (!game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")) {
+                    game.dispatch("apply_clan");
+                    if (game.account.getClan() != null && !game.account.getClan().equalsIgnoreCase("")) {
+                        game.dispatch("search_clan");
+                        game.dispatch.enterText(game.account.getClan());
+                        game.dispatch("confirm_search_clan");
+                    }
+                    game.dispatch("join_clan");
+                    game.dispatch("back_from_clan");
+                    game.account.setJoinClan(true);
+                    game.updateAccount();
                 }
-                game.dispatch("join_clan");
-                game.dispatch("back_from_clan");
-                game.account.setJoinClan(true);
+            } else if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")) {
+                game.dispatch("open_clan");
+                game.dispatch("quit_clan");
+                game.account.setJoinClan(false);
                 game.updateAccount();
             }
-        }else if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")){
-            game.dispatch("open_clan");
-            game.dispatch("quit_clan");
-            game.account.setJoinClan(false);
-            game.updateAccount();
         }
 
 
@@ -174,8 +173,9 @@ public class WhenStart {
 
 
             if (game.account.isFinishInit() && game.account.getFeatureToggler().get("Use Resource") && (game.account.getBuildingLvl("stronghold") < 10 || game.account.doInRound(3))) {
-                game.dispatch("open_my_item");
-                game.dispatch("use_all_resource");
+                if(game.dispatch("open_my_item")){
+                    game.dispatch("use_all_resource");
+                }
             }
             game.account.setLastRound(LocalDateTime.now());
         }

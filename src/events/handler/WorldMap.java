@@ -1,10 +1,12 @@
 package events.handler;
 
+import events.common.Event;
 import events.register.TestEvent;
 import events.register.WorldMapEvents;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
+import net.sf.cglib.core.Local;
 import store.Account;
 import store.MatchPoint;
 import ui.SearchOptions;
@@ -12,15 +14,18 @@ import util.FilePath;
 import util.Logger;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class WorldMap {
     public static void fire(GameInstance game) throws Exception {
         game.dispatch.delay(1);
 
-        if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+        if (game.account.isDuringTemplate() && game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
             game.dispatch("feedTemple");
             game.startEvent(GameStatus.initiate);
             return;
@@ -39,7 +44,7 @@ public class WorldMap {
         game.dispatch.delay(2);
 
 
-        if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Auto Repair")) {
+        /*if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Auto Repair")) {
             int[] oldMap = game.log.worldCurr.clone();
             game.dispatch("auto_repair");
             game.dispatch("change_outpost");
@@ -51,7 +56,7 @@ public class WorldMap {
                     game.dispatch("auto_repair");
                 }
             }
-        }
+        }*/
 
         if (game.account.getFeatureToggler().get("Gathering (6+)")) {
             if (game.account.getBuildingLvl("stronghold") < 10) {
@@ -74,11 +79,10 @@ public class WorldMap {
             }
 
 
-            game.dispatch("world_set");
-
             if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Agatha Search")) {
                 agathaSearch(game);
             } else {
+                game.dispatch("world_set");
                 if (game.account.isRandomized()) {
                     for (int i = 0; i < 4; i++) {
                         if (game.log.worldCurr[0] < 270 && game.log.worldCurr[1] < 500) {
@@ -99,7 +103,6 @@ public class WorldMap {
 
         SearchOptions searchOptions = new SearchOptions();
         searchOptions.targets = game.account.getGatherPrioritiesArray(
-                game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Prioritize Growth"),
                 game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood"));
 
         if ( searchOptions.targets.isEmpty()) {
@@ -160,29 +163,47 @@ public class WorldMap {
         }
         searchOptions.targets = temp;
 
-        game.dispatch.resetAgathaSearch();
-        ArrayList<String> prevSets = new ArrayList<>();
-        prevSets.add(game.log.worldCurr[0]+""+game.log.worldCurr[1]);
 
+        game.dispatch.resetAgathaSearch();
+
+        HashSet<String> prevSets = new HashSet<String>();
+
+        String sets;
         for(String target:searchOptions.targets){
             if(game.log.idleTroops <= 0 || game.log.marches <= 0 || redo-- <= 0){
                 break;
             }
 
-            String sets;
+           // String sets;
+
             for(int lvl=searchOptions.maxLvl; lvl >= searchOptions.minLvl; lvl--){
-                for(int j =0; j<10; j++){
+
+
+                if (!target.contains("_rss")) {
+                    if ((lvl == 5 && game.log.idleTroops < 21000) || (lvl == 4 && game.log.idleTroops < 5000)) {
+                        lvl--;
+                        if (lvl < searchOptions.minLvl) {
+                            break;
+                        }
+                    }
+                }
+
+                for(int j =0; j<6; j++){
                     game.dispatch.agathaSearchClick(target, lvl);
-                    game.dispatch("world_set");
                     Logger.log("**Start search");
-                    sets = game.log.worldCurr[0]+""+game.log.worldCurr[1];
-                    if(prevSets.contains(sets)){
-                        Logger.log("** No match because not found");
-                        break;
-                    }else {
-                        game.dispatch.staticDelay(2);
-                        //game.dispatch("select_monster");
-                        if (game.dispatch("attack_monster_test")) {
+                    game.dispatch.staticDelay(1.25);
+                    //game.dispatch("select_monster");
+                    if (game.dispatch("attack_monster_test")) {
+
+                        game.dispatch("world_set");
+                        sets = game.log.worldCurr[0]+""+game.log.worldCurr[1];
+
+
+                        if(prevSets.contains(sets)){
+                            Logger.log("** Already attacked");
+                            game.dispatch(Event.builder().setLoc(691, 470).setDelay(1.5));
+                        }else{
+                            prevSets.add(sets);
                             Logger.log("good, attack the monster");
                             game.dispatch("attack_monster");
                             game.log.marches--;
@@ -193,8 +214,13 @@ public class WorldMap {
                                 break;
                             }
                         }
-                        prevSets.add(sets);
+                    }else {
+                        Logger.log("** No match because not found");
+                        //hide box
+                        game.dispatch(Event.builder().setLoc(691, 470).setDelay(1.5));
+                        break;
                     }
+                       // prevSets.add(sets);
                     Logger.log("**Find match");
                 }
             }
@@ -283,22 +309,25 @@ public class WorldMap {
         game.dispatch.delay(1.5);
 
 
-        //save account
-        String id = game.store.createShortID();
-        String fileName =  id+".txt";
-        File directory = new File(FilePath.STORE_ACCOUNT_PATH);
-        if (!directory.exists()){
-            directory.mkdir();
+        try{
+
+            //save account
+            String id = game.store.createShortID();
+            File directory = new File(FilePath.STORE_ACCOUNT_PATH);
+            if (!directory.exists()){
+                directory.mkdir();
+            }
+            Account acc = new Account();
+            acc.setId(id);
+            game.posTarget.put("file_id", id);
+            String resultPath = game.store.updateAccount(acc, directory+"/"+id);
+            game.dispatch.pullAccountDataTo(resultPath);
+
+        }catch (Exception e){
+            Logger.log(e.getMessage());
         }
-        Account acc = new Account();
-        acc.setId(id);
-        game.posTarget.put("id", id);
-        String resultPath = game.store.updateAccount(acc, directory+"/"+id);
-        game.dispatch.pullAccountDataTo(resultPath);
 
         game.dispatch("change_name");
-        game.posTarget.put("status", "complete");
-        game.store.sendDataBack("update",  game.posTarget);
         game.startEvent(GameStatus.initiate, "complete");
     }
 }

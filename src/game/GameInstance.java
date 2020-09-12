@@ -10,6 +10,7 @@ import events.handler.*;
 import store.Account;
 import store.AccountUpdateListener;
 import store.Store;
+import util.Global;
 import util.Logger;
 import util.MyDebugger;
 
@@ -30,10 +31,8 @@ public class GameInstance {
     public AccountUpdateListener updateListener;
     public Account account;
     public int restarting = 0;
-    public boolean debug;
 
-    public GameInstance(Store store, boolean debug) {
-        this.debug = debug;
+    public GameInstance(Store store) {
         this.store = store;
         this.dispatch = new EventDispatcher(this);
     }
@@ -43,7 +42,7 @@ public class GameInstance {
         this.log = new LogProcess(this);
 
         new Thread(() -> {
-            if(debug){
+            if(Global.DEBUG){
                 this.account = store.getAccountGroup().getNextAccount();
                 new MyDebugger(this);
             }
@@ -71,7 +70,7 @@ public class GameInstance {
         new Thread(()-> {
             try {
                 dispatch.delay(1);
-
+                sendPosStatus(finishStatus);
                 if(status.get() == GameStatus.initiate){
                     if (lastRound != null) {
                         //  store.getAccountGroup().updateCompletedBuildingQueue();
@@ -84,7 +83,7 @@ public class GameInstance {
                 }
 
                 if(posTarget != null){
-                    startPosModeEvent(finishStatus);
+                    startPosModeEvent();
                 }else{
                     switch (status.get()) {
                         case starting:
@@ -126,7 +125,8 @@ public class GameInstance {
                     Logger.log("Closed");
                 }else{
 
-                    if(store.isForceStop){
+                    boolean isForceStop = store.isForceStop;
+                    if(isForceStop){
                         Logger.log("Force stopped, start new round!");
                         store.setForceStop(false);
                     }
@@ -134,7 +134,7 @@ public class GameInstance {
                         GameException.fire(this, e);
                     }
 
-                    startEvent(GameStatus.initiate);
+                    startEvent(GameStatus.initiate, isForceStop ?  "cancel" : "Error"+e.getMessage());
                 }
             }
         }).start();
@@ -146,11 +146,14 @@ public class GameInstance {
         dispatch.startGame();
     }
 
-    public void startPosModeEvent(String finishStatus) throws Exception {
-        if(posTarget != null && !finishStatus.equalsIgnoreCase("") && !posTarget.containsKey("temp")) {
+    public void sendPosStatus(String finishStatus){
+        if(posTarget != null &&  finishStatus != null && !finishStatus.equalsIgnoreCase("") && !posTarget.containsKey("temp")) {
             posTarget.put("status", finishStatus);
             store.sendDataBack("update", posTarget);
         }
+    }
+
+    public void startPosModeEvent() throws Exception {
         updateListener.onUpdate(null);
         switch (status.get()) {
             case starting:
@@ -176,6 +179,10 @@ public class GameInstance {
     public void updateAccount(){
         updateListener.onUpdate(account);
         store.updateAccount(account);
+    }
+
+    public void updateTable(){
+        updateListener.onUpdateTable();
     }
 
     public boolean dispatch(String name) throws Exception {

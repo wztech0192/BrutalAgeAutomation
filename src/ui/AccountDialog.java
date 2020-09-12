@@ -74,8 +74,9 @@ public class AccountDialog extends JDialog {
             final JTextField errorField = NullableTextField(acc.getError());
             final JTextField lastGiftTimeField = NullableTextField(acc.getLastGiftTime());
             final JTextField lastRoundField = NullableTextField(acc.getLastRound());
+            final JTextField templateTimeField = NullableTextField(acc.getTemplateStartDate());
             final JTextField troopsField = NullableTextField(acc.getTroops());
-            final JPanel metaPanel = new JPanel(new GridLayout(13, 2));
+            final JPanel metaPanel = new JPanel(new GridLayout(14, 2));
             metaPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "Account Data"));
             metaPanel.add(changedServerCB);
             metaPanel.add(finishInitCB);
@@ -93,6 +94,7 @@ public class AccountDialog extends JDialog {
             addLabelTextField("Troops: ", troopsField, metaPanel);
             addLabelTextField("Last Gift Time: ", lastGiftTimeField, metaPanel);
             addLabelTextField("Last Round Time: ", lastRoundField, metaPanel);
+            addLabelTextField("Template Time: ", templateTimeField, metaPanel);
 
 
             final JPanel rssPanel = new JPanel(new GridLayout(acc.getResources().size(), 2));
@@ -170,6 +172,7 @@ public class AccountDialog extends JDialog {
                     acc.setError(Integer.parseInt(errorField.getText()));
                     acc.setLastGiftTime(LocalDateTime.parse(lastGiftTimeField.getText()));
                     acc.setLastRound(LocalDateTime.parse(lastRoundField.getText()));
+                    acc.setTemplateStartDate(LocalDateTime.parse(templateTimeField.getText()));
                     acc.setTroops(Integer.parseInt(troopsField.getText()));
 
                     for (Map.Entry<String, JTextField> entry : priorityTextfield.entrySet()) {

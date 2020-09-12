@@ -6,7 +6,7 @@ import game.GameStatus;
 
 public class Starting {
     public static void fire(GameInstance game) throws Exception {
-        game.dispatch.staticDelay(5);
+        game.dispatch.staticDelay(3);
         int i = 0;
         int count = 120;
         while (game.status.is(GameStatus.starting) && count -- > 0) {

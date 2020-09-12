@@ -4,8 +4,12 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import dispatcher.EventDispatcher;
 import game.GameInstance;
 import game.GameStatus;
+import store.Account;
+import util.Global;
 import util.Logger;
 
+import javax.swing.*;
+import java.awt.event.ItemEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -25,7 +29,7 @@ public class Initiate {
         while (true) {
             if(game.store.isClose) return;
             if(game.store.isPositionMode()){
-                if(!game.store.positionQueue.isEmpty() || game.store.metadata.getSavedPosAcc().size() < game.store.metadata.getMaxPosAcc()){
+                if(!game.store.positionQueue.isEmpty() || game.store.metadata.getSavedPosAcc().size() < Global.config.getMaxStorePos()){
                     createPosItem(game);
                     game.updateListener.onUpdate(null);
                     break;
@@ -36,8 +40,32 @@ public class Initiate {
                 }
             }
             if(game.store.getAccountGroup().getAccounts().size() > 0){
+
+                Account account = game.store.getAccountGroup().getNextAccount();
+
+                if (account.isDuringTemplate() && game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+                    boolean feedOver = false;
+                    while(true){
+                        if ( account.getTroops() >= account.getNumberFeaturer().getNumberSetting().get("Min Troop") + 1000) {
+                            break;
+                        }else if(game.account == account){
+                            feedOver = true;
+                            break;
+                        }
+                        else{
+                            account = game.store.getAccountGroup().getNextAccount();
+                        }
+                    }
+
+                    if(feedOver){
+                        Logger.log("Finished Feeding, so stop!!!!");
+                        game.store.metadata.getFeatureToggler().getGlobalFeatures().put("Feed Temple", false);
+                        game.store.marshellMetadata();
+                    }
+
+                }
+                game.account = account;
                 Logger.log("Get Account Index: " + game.store.getAccountGroup().getIndex());
-                game.account = game.store.getAccountGroup().getNextAccount();
                 String tempID = game.account.getId();
                 game.dispatch.delay(1);
                 Logger.log("---------------- start " + tempID);
@@ -50,6 +78,8 @@ public class Initiate {
             game.dispatch.staticDelay(10);
         }
 
+        game.updateTable();
+        game.store.currentPosItem = game.posTarget;
         game.dispatch.delay(2);
         game.startEvent(GameStatus.starting);
         game.dispatch.startGame();

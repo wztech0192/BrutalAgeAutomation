@@ -23,7 +23,7 @@ public class EventMap {
                 .setDelay(2)
                 .setLoc(55, 1198)
                 .setListener(((event, game) -> {
-                    game.dispatch.staticDelay(1.5);
+                    game.dispatch.staticDelay(1.25);
                     return Event.SUCCESS;
                 }));
 
@@ -32,12 +32,23 @@ public class EventMap {
                 .setTargetName("side_1:btn_items")
                 .setDelay(1.5)
                 .setLoc(682, 1100)
-                .setChain(
-                        Event.builder()
-                                .setTargetName("tabMenu:tab_2")
-                                .setDelay(1.5)
-                                .setLoc(526, 125)
-                );
+                .setListener(((event, game) -> {
+                    for(int i=0; i<5; i++){
+                        if(game.log.btnName.contains("btn_items")){
+                            game.dispatch.delay(1.5);
+                            game.dispatch(Event.builder()
+                                    .setTargetName("tabMenu:tab_2")
+                                    .setDelay(1.5)
+                                    .setLoc(526, 125));
+                            return Event.SUCCESS;
+                        }else{
+                            game.dispatch("top_left");
+                            game.dispatch(Event.builder().setLoc(682, 1100).setDelay(1.5));
+                        }
+                    }
+                    return event;
+                }));
+
 
         Event.builder(_map, "levelup_dialog")
                 .setTargetName("board:btn_sure")

@@ -1,20 +1,27 @@
 package util;
 
 import com.android.ddmlib.*;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import dispatcher.EventDispatcher;
 import events.EventMap;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
+import net.sf.cglib.core.Local;
 import net.sourceforge.tess4j.TesseractException;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MyDebugger {
 
@@ -24,6 +31,14 @@ public class MyDebugger {
             System.out.print("**Enter a event: ");
             Scanner input = new Scanner(System.in);
             String cmd;
+
+            Pattern chatDataRegex = Pattern.compile(".*chat\\.pf\\.tap4fun\\.com(.*?)\\{\"");
+            Pattern findXRegex = Pattern.compile("\"X\":(\\d*),");
+            Pattern findYRegex = Pattern.compile("\"Y\":(\\d*),");
+            Pattern chatDateRegex = Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\b)");
+            LocalDateTime prevRead = LocalDateTime.now();
+            DateTimeFormatter timePattern = DateTimeFormatter.ofPattern("yyyy-MM-d H:m:s");
+
             while(!(cmd = input.nextLine()).equalsIgnoreCase("exit")){
                 try {
 
@@ -51,6 +66,41 @@ public class MyDebugger {
                         switch (cmd) {
                             case "test":
                                 game.dispatch.enterSpecialText("你好嗎? Hello?");
+                                break;
+                            case "chat":
+                                game.dispatch.exec("adb shell cat /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/chatdb", s->{
+                                    Matcher m = chatDateRegex.matcher(s);
+                                    if(m.find()) {
+                                        LocalDateTime chatTime = LocalDateTime.parse(m.group(1), timePattern);
+                                        long duration = Duration.between(prevRead, chatTime).toMinutes();
+                                        if (duration >= 0) {
+                                            if ((m = chatDataRegex.matcher(s)).find()) {
+                                                System.out.println(m.group(1));
+                                                switch (m.group(1)) {
+                                                    case "Come and see this!": {
+                                                        if ((m = findXRegex.matcher(s)).find()) {
+                                                            System.out.println("for x");
+                                                            System.out.println(m.group(1));
+                                                        }
+
+                                                        if ((m = findYRegex.matcher(s)).find()) {
+                                                            System.out.println("for Y");
+                                                            System.out.println(m.group(1));
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    return false;
+                                });
+                                break;
+                            case "all_chat":
+                                game.dispatch.exec("adb shell cat /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/chatdb", s->{
+
+                                    System.out.println(s);
+                                    return false;
+                                });
                                 break;
                             case "ls":
                                 EventMap.printAll();

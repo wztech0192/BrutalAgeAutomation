@@ -4,6 +4,7 @@ import com.android.ddmlib.*;
 import dispatcher.EventDispatcher;
 import game.GameInstance;
 import store.Account;
+import store.AccountUpdateListener;
 import store.BuildHammer;
 import store.Store;
 import util.Global;
@@ -39,7 +40,6 @@ public class UserInterface extends JPanel {
     private JPanel priorityPaneWrapper;
     private JComboBox<String> emulatorSelect;
     private Store store;
-    private boolean debug;
     private GameInstance gameInstance;
     private IDevice device;
     private AndroidDebugBridge bridge;
@@ -48,10 +48,9 @@ public class UserInterface extends JPanel {
     private String tag;
     private boolean isPosMode = Global.OnlyPosMode;
 
-    public UserInterface(JFrame owner, boolean debug, AndroidDebugBridge bridge, String tag) {
+    public UserInterface(JFrame owner, AndroidDebugBridge bridge, String tag) {
         this.tag = tag;
         this.owner = owner;
-        this.debug = debug;
         this.bridge = bridge;
         this.setLayout(new BorderLayout());
 
@@ -80,13 +79,13 @@ public class UserInterface extends JPanel {
         new Thread(() -> {
             if (connectToDevice()) {
                 this.removeAll();
-                gameInstance = new GameInstance(store, debug);
+                gameInstance = new GameInstance(store);
                 System.out.println("active interface");
                 this.add(createFarmPanel(), BorderLayout.CENTER);
                 this.add(activeOrCloseBTN, BorderLayout.NORTH);
                 activeOrCloseBTN.setText("Close");
                 activeOrCloseBTN.setPreferredSize(null);
-                if (debug)
+                if (Global.DEBUG)
                     gameInstance.start();
 
                 owner.pack();
@@ -450,17 +449,30 @@ public class UserInterface extends JPanel {
             }
         });
 
-        gameInstance.setAccountUpdateListener(acc -> {
-            if(acc != null){
-                int index = store.getAccountGroup().getAccounts().indexOf(acc);
-                topPane.setBorder(BorderFactory.createTitledBorder("Current: " + acc.getSubId()));
-                String[] newData = acc.getColumnData();
-                for (int i = 0; i < model.getColumnCount(); i++) {
-                    model.setValueAt(newData[i], index, i);
+        gameInstance.setAccountUpdateListener(new AccountUpdateListener() {
+            @Override
+            public void onUpdate(Account acc) {
+                if(acc != null){
+                    int index = store.getAccountGroup().getAccounts().indexOf(acc);
+                    topPane.setBorder(BorderFactory.createTitledBorder("Current: " + acc.getSubId()));
+                    String[] newData = acc.getColumnData();
+                    for (int i = 0; i < model.getColumnCount(); i++) {
+                        model.setValueAt(newData[i], index, i);
+                    }
+                }else{
+                    topPane.setBorder(BorderFactory.createTitledBorder("Pending "+store.positionQueue.size()+
+                            ", stored account "+store.metadata.getSavedPosAcc().size()+"/"+Global.config.getMaxStorePos()));
                 }
-            }else{
-                topPane.setBorder(BorderFactory.createTitledBorder("Pending "+store.positionQueue.size()+
-                        ", stored account "+store.metadata.getSavedPosAcc().size()+"/"+store.metadata.getMaxPosAcc()));
+            }
+
+            @Override
+            public void onUpdateTable() {
+                String[][] data = store.getAccountGroup().getTableData();
+                for (int i = 0; i < data.length; i++) {
+                    for(int j=0; j< data[i].length;j++){
+                        model.setValueAt(data[i][j], i, j);
+                    }
+                }
             }
         });
 

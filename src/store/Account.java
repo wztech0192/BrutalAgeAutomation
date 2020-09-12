@@ -1,6 +1,7 @@
 package store;
 
 import game.GameInstance;
+import net.sf.cglib.core.Local;
 import util.LocalDateTimeAdapter;
 import util.Logger;
 
@@ -17,19 +18,29 @@ import java.util.stream.Collectors;
 @XmlRootElement(name = "Account")
 public class Account {
 
-    public static String[] Columns = { "ID", "Name", "Error", "Stronghold",  "P) Meat", "P) Wood", "Troops", "Wounded"};
+    public static String[] Columns = { "ID", "Name", "Error", "Stronghold",  "Troops", "Wounded",  "Priorities", "Last Round"};
 
     //"Wood", "Ivory", "Mana", "Rock", "Meat"
     public String[] getColumnData(){
+
+        StringBuilder priorityString = new StringBuilder();
+        Iterator<Integer> it = getNumberFeaturer().getGatherPriorities().values().iterator();
+        while(it.hasNext()){
+            priorityString.append(it.next());
+            if(it.hasNext()){
+                priorityString.append(" | ");
+            }
+        }
+
         return new String[]{
                 getSubId(),
                 getName(),
                 String.valueOf(getError()),
                 String.valueOf(getBuildingLvl("stronghold")),
-                getNumberFeaturer().getGatherPriorities().get("meat")+") "+df2.format(resources.get("meat") / K) +" K",
-                getNumberFeaturer().getGatherPriorities().get("wood")+") "+df2.format(resources.get("wood") / K) +" K",
                 String.valueOf(getTroops()),
-                getWounded()
+                getWounded(),
+                priorityString.toString(),
+                Duration.between(lastRound, LocalDateTime.now()).toMinutes() +" mins"
         };
     }
 
@@ -63,6 +74,7 @@ public class Account {
 
     private LocalDateTime lastGiftTime;
     private LocalDateTime lastRound;
+    private LocalDateTime templateStartDate;
 
     private int serverID = 519;
     private int horde = 0;
@@ -342,7 +354,15 @@ public class Account {
     public boolean getChangedServer() {
         return this.changedServer;
     }
+    
+    @XmlJavaTypeAdapter(value = LocalDateTimeAdapter.class)
+    public void setTemplateStartDate(LocalDateTime templateStartDate) {
+        this.templateStartDate = templateStartDate;
+    }
 
+    public LocalDateTime getTemplateStartDate() {
+        return templateStartDate;
+    }
 
     public LocalDateTime getLastGiftTime() {
         return lastGiftTime;
@@ -420,13 +440,13 @@ public class Account {
         this.numberFeaturer = new NumberFeaturer();
     }
 
-    public ArrayList<String> getGatherPrioritiesArray(boolean isPriorityGrowth, int minFoodWood) {
+    public ArrayList<String> getGatherPrioritiesArray( int minFoodWood) {
         HashMap<String, Integer> priorityTree = new HashMap<>();
         for(Map.Entry<String, Integer> entry : getNumberFeaturer().getGatherPriorities().entrySet()){
 
             int value = entry.getValue();
 
-            if(isPriorityGrowth && getBuildingLvl("stronghold") >= 9){
+            if( getBuildingLvl("stronghold") >= 9){
                 if(entry.getKey().equalsIgnoreCase("meat") || entry.getKey().equalsIgnoreCase("wood")){
                     if(getResource(entry.getKey()) <  minFoodWood/2  ){
                         value = 999;
@@ -474,5 +494,14 @@ public class Account {
 
     public String getWounded() {
         return wounded;
+    }
+
+    public boolean isDuringTemplate() {
+        if(getTemplateStartDate() == null){
+            return false;
+        }
+        long duration = Duration.between(getTemplateStartDate(), LocalDateTime.now()).toMinutes();
+        Logger.log("***** Template started for "+duration+" minutes!");
+        return duration >= 0 && duration <= 240;
     }
 }

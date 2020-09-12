@@ -17,7 +17,23 @@ import java.util.regex.Pattern;
 
 public class Global {
     public static final boolean OnlyPosMode = false;
+    public static boolean DEBUG = false;
+    public static boolean DEV_MODE = false;
     public static Config config;
+
+    public static void PopulateEnvSetting(String[] args){
+        if(args.length >0){
+            Logger.log(args[0]);
+            switch(args[0].toLowerCase()){
+                case "debug":
+                    DEBUG = true;
+                case "dev":
+                    DEV_MODE = true;
+                default:
+            }
+        }
+    }
+
     static{
         String ownerName= "";
         try {

@@ -21,5 +21,12 @@ public class OtherEvents {
                     return Event.SUCCESS;
                 }));
 
+        Event.builder(_map, "click_chat_input")
+                .setLoc(191, 1208)
+                .setDelay(1);
+
+        Event.builder(_map, "send_chat")
+                .setLoc(618, 1224)
+                .setDelay(1);
     }
 }

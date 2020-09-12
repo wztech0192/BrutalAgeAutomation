@@ -2,16 +2,21 @@ package events;
 
 import com.android.ddmlib.logcat.LogCatMessage;
 import com.android.ddmlib.logcat.LogCatReceiverTask;
+import dispatcher.EventDispatcher;
+import events.handler.Chat;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
 import org.opencv.core.Point;
-import store.Account;
+import util.Global;
 import util.Logger;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +24,7 @@ public class LogProcess {
     private final static Pattern regexWorldScale = Pattern.compile("(\\d*) 1$");
     private final static Pattern regexBtnNamePattern = Pattern.compile("character name is ([^,]*), (\\d*), (\\d*)"); // the pattern to search for
     private final static Pattern regexCurrentOffset = Pattern.compile("m_currentOffset:\\((.*),(.*)\\)"); // the pattern to search for
+    private final static Pattern regexTrainingTime = Pattern.compile("Training completed.*currentTiem: (.*), fireTime: (.*)");
     private final static Pattern regexBuildTime = Pattern.compile(".*lv.(\\d*) building.*currentTiem: (.*), fireTime: (.*)");
     private final static Pattern regexTalentScroll = Pattern.compile("dummy :(.*)");
     private final static Pattern regexCurrTroops = Pattern.compile("m_currentTroopsNumber = (\\d*)");
@@ -28,8 +34,17 @@ public class LogProcess {
     private final static Pattern regexMaxRss = Pattern.compile("max resource: (\\d*)");
     private final static Pattern regexGetText = Pattern.compile("showText = (.*) textLength");
     private final static Pattern regexLimitTransport = Pattern.compile("limit (\\d*)");
-    private final static DateTimeFormatter buildTimePattern = DateTimeFormatter.ofPattern("MMM d, yyyy h:m:s a");
+    private final static DateTimeFormatter timePattern = DateTimeFormatter.ofPattern("MMM d, yyyy h:m:s a");
+
     private final static Pattern regexNeedRss = Pattern.compile("enter max : (\\d*) m_rssneedtoby: (.*)$");
+
+    //chat
+    private final static DateTimeFormatter chatTimePattern = DateTimeFormatter.ofPattern("yyyy-MM-d H:m:s");
+    private final static Pattern chatDataRegex = Pattern.compile(".*chat\\.pf\\.tap4fun\\.com(.*?)\\{\"");
+    private final static Pattern chatDateRegex = Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\b)");
+    private LocalDateTime prevRead = LocalDateTime.now();
+    private boolean isInChat = false;
+
 
     public boolean shouldTrain;
     public boolean shouldHeal;
@@ -41,6 +56,7 @@ public class LogProcess {
     public int[] transportRss = new int[5];
     public int buildingCompleteLevel = 0;
     public LocalDateTime buidlingCompleteTime = LocalDateTime.now();
+    public LocalDateTime trainingCompleteTime = LocalDateTime.now();
     public int[] touchPoint = new int[2];
     public Point city = new Point();
     public double worldScale;
@@ -61,6 +77,7 @@ public class LogProcess {
     public String needRsstype = "";
     private GameInstance game;
     private LogCatReceiverTask lcrt;
+    public boolean testPopup = true;
 
 
     public LogProcess(GameInstance game) {
@@ -92,9 +109,10 @@ public class LogProcess {
     private void processLog(String str) throws Exception {
 
 
-        if (game.debug) {
+        if (Global.DEBUG) {
             handleCityWork(str);
             handleWorldMap(str);
+            handleChat(str);
         }
 
 
@@ -126,7 +144,7 @@ public class LogProcess {
             city.y = Double.parseDouble(m.group(2));
         } else if (str.contains("sfx_event_level_up.ogg")) {
             levelupDialog = true;
-        } else if (str.contains("playEffectL filename sound/sfx_event_notice_window.ogg")) {
+        } else if (testPopup && str.contains("playEffectL filename sound/sfx_event_notice_window.ogg")) {
             hasPopupWarning = true;
         } else if (str.contains("SaveRawData successs CITYMAP_LOCAL_DATA")) {
             isInCity = true;
@@ -142,14 +160,14 @@ public class LogProcess {
 
 
         switch (game.status.get()) {
-            case starting:
-                handleStart(str);
-                break;
+
             case tutorial:
                 handleTutorial(str);
                 break;
             case change_server:
                 break;
+            case starting:
+                handleStart(str);
             case when_start:
                 if ((m = regexTalentScroll.matcher(str)).find()) {
                     talentScroll = Double.parseDouble(m.group(1));
@@ -166,6 +184,45 @@ public class LogProcess {
                 handleWorldMap(str);
                 break;
             default:
+        }
+    }
+
+    private int runID = 0;
+    private LocalDateTime tempDate;
+    private void handleChat(String str){
+        if(str.contains("SaveRawData successs PRIVATECHAT_LOCAL_DATA.sav")){
+            new Thread(()->{
+                try {
+                    int tempRunID = ++runID;
+                    Thread.sleep(300);
+
+                    if(tempRunID == runID) {
+                        tempDate = null;
+                        EventDispatcher.exec("adb shell cat /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/chatdb", s -> {
+                            Matcher m = chatDateRegex.matcher(s);
+                            if (m.find()) {
+                                LocalDateTime chatTime = LocalDateTime.parse(m.group(1), chatTimePattern);
+                                boolean isAfter = prevRead == null || prevRead.isBefore(chatTime);
+                                if (isAfter) {
+                                    if(tempDate == null || tempDate.isBefore(chatTime)){
+                                        tempDate = chatTime;
+                                    }
+                                    if ((m = chatDataRegex.matcher(s)).find()) {
+                                        Chat.fire(game, s, m.group(1));
+                                    }
+                                }
+                            }
+                            return false;
+                        });
+
+                        if(tempDate != null){
+                            prevRead = tempDate;
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
         }
     }
 
@@ -240,10 +297,18 @@ public class LogProcess {
             Logger.log(str);
             buildingCompleteLevel = Integer.parseInt(m.group(1));
             buidlingCompleteTime = LocalDateTime.parse(m.group(3).trim(),   // = 7:07:00 PM
-                    buildTimePattern).minus(Duration.between(LocalDateTime.now(),
+                    timePattern).minus(Duration.between(LocalDateTime.now(),
                     LocalDateTime.parse(m.group(2).trim(),   // = 7:07:00 PM
-                            buildTimePattern)));
+                            timePattern)));
             Logger.log("Some building complete lvl " + buildingCompleteLevel + " at: " + buidlingCompleteTime);
+        }
+        else if ((m = regexTrainingTime.matcher(str)).find()){
+            Logger.log(str);
+            trainingCompleteTime = LocalDateTime.parse(m.group(2).trim(),   // = 7:07:00 PM
+                    timePattern).minus(Duration.between(LocalDateTime.now(),
+                    LocalDateTime.parse(m.group(1).trim(),   // = 7:07:00 PM
+                            timePattern)));
+            Logger.log("Training complete at: " + trainingCompleteTime);
         }
         else if ((m = regexNeedRss.matcher(str)).find()){
             needRss = Integer.parseInt(m.group(1));
@@ -289,14 +354,16 @@ public class LogProcess {
         transportRss = new int[5];
         buildingCompleteLevel = 0;
         buidlingCompleteTime = LocalDateTime.now();
+        trainingCompleteTime = LocalDateTime.now();
         touchPoint = new int[2];
         city = new Point();
         worldScale = 0;
         worldCurr = new int[4];
         levelupDialog = false;
         btnName = "";
-        int idleTroops = 0;
-        int currTroops = 0;
+        idleTroops = 0;
+        currTroops = 0;
+        isInChat = false;
         emptyOutPost = false;
         isRssEnough = false;
         maxTransportNum = 0;

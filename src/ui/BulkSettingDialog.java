@@ -6,6 +6,7 @@ import store.Store;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.function.BiFunction;
 
 public class BulkSettingDialog extends JButton{
@@ -19,7 +20,7 @@ public class BulkSettingDialog extends JButton{
 
         this.setText("Bulk Account Setting");
         this.addActionListener(e->{
-            JPanel panel = new JPanel(new GridLayout(6, 1));
+            JPanel panel = new JPanel(new GridLayout(7, 1));
             addSingleBulkSetting("cb",panel, "Changed Server", table, (acc, value) -> {
                 acc.setChangedServer(value.equalsIgnoreCase("y"));
                 return true;
@@ -45,6 +46,18 @@ public class BulkSettingDialog extends JButton{
                 acc.setClan(value);
                 return true;
             });
+
+            addSingleBulkSetting("tf",panel, "Template Start Time", table, (acc, value) -> {
+                try{
+                    acc.setTemplateStartDate(LocalDateTime.parse(value));
+                }
+                catch(Exception ex){
+                    JOptionPane.showMessageDialog(null, "Incorrect Date Format");
+                }
+
+                return true;
+            });
+
 
             JOptionPane.showConfirmDialog(panel, panel,
                     "Bulk Setting", JOptionPane.CLOSED_OPTION);

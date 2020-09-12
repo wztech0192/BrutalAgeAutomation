@@ -10,6 +10,7 @@ import store.MatchPoint;
 import util.Logger;
 
 import java.awt.image.BufferedImage;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class WorldMapEvents {
     private static String encryptName(JsonObject json) {
         if (json != null) {
 
-            if(json.containsKey("id"))
-                return (String)json.get("id");
+            if(json.containsKey("file_id"))
+                return (String)json.get("file_id");
           /*  StringBuffer str = new StringBuffer();
             str.append(json.get("buiX"));
             str.append(json.get("buiY"));
@@ -241,9 +242,10 @@ public class WorldMapEvents {
                     game.dispatch(Event.builder().setLoc(332, 661).setDelay(2));
                     Logger.log("Current Idle: " + game.log.idleTroops);
                     Logger.log("Current Troops: " + game.log.currTroops);
-                    if (game.log.idleTroops == game.log.currTroops)
+
+                    if (game.log.idleTroops == game.log.currTroops || game.log.currTroops > 25000)
                         game.dispatch("quickSelect");
-                    while (game.log.idleTroops > 0 && game.log.currTroops <= 0 && redo++ < 10) {
+                    while ( game.log.currTroops <= 0 && redo++ < 10) {
                         game.dispatch("quickSelect");
                     }
 
@@ -281,19 +283,27 @@ public class WorldMapEvents {
                             break;
                         }
                     }
-                    game.dispatch(Event.builder().setLoc(570, 970, 680, 970, 300).setDelay(1));
-                    game.dispatch(Event.builder().setLoc(570, 844, 680, 844, 300).setDelay(1));
 
+                    game.dispatch(Event.builder().setTargetName("click beast").setLoc(576, 797).setDelay(1.5));
+                    game.dispatch.staticDelay(1.5);
+                    game.dispatch.enterText(String.valueOf(99999));
+                    game.dispatch.staticDelay(1.5);
+                    game.dispatch(Event.builder().setTargetName("click shaman").setLoc(576, 925).setDelay(1.5));
+                    game.dispatch.staticDelay(1.5);
+                    game.dispatch.enterText(String.valueOf(99999));
+                    game.dispatch.staticDelay(1.5);
                     int sendWarriorsCount = game.account.getTroops() - game.log.currTroops - game.account.getNumberFeaturer().getNumberSetting().get("Min Troop");
 
                     Logger.log(game.account.getTroops()+" / " + game.log.currTroops+", Send "+sendWarriorsCount+" warriors");
                     if (sendWarriorsCount > 0) {
-                        game.dispatch(Event.builder().setLoc(566, 670).setDelay(1));
+                        game.dispatch(Event.builder().setLoc(566, 670));
+                        game.dispatch.staticDelay(1.5);
                         game.dispatch.enterText(String.valueOf(sendWarriorsCount));
-                        game.dispatch(Event.builder().setLoc(521, 1200));
                     }
-                    game.dispatch.delay(1);
 
+                    //click out;
+                    game.dispatch(Event.builder().setLoc(521, 1200).setDelay(1));
+                    //click send
                     game.dispatch(Event.builder().setLoc(521, 1200));
                     game.dispatch.staticDelay(1.5);
                     game.dispatch(Event.builder().setLoc(381, 650));
@@ -302,6 +312,7 @@ public class WorldMapEvents {
                         int leftTroops = game.account.getTroops() - game.log.currTroops;
                         Logger.log("Left Troops: "+leftTroops);
                         game.account.setTroops(leftTroops);
+                        game.account.setLastRound(LocalDateTime.now());
                         game.updateAccount();
                     }
 

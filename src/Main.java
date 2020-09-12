@@ -17,7 +17,6 @@ public class Main {
         System.load(FilePath.RootPath + "/" + Core.NATIVE_LIBRARY_NAME + ".dll");
     }
 
-
     public static void main(String[] args) {
 
         if(Global.config.getOwnerName().equalsIgnoreCase("")){
@@ -30,9 +29,10 @@ public class Main {
                     break;
                 }
             }
-            boolean debug = args.length > 0;
-            AndroidDebugBridge.init(false);
+            Global.PopulateEnvSetting(args);
 
+
+            AndroidDebugBridge.init(false);
             AndroidDebugBridge bridge = AndroidDebugBridge.createBridge(
                     FilePath.RootPath + "/../adb", false);
             Runtime.getRuntime().addShutdownHook(new Thread(AndroidDebugBridge::disconnectBridge));
@@ -43,12 +43,20 @@ public class Main {
             JFrame mFrame = new JFrame();
             JTabbedPane tabbedPane = new JTabbedPane();
 
-            tabbedPane.addTab("0", new UserInterface(mFrame, debug, bridge, "0"));
+            if(Global.DEV_MODE){
+                tabbedPane.addTab("dev", new UserInterface(mFrame, bridge, "dev"));
+            }else{
+                tabbedPane.addTab("0", new UserInterface(mFrame, bridge, "0"));
+            }
             tabbedPane.setSelectedIndex(0);
 
             for(int i=1; i<Global.config.getInstanceNumber();i++){
+
                 String si = String.valueOf(i);
-                tabbedPane.addTab(si, new UserInterface(mFrame, debug, bridge, si));
+                if(Global.DEV_MODE){
+                    si = "dev-"+si;
+                }
+                tabbedPane.addTab(si, new UserInterface(mFrame, bridge, si));
             }
 
 

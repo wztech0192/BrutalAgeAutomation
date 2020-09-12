@@ -81,7 +81,7 @@ public class ClanEvents {
                             }
                         }
                     }else{
-                        game.dispatch.staticDelay(2);
+                        game.dispatch.staticDelay(1.5);
                         game.dispatch("top_left");
                     }
                     return event;
@@ -120,7 +120,7 @@ public class ClanEvents {
                             break;
                         }
                     }
-                    game.dispatch.staticDelay(2);
+                    game.dispatch.staticDelay(1.5);
                     game.dispatch("top_left");
 
                     if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan")){
@@ -173,7 +173,7 @@ public class ClanEvents {
                 .setDelay(2)
                 .setListener(((event, game) -> {
                     game.dispatch("top_left");
-                    game.dispatch.staticDelay(2);
+                    game.dispatch.staticDelay(1.5);
                     int redo = 0;
                     game.log.isInCity = false;
                     while(!game.log.isInCity && redo++ < 4){
@@ -187,13 +187,13 @@ public class ClanEvents {
                 .setListener(((event, game) -> {
                     game.log.hasClan = false;
                     game.dispatch(Event.builder().setLoc(666, 1211));
-                    game.dispatch.staticDelay(2);
+                    game.dispatch.staticDelay(1.5);
 
                     if(!game.log.hasClan){
                         game.dispatch("confirm_clan");
                     }
                     else{
-                        if (game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+                        if (game.account.isDuringTemplate()  && game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
                             return event;
                         }
                         game.dispatch("quit_clan");

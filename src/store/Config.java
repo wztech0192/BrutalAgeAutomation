@@ -14,6 +14,16 @@ public class Config {
     private boolean SaveErrorScreenshot = false;
     private int instanceNumber = 4;
 
+    private int maxStorePos = 0;
+
+    public int getMaxStorePos() {
+        return maxStorePos;
+    }
+    @XmlElement
+    public void setMaxStorePos(int maxStorePos) {
+        maxStorePos = maxStorePos;
+    }
+
     public String getOwnerName() {
         return OwnerName;
     }

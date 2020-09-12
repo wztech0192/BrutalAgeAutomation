@@ -134,6 +134,7 @@ public class BuildingEvents {
                 .isBuilding()
                 .setLoc(-574, -349, 432, 434)
                 .setListener(((event, game) -> {
+                    game.log.testPopup = false;
                     game.dispatch.delay(1.5);
                     game.dispatch(Event.builder().setLoc(65, 642).setDelay(2));
                     Event hitMonster = Event.builder().setLoc(340, 681).setDelay(1);
@@ -146,6 +147,8 @@ public class BuildingEvents {
                         game.dispatch("top_left");
                     }
                     game.dispatch("top_left");
+
+                    game.log.testPopup = true;
                     return Event.SUCCESS;
                 }));
 
@@ -234,6 +237,7 @@ public class BuildingEvents {
                                 .setLoc(190, 630)
                                 .setDelay(1.5)
                                 .setListener((event, game) -> {
+                                           game.log.testPopup = false;
                                             while (game.log.btnName.contains("BODY:btn_rss")) {
 
                                                 if (game.account.getBuildingLvl("stronghold") >= 10 && game.account.isRssLessThan("meat", "wood")) {
@@ -255,6 +259,8 @@ public class BuildingEvents {
                                                     .setDelay(1.5)
                                             );
                                             game.dispatch("top_left");
+
+                                            game.log.testPopup = true;
                                             return Event.SUCCESS;
                                         }
                                 )

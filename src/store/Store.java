@@ -31,6 +31,7 @@ public class Store extends WebSocketAdapter {
     public boolean isForceStop;
     public boolean isClose;
     public String tag;
+    public JsonObject currentPosItem = null;
 
     public Store(String tag, AndroidDebugBridge bridge){
         this.tag = tag;
@@ -91,7 +92,7 @@ public class Store extends WebSocketAdapter {
 
     public void updatePosSavedAcc(){
         JsonObject json = new JsonObject();
-        json.put("max",metadata.getMaxPosAcc());
+        json.put("max",Global.config.getMaxStorePos());
         json.put("current", metadata.getSavedPosAcc().size());
         sendDataBack("acc", json);
     }
@@ -103,7 +104,7 @@ public class Store extends WebSocketAdapter {
             ws = new WebSocketFactory().setConnectionTimeout(10000).createSocket(SERVER).addListener(this)
                     .addExtension(WebSocketExtension.PERMESSAGE_DEFLATE).connect();
             JsonObject payload = new JsonObject();
-            payload.put("max",metadata.getMaxPosAcc());
+            payload.put("max",Global.config.getMaxStorePos());
             payload.put("current", metadata.getSavedPosAcc().size());
             payload.put("executorID", Global.config.getOwnerName()+"-"+metadata.getSelectedEmulator());
             sendDataBack("receiver", payload);
@@ -149,18 +150,31 @@ public class Store extends WebSocketAdapter {
                     break;
                 case "cancel":
                     Iterator<JsonObject> it = positionQueue.iterator();
-                    JsonObject target = null;
-                    while(it.hasNext()){
-                        target = it.next();
-                        if(((String)target.get("id")).equalsIgnoreCase((String) data.get("payload"))){
-                            it.remove();
-                            break;
+
+                    if(currentPosItem != null && ((String)currentPosItem.get("id")).equalsIgnoreCase((String) data.get("payload") )){
+                    System.out.println("Cancel current");
+                        currentPosItem.put("status", "cancel");
+                        sendDataBack("update",currentPosItem);
+                        setForceStop(true);
+                    }else{
+                        JsonObject target;
+                        JsonObject removedTarget = null;
+                        while(it.hasNext()){
+                            target = it.next();
+                            if(((String)target.get("id")).equalsIgnoreCase((String) data.get("payload"))){
+                                removedTarget = target;
+                                it.remove();
+                                break;
+                            }
+                        }
+                        if(removedTarget != null){
+                            System.out.println("Cancel queue");
+                            removedTarget.put("status", "cancel");
+                            sendDataBack("update",removedTarget);
+
                         }
                     }
-                    if(target != null){
-                        target.put("status", "cancel");
-                        sendDataBack("update",target);
-                    }
+
                     System.out.println(positionQueue.size());
                     break;
             }

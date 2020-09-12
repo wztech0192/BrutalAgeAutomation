@@ -15,7 +15,6 @@ public class Metadata {
     private String ip = "";
     private NumberFeaturer numberFeaturer;
     private LinkedList<String> SavedPosAcc = new LinkedList<>();
-    private int maxPosAcc = 5;
     private String clan = "";
     private int server = 519;
     private int horde = 0;
@@ -38,13 +37,6 @@ public class Metadata {
         return SavedPosAcc;
     }
 
-    public int getMaxPosAcc() {
-        return maxPosAcc;
-    }
-
-    public void setMaxPosAcc(int maxPosAcc) {
-        this.maxPosAcc = maxPosAcc;
-    }
 
     public int getHorde() {
         return horde;
