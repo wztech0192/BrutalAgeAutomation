@@ -24,24 +24,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/events/register/ChatEvents.java" afterDir="false" />
+    <list default="true" id="b901f5e2-0e37-4a6b-b914-ff07a1ebb6cb" name="Default Changelist" comment="update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dispatcher/EventDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/EventMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/EventMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/events/LogProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/LogProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/Chat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/Chat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/CityWork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/CityWork.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/Initiate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/Initiate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/WhenStart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WhenStart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/handler/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/handler/WorldMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/events/register/OtherEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/events/register/OtherEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/GameInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameInstance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/GameStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/FeatureToggler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/FeatureToggler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UserInterface.java" afterDir="false" />
     </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -320,7 +307,14 @@
       <option name="project" value="LOCAL" />
       <updated>1598166399483</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="update">
+      <created>1599945608386</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1599945608387</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -497,6 +491,16 @@
           <url>file://$PROJECT_DIR$/src/store/Store.java</url>
           <line>201</line>
           <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/util/MyDebugger.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/util/MyDebugger.java</url>
+          <line>74</line>
+          <option name="timeStamp" value="35" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
