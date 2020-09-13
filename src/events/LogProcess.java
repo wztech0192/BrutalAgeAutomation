@@ -197,7 +197,8 @@ public class LogProcess {
 
                     if(tempRunID == runID) {
                         tempDate = null;
-                        game.dispatch.exec("adb shell cat /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/chatdb", s -> {
+
+                        EventDispatcher.execADBIP(game.store.metadata.getIp(),"adb shell cat /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/chatdb", s -> {
                             Matcher m = chatDateRegex.matcher(s);
                             if (m.find()) {
                                 LocalDateTime chatTime = LocalDateTime.parse(m.group(1), chatTimePattern);
