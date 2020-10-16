@@ -77,6 +77,10 @@ public class AccountGroup {
         return accounts;
     }
 
+    public Account getLastAccount() {
+        return getAccounts().get(getAccounts().size() - 1);
+    }
+
     public String[][] getTableData() {
         String[][] data = new String[accounts.size()][Account.Columns.length];
 

@@ -57,8 +57,8 @@ public class ClanEvents {
                    Logger.log("*** Can Transport: "+game.log.maxTransportNum);
                     Logger.log("*** Max Transport: "+game.log.limitTransportNum);
                     if(game.log.maxTransportNum >= game.log.limitTransportNum) {
-                        for (int i = 311; i <= 711; i += 100) {
-                            if(i == 311 && game.log.transportRss[0] < game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood")){
+                        for (int i = 0; i <5; i++) {
+                            if((i != 0 && i != 1 ) || game.transportFoodValue(i) >= game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood")) {
                                 /*
                                 * 0 wood  -0
                                     1 rock  -3
@@ -66,18 +66,15 @@ public class ClanEvents {
                                     3 meat -1
                                     4 mana -2
                                 * */
-                                continue;
-                            }
-                            else if(i == 411 && game.log.transportRss[3] < game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood")){
-                                continue;
-                            }
-                            game.dispatch.exec(String.format("input swipe 539 %d 579 %d", i, i));
-                            game.dispatch.staticDelay(0.25);
-                            Logger.log("*** Transport: "+game.log.selectedTransportNum+"/"+game.log.limitTransportNum);
-                            if (game.log.selectedTransportNum >= game.log.limitTransportNum - 10000) {
-                                game.dispatch("start_transport");
-                                game.log.marches--;
-                                return Event.SUCCESS;
+                                int swipePos = 311 + (i * 100);
+                                game.dispatch.exec(String.format("input swipe 539 %d 579 %d", swipePos, swipePos));
+                                game.dispatch.staticDelay(0.50);
+                                Logger.log("*** Transport: " + game.log.selectedTransportNum + "/" + game.log.limitTransportNum);
+                                if (game.log.selectedTransportNum >= (game.log.limitTransportNum * 0.80)) {
+                                    game.dispatch("start_transport");
+                                    game.log.marches--;
+                                    return Event.SUCCESS;
+                                }
                             }
                         }
                     }else{
@@ -115,7 +112,7 @@ public class ClanEvents {
                     }
                     game.dispatch("open_member");
 
-                    for(int i =0; i<4; i++){
+                    for(int i =0; i<5; i++){
                         if(!game.dispatch("round_transport") || game.log.marches<=0){
                             break;
                         }

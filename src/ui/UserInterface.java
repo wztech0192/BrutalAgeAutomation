@@ -264,6 +264,8 @@ public class UserInterface extends JPanel {
 
     private void closeInstance() {
         store.close();
+        if(gameInstance != null)
+            gameInstance.close();
         this.removeAll();
         this.add(activeOrCloseBTN, BorderLayout.CENTER);
         activeOrCloseBTN.setText("Active");
@@ -549,6 +551,8 @@ public class UserInterface extends JPanel {
                 }
                 index++;
             }
+            
+            store.clearErrorFiles();
             JOptionPane.showMessageDialog(owner, "Reset all error");
         });
 

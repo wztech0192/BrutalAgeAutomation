@@ -342,6 +342,19 @@ public class Store extends WebSocketAdapter {
     public void toggleBotMode() {
         botMode = !botMode;
     }
+
+    public void clearErrorFiles() {
+        try {
+            File folder = new File(FilePath.ERROR_PATH);
+            for (File file : folder.listFiles()) {
+                file.delete();
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 }
 
 

@@ -12,6 +12,8 @@ import util.Logger;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CityWork {
 
@@ -488,10 +490,15 @@ public class CityWork {
 
     }
 
+
+
+
     public static void fireBotMode(GameInstance game) throws  Exception {
          if(game.dispatch("open_chat")){
              game.dispatch.sendChat("Im Online!");
              game.status.set(GameStatus.chatting);
+             Chat.cancelChatCheck();
+             Chat.scheduleChatCheck(game);
          }else{
              Logger.log("Open Chat failed");
              game.startEvent(GameStatus.initiate);

@@ -35,17 +35,13 @@ public class LogProcess {
     private final static Pattern regexGetText = Pattern.compile("showText = (.*) textLength");
     private final static Pattern regexLimitTransport = Pattern.compile("limit (\\d*)");
     private final static DateTimeFormatter timePattern = DateTimeFormatter.ofPattern("MMM d, yyyy h:m:s a");
-
     private final static Pattern regexNeedRss = Pattern.compile("enter max : (\\d*) m_rssneedtoby: (.*)$");
 
     //chat
     private final static DateTimeFormatter chatTimePattern = DateTimeFormatter.ofPattern("yyyy-MM-d H:m:s");
     private final static Pattern chatDataRegex = Pattern.compile(".*chat\\.pf\\.tap4fun\\.com(.*?)\\{\"");
     private final static Pattern chatDateRegex = Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\b)");
-    private LocalDateTime prevRead = LocalDateTime.now();
-    private boolean isInChat = false;
-
-
+    public LocalDateTime lastValidChatTime = LocalDateTime.now();
     public boolean shouldTrain;
     public boolean shouldHeal;
     public int marches;
@@ -75,10 +71,12 @@ public class LogProcess {
     public String text;
     public int needRss = 0;
     public String needRsstype = "";
+    public boolean testPopup = true;
+    private LocalDateTime prevRead = LocalDateTime.now();
     private GameInstance game;
     private LogCatReceiverTask lcrt;
-    public boolean testPopup = true;
-
+    private int runID = 0;
+    private LocalDateTime tempDate;
 
     public LogProcess(GameInstance game) {
         this.game = game;
@@ -186,25 +184,24 @@ public class LogProcess {
         }
     }
 
-    private int runID = 0;
-    private LocalDateTime tempDate;
-    private void handleChat(String str){
-        if(str.contains("SaveRawData successs PRIVATECHAT_LOCAL_DATA.sav")){
-            new Thread(()->{
+    private void handleChat(String str) {
+
+        if (str.contains("SaveRawData successs PRIVATECHAT_LOCAL_DATA.sav")) {
+            new Thread(() -> {
                 try {
                     int tempRunID = ++runID;
                     Thread.sleep(300);
 
-                    if(tempRunID == runID) {
+                    if (tempRunID == runID) {
                         tempDate = null;
 
-                        EventDispatcher.execADBIP(game.store.metadata.getIp(),"shell cat /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/chatdb", s -> {
+                        EventDispatcher.execADBIP(game.store.metadata.getIp(), "shell cat /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/chatdb", s -> {
                             Matcher m = chatDateRegex.matcher(s);
                             if (m.find()) {
                                 LocalDateTime chatTime = LocalDateTime.parse(m.group(1), chatTimePattern);
                                 boolean isAfter = prevRead == null || prevRead.isBefore(chatTime);
                                 if (isAfter) {
-                                    if(tempDate == null || tempDate.isBefore(chatTime)){
+                                    if (tempDate == null || tempDate.isBefore(chatTime)) {
                                         tempDate = chatTime;
                                     }
                                     if ((m = chatDataRegex.matcher(s)).find()) {
@@ -215,7 +212,7 @@ public class LogProcess {
                             return false;
                         });
 
-                        if(tempDate != null){
+                        if (tempDate != null) {
                             prevRead = tempDate;
                         }
                     }
@@ -237,10 +234,9 @@ public class LogProcess {
     private void handleStart(String str) throws Exception {
 
         if (str.contains("_offsetCityMap")) {
-            if(game.store.isBotMode()){
+            if (game.store.isBotMode()) {
                 game.startEvent(GameStatus.when_start);
-            }
-            else if (game.posTarget != null) {
+            } else if (game.posTarget != null) {
                 handlePosModeStart();
             } else if (game.account != null) {
                 if (game.account.getChangedServer()) {
@@ -304,27 +300,24 @@ public class LogProcess {
                     LocalDateTime.parse(m.group(2).trim(),   // = 7:07:00 PM
                             timePattern)));
             Logger.log("Some building complete lvl " + buildingCompleteLevel + " at: " + buidlingCompleteTime);
-        }
-        else if ((m = regexTrainingTime.matcher(str)).find()){
+        } else if ((m = regexTrainingTime.matcher(str)).find()) {
             Logger.log(str);
             trainingCompleteTime = LocalDateTime.parse(m.group(2).trim(),   // = 7:07:00 PM
                     timePattern).minus(Duration.between(LocalDateTime.now(),
                     LocalDateTime.parse(m.group(1).trim(),   // = 7:07:00 PM
                             timePattern)));
             Logger.log("Training complete at: " + trainingCompleteTime);
-        }
-        else if ((m = regexNeedRss.matcher(str)).find()){
+        } else if ((m = regexNeedRss.matcher(str)).find()) {
             needRss = Integer.parseInt(m.group(1));
 
-            switch(m.group(2)){
-                case "rss_a" :
+            switch (m.group(2)) {
+                case "rss_a":
                     needRsstype = "wood";
-                case "rss_d" :
+                case "rss_d":
                     needRsstype = "meat";
                     break;
             }
-        }
-        else {
+        } else {
             handleTransport(str);
         }
     }
@@ -366,7 +359,6 @@ public class LogProcess {
         btnName = "";
         idleTroops = 0;
         currTroops = 0;
-        isInChat = false;
         emptyOutPost = false;
         isRssEnough = false;
         maxTransportNum = 0;

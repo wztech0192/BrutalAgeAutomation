@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 
 
 public class GameInstance {
-
     public LocalDateTime lastRound = null;
     public LogProcess log;
     public StatusIndicator status;
@@ -213,4 +212,39 @@ public class GameInstance {
         return dispatch.sendEvent(event);
     }
 
+    public int transportFoodValue(int target){
+              /*
+            * 0 wood  -0
+                1 rock  -3
+                2 ivory -4
+                3 meat -1
+                4 mana -2
+            * */
+        int dx = 0;
+        switch(target){
+            case 1:
+                dx = 3;
+                break;
+            case 2:
+                dx = 4;
+                break;
+            case 3:
+                dx = 1;
+                break;
+            case 4:
+                dx = 2;
+                break;
+            default:
+        }
+
+        int result = log.transportRss[dx];
+        Logger.log("Result "+dx+" -> "+result);
+        return result;
+    }
+
+    public void close() {
+        Chat.cancelChatCheck();
+        if(status != null)
+            status.set(GameStatus.close);
+    }
 }

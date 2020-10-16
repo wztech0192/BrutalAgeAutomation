@@ -3,11 +3,14 @@ package events.handler;
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import game.GameInstance;
+import game.GameStatus;
 import util.Logger;
 
 import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,13 +26,14 @@ public class Chat {
     private static GameInstance botInstance;
 
     private static LocalDateTime lastRoundTime = null;
+    private static TimerTask timerTask;
 
-    public static void setLastRoundTime(){
+    public static void setLastRoundTime() {
         lastRoundTime = LocalDateTime.now();
     }
 
-    public static Point dequeueClearList(){
-        if(MonsterClearList.isEmpty())
+    public static Point dequeueClearList() {
+        if (MonsterClearList.isEmpty())
             return null;
 
         Point p = MonsterClearList.poll();
@@ -38,17 +42,17 @@ public class Chat {
         return p;
     }
 
-    public static void enqueueClearList(Point p){
+    public static void enqueueClearList(Point p) {
         MonsterClearList.add(p);
         synchronizedWithSocket();
     }
 
-    public static void removeFromClearList(Point p){
-        MonsterClearList.removeIf(lp->lp.y == p.y && lp.x == p.x);
+    public static void removeFromClearList(Point p) {
+        MonsterClearList.removeIf(lp -> lp.y == p.y && lp.x == p.x);
         synchronizedWithSocket();
     }
 
-    private static void synchronizedWithSocket(){
+    private static void synchronizedWithSocket() {
        /*if(botInstance != null && botInstance.store.isPositionMode()){
             JsonObject payload = new JsonObject();
             payload.put("clearList",  new JsonArray(MonsterClearList));
@@ -57,12 +61,11 @@ public class Chat {
         }*/
     }
 
-
-    public static void fire(GameInstance game, String s, String chatValue)  {
+    public static void fire(GameInstance game, String s, String chatValue) {
 
         botInstance = game;
 
-        new Thread(()->{
+        new Thread(() -> {
             try {
                 Logger.log(chatValue);
                 Matcher m;
@@ -73,46 +76,44 @@ public class Chat {
                         game.dispatch.sendChat("Hello!");
                         break;
                     }
-                    case "help":{
+                    case "help": {
                         game.dispatch.sendChat("You can say: hi, last round, status, finished; or send location with default message or stop");
                         break;
                     }
-                    case "finished":{
-                        if(FinishedClearList.isEmpty()){
+                    case "finished": {
+                        if (FinishedClearList.isEmpty()) {
                             game.dispatch.sendChat("Finished list is empty");
-                        }else{
-                            String msg = FinishedClearList.stream().map(p -> "("+p.x+", "+p.y+")").collect(Collectors.joining("; "));
-                            game.dispatch.sendChat(FinishedClearList.size()+ " finished: "+msg);
+                        } else {
+                            String msg = FinishedClearList.stream().map(p -> "(" + p.x + ", " + p.y + ")").collect(Collectors.joining("; "));
+                            game.dispatch.sendChat(FinishedClearList.size() + " finished: " + msg);
                         }
                         break;
                     }
 
-                    case "last round":{
-                        if(lastRoundTime != null){
+                    case "last round": {
+                        if (lastRoundTime != null) {
 
                             long min = Duration.between(lastRoundTime, LocalDateTime.now()).toMinutes();
-                            String info = "Last round started in "+min+" ago. ";
-                            if(min < 10){
-                                info+=" Looks good.";
-                            }
-                            else if(min < 20){
-                                info+=" Might have issue.";
-                            }else{
-                                info+=" Something is wrong.";
+                            String info = "Last round started in " + min + " minutes ago. ";
+                            if (min < 10) {
+                                info += " Looks good.";
+                            } else if (min < 20) {
+                                info += " Might have issue.";
+                            } else {
+                                info += " Something is wrong.";
                             }
                             game.dispatch.sendChat(info);
-                        }
-                        else{
+                        } else {
                             game.dispatch.sendChat("No last round recorded");
                         }
                         break;
                     }
-                    case "status":{
-                        if(MonsterClearList.isEmpty()){
+                    case "status": {
+                        if (MonsterClearList.isEmpty()) {
                             game.dispatch.sendChat("Monster list is empty");
-                        }else{
-                            String msg = MonsterClearList.stream().map(p -> "("+p.x+", "+p.y+")").collect(Collectors.joining("; "));
-                            game.dispatch.sendChat(MonsterClearList.size()+ " pending: "+msg);
+                        } else {
+                            String msg = MonsterClearList.stream().map(p -> "(" + p.x + ", " + p.y + ")").collect(Collectors.joining("; "));
+                            game.dispatch.sendChat(MonsterClearList.size() + " pending: " + msg);
                         }
                         break;
                     }
@@ -128,23 +129,24 @@ public class Chat {
                                 p.y = Integer.parseInt(m.group(1));
                             }
 
-                            String location = p.x+", "+p.y;
+                            String location = p.x + ", " + p.y;
+                            boolean isExist = MonsterClearList.stream().noneMatch(lp -> lp.y == p.y && lp.x == p.x);
 
-                            if(chatValueLower.equalsIgnoreCase("stop")){
-                                if(MonsterClearList.stream().noneMatch(lp -> lp.y == p.y && lp.x == p.x)){
-                                    game.dispatch.sendChat("Monster in "+location+" doest exist!");
-                                }else{
+                            if (chatValueLower.equalsIgnoreCase("stop")) {
+                                if (isExist) {
+                                    // game.dispatch.sendChat("Monster in "+location+" doest exist!");
+                                } else {
                                     removeFromClearList(p);
-                                    game.dispatch.sendChat("Monster in "+location+" cancelled");
+                                    // game.dispatch.sendChat("Monster in "+location+" cancelled");
                                 }
-                            }else{
-                                if(MonsterClearList.stream().noneMatch(lp -> lp.y == p.y && lp.x == p.x)){
-                                    Logger.log("Clean list for "+p.x+", "+p.y+" added");
-                                    game.dispatch.sendChat("Monster in "+location+" successfully queued!");
+                            } else {
+                                if (isExist) {
+                                    Logger.log("Clean list for " + p.x + ", " + p.y + " added");
+                                    //game.dispatch.sendChat("Monster in "+location+" successfully queued!");
                                     enqueueClearList(p);
 
-                                }else{
-                                    game.dispatch.sendChat("Monster in "+location+" already in queue");
+                                } else {
+                                    //   game.dispatch.sendChat("Monster in "+location+" already in queue");
                                 }
                             }
 
@@ -158,11 +160,62 @@ public class Chat {
                     }
                     default:
                 }
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 Logger.log(e.getMessage());
             }
         }).start();
+    }
+
+    public static void cancelChatCheck() {
+        if (timerTask != null) {
+            timerTask.cancel();
+            timerTask = null;
+        }
+    }
+
+    public static void scheduleChatCheck(GameInstance game) {
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (game.status.is(GameStatus.chatting)) {
+                    Logger.log("Test if chat persist");
+
+                    boolean isChatGood = true;
+                    try {
+                        if (!game.dispatch("check_chat")) {
+                            Logger.log("Chat is bad, restart!");
+                            isChatGood = false;
+                        } else {
+
+                            if (lastRoundTime != null) {
+                                long min = Duration.between(lastRoundTime, LocalDateTime.now()).toMinutes();
+                                if (min > 15) {
+                                    game.dispatch.sendChat("Auto detect that the last round is "+min+" minutes ago, something is wrong...");
+                                }
+                            }
+
+                            Logger.log("Chat is good!");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Logger.log(e.getMessage());
+                    }
+
+                    if (!isChatGood) {
+                        game.startEvent(GameStatus.initiate);
+                    } else {
+                        scheduleChatCheck(game);
+                    }
+                } else {
+                    timerTask = null;
+                }
+            }
+        };
+
+        Timer timer = new Timer();
+        int minutes = 30;
+        timer.schedule(timerTask, 1000 * 60 * minutes);
+        Logger.log("Schedule chat check in " + minutes + " minutes");
     }
 }

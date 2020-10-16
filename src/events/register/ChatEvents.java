@@ -8,13 +8,34 @@ import java.util.HashMap;
 public class ChatEvents {
     public static void register(HashMap<String, Event> _map) {
 
+
+        Event.builder(_map, "check_chat")
+                .setLoc(326, 138)
+                .setListener(((event, game) -> {
+                    game.dispatch.delay(1.5);
+                    if(game.log.btnName.contains("chat_room")){
+                        return Event.SUCCESS;
+                    }
+                    return event;
+                }));
+
         Event.builder(_map, "click_chat_input")
                 .setLoc(191, 1208)
-                .setDelay(1);
+                .setListener(((event, game) -> {
+                    game.dispatch.delay(1);
+                    if(game.log.btnName.contains("inputBox:input_zone")){
+                        return Event.SUCCESS;
+                    }
+                    return event;
+                }));
 
         Event.builder(_map, "send_chat")
-                .setLoc(618, 1224)
+                .setLoc(647, 1209)
                 .setDelay(1);
+
+        Event.builder(_map, "close_chat_modal")
+                .setLoc(75, 275)
+                .setDelay(1.5);
 
         Event.builder(_map, "open_chat")
                 .setLoc(675, 1012)

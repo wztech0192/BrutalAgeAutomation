@@ -230,6 +230,7 @@ public class EventDispatcher implements IShellOutputReceiver {
 
 
     public boolean sendEvent(Event event) throws Exception {
+        game.log.btnName = "";
         int redo = 0;
         boolean pass = true;
         while (redo <= event.maxRedo) {
@@ -787,8 +788,8 @@ public class EventDispatcher implements IShellOutputReceiver {
 
     private int chatErrorCount = 0;
     public void sendChat(String s) throws Exception  {
-        sendEvent("click_chat_input");
-        if(game.log.btnName.contains("inputBox:input_zone")){
+        if( sendEvent("check_chat") && sendEvent("click_chat_input")){
+            game.log.lastValidChatTime = LocalDateTime.now();
             chatErrorCount = 0;
             enterText(s);
             sendEvent("send_chat");
@@ -798,6 +799,8 @@ public class EventDispatcher implements IShellOutputReceiver {
                 chatErrorCount = 0;
                 Logger.log("Chat error, restart!");
                 game.startEvent(GameStatus.initiate);
+            }else if(chatErrorCount > 0){
+                game.dispatch("close_chat_modal");
             }
         }
     }

@@ -50,6 +50,11 @@ public class Initiate {
                 Account account = game.store.getAccountGroup().getNextAccount();
 
                 if (account.isDuringTemplate() && game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+
+                    if(game.account == null){
+                        game.account = game.store.getAccountGroup().getLastAccount();
+                    }
+
                     boolean feedOver = false;
                     while(true){
                         if ( account.getTroops() >= account.getNumberFeaturer().getNumberSetting().get("Min Troop") + 1000) {
