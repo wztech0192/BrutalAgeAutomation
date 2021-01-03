@@ -13,13 +13,22 @@ import java.util.regex.Pattern;
 
 public class TestEvent {
 
-    public static  int getRemain(String numStr, boolean onlyFirst){
+    public static int getRemain(String numStr, boolean onlyFirst){
+        System.out.println(numStr);
+
         if(numStr.equalsIgnoreCase("")) return -1;
         String[] split = numStr.split("/");
         int curr = getNumber(split[0], true);
-        if(onlyFirst) return curr;
+        if(onlyFirst) {
+            if(numStr.trim().charAt(0) == '0'){
+                return 0;
+            }
+            return curr;
+        }
+
 
         int total = getNumber(split[1], true);
+        System.out.println(total+" - "+curr);
         return total - curr;
     }
 
@@ -151,7 +160,7 @@ public class TestEvent {
 
                         int troops = getNumber(game.dispatch.doOSR(image,205, 103, 311, 129 ), true);
                         int marches = getRemain(game.dispatch.doOSR(image,208,156,265,181), false);
-                        String wounded = game.dispatch.doOSR(538,154 ,663 ,185).replaceAll("[^0-9]", "");
+                        int wounded = getRemain(game.dispatch.doOSR(538,154 ,663 ,185), true);
                         int idle = getNumber(game.dispatch.doOSR(362,218 ,479 ,255),true);
 
 
@@ -164,7 +173,7 @@ public class TestEvent {
                         int maxTroop = 0;
                         if(game.account != null) {
                              maxTroop = game.account.getNumberFeaturer().getNumberSetting().get("Max Troop");
-                             game.account.setWounded(wounded);
+                             game.account.setWounded(String.valueOf(wounded));
                              if(troops > -1 & troops < 200000){
                                  game.account.setTroops(troops);
 
@@ -174,7 +183,7 @@ public class TestEvent {
 
                         game.log.shouldTrain = troops < maxTroop;
                         game.log.marches = marches;
-                        game.log.shouldHeal = !wounded.startsWith("0");;
+                        game.log.shouldHeal = wounded > 0;
                         game.log.idleTroops = idle;
 
                         Logger.log("Should train: "+game.log.shouldTrain);

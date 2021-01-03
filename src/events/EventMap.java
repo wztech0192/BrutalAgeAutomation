@@ -14,11 +14,12 @@ public class EventMap {
     static {
         _map = new HashMap<>();
 
+        //converted
         Event.builder(_map, "top_left")
                 .setDelay(1.5)
                 .setLoc(58, 65);
 
-
+        //converted
         Event.builder(_map, "bottom_left")
                 .setDelay(2)
                 .setLoc(55, 1198)
@@ -49,7 +50,7 @@ public class EventMap {
                     return event;
                 }));
 
-
+        //converted
         Event.builder(_map, "levelup_dialog")
                 .setTargetName("board:btn_sure")
                 .setDelay(1.75)

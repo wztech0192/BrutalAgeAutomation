@@ -90,17 +90,17 @@ public class GetGiftEvents {
 
         Event.builder(_map, "get_quest_gift_single")
                 .setDelay(1)
-                .setLoc(28, 1103);
+                .setLoc(100, 1103);
 
 
         Event.builder(_map, "get_quest_gift")
                 .setTargetName("reward:btn_reward")
                 .setDelay(1.25)
-                .setLoc(28, 1103)
+                .setLoc(100, 1103)
                 .setListener(
                         (event, game) -> {
                             int redo = 15;
-                            Event tempEvent = Event.builder().setDelay(0.25).setLoc(28,1103);
+                            Event tempEvent = Event.builder().setDelay(0.25).setLoc(100,1103);
                             while(!game.log.btnName.equalsIgnoreCase("quest:btn_task") && redo-- > 0){
                                 game.dispatch(tempEvent);
                             }

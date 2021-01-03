@@ -7,6 +7,7 @@ import com.android.ddmlib.TimeoutException;
 import events.EventMap;
 import events.common.Event;
 import events.register.BuildingEvents;
+import events.register.TestEvent;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
@@ -173,7 +174,7 @@ public class EventDispatcher implements IShellOutputReceiver {
     }
 
     public void cityZoom() throws Exception {
-        exec("su 0 cat /mnt/sdcard/"+Global.config.getEventFolder()+"/city_zoom_event > /dev/input/" + getInputEventFile());
+        exec("su 0 cat /mnt/sdcard/"+Global.config.getEventFolder()+"/city_zoom_event2 > /dev/input/" + getInputEventFile());
         game.dispatch.staticDelay(0.25);
     }
 
@@ -438,6 +439,12 @@ public class EventDispatcher implements IShellOutputReceiver {
                 exec("input tap 324 500");
             }
         }
+        if(game.log.clickProphet){
+            staticDelay(1.5);
+            exec("input tap 70 300");
+            staticDelay(1.5);
+            game.log.clickProphet = false;
+        }
     }
 
     public void sendEventChain(Event[] chain, boolean deep) throws Exception {
@@ -699,6 +706,29 @@ public class EventDispatcher implements IShellOutputReceiver {
         return doOSR(bi, 0, 0, bi.getWidth(), bi.getHeight());
     }
 
+    public boolean isPixelMatch(int[] ...pixels) throws AdbCommandRejectedException, IOException, TimeoutException {
+       return isPixelMatch(game.store.device.getScreenshot(), pixels);
+    }
+
+    public boolean isPixelMatch(RawImage rawImage, int[] ...pixels){
+        int IndexInc = rawImage.bpp >> 3;
+        for(int[] pixel : pixels){
+            int x = pixel[0];
+            int y = pixel[1];
+            int expected = pixel[2];
+            int actual = rawImage.getARGB(((rawImage.width * y) + x) * IndexInc);
+
+            int diff = Math.abs(expected - actual);
+
+            System.out.println("("+x+","+y+"): expected color: "+expected+" actual color: "+ actual+", "+"diff: "+diff);
+
+            if(diff > 10){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public BufferedImage captureAsBI() throws AdbCommandRejectedException, IOException, TimeoutException {
         return raw2BufferedImage(game.store.device.getScreenshot());
     }
@@ -803,5 +833,16 @@ public class EventDispatcher implements IShellOutputReceiver {
                 game.dispatch("close_chat_modal");
             }
         }
+    }
+
+    public int getCurrentTroop() {
+        try {
+            BufferedImage image = game.dispatch.captureAsBI();
+            return TestEvent.getRemain(game.dispatch.doOSR(image,222, 560, 428, 597 ), true);
+
+        } catch (AdbCommandRejectedException | TimeoutException | IOException | TesseractException e) {
+            e.printStackTrace();
+        }
+        return 1;
     }
 }

@@ -1,5 +1,6 @@
 package events.handler;
 
+import events.common.Event;
 import game.GameInstance;
 import game.GameStatus;
 import util.FilePath;
@@ -33,6 +34,11 @@ public class WhenStart {
 
             if (Math.abs(game.log.city.x - -1540) + Math.abs(game.log.city.y - -889.15002441406) < 5){
                 game.dispatch("dragon_tutorial");
+            }
+            if (Math.abs(game.log.city.x - -1583) + Math.abs(game.log.city.y - -1524) < 5){
+                game.dispatch(Event.builder().setLoc(80, 300).setDelay(1));
+                game.dispatch("top_left");
+                break;
             }
 
             if (

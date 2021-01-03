@@ -502,6 +502,18 @@ public class Account {
         }
         long duration = Duration.between(getTemplateStartDate(), LocalDateTime.now()).toMinutes();
         Logger.log("***** Template started for "+duration+" minutes!");
-        return duration >= 0 && duration <= 240;
+        return duration >= 0 && duration <= 90;
+    }
+
+    public boolean closeToTemplate() {
+        if(getTemplateStartDate() == null){
+            return false;
+        }
+        long duration = Duration.between(getTemplateStartDate(), LocalDateTime.now()).toMinutes();
+        Logger.log("***** Template started for "+duration+" minutes!");
+
+        boolean result =  duration >= -130 && duration <= 0;
+        Logger.log("***** Is close to temple? "+result);
+        return result;
     }
 }

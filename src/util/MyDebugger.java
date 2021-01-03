@@ -65,7 +65,8 @@ public class MyDebugger {
                     else {
                         switch (cmd) {
                             case "test":
-                                game.dispatch.enterSpecialText("你好嗎? Hello?");
+                                //-14736076
+                                game.dispatch.isPixelMatch(new int[]{  98, 870, -146 }, new int[]{  98, 747, -146 }, new int[]{  98, 994, -146 });
                                 break;
                             case "chat":
                                 game.dispatch.exec("adb shell cat /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/chatdb", s->{

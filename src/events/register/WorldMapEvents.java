@@ -241,12 +241,17 @@ public class WorldMapEvents {
                     int redo = 0;
                     game.dispatch(Event.builder().setLoc(332, 661).setDelay(2));
                     Logger.log("Current Idle: " + game.log.idleTroops);
-                    Logger.log("Current Troops: " + game.log.currTroops);
 
-                    if (game.log.idleTroops == game.log.currTroops || game.log.currTroops > 25000)
+                    int currTroops = game.log.getCurrentTroops();
+                    Logger.log("Current Troops: " + currTroops);
+
+                    if (game.log.idleTroops == currTroops || currTroops> 25000) {
                         game.dispatch("quickSelect");
-                    while ( game.log.currTroops <= 0 && redo++ < 10) {
+                        currTroops =  game.log.getCurrentTroops();
+                    }
+                    while ( currTroops <= 0 && redo++ < 10) {
                         game.dispatch("quickSelect");
+                        currTroops =  game.log.getCurrentTroops();
                     }
 
                     game.dispatch("gather_check");
@@ -254,6 +259,11 @@ public class WorldMapEvents {
                     if (!game.log.btnName.contains("btn_go")) {
                         game.dispatch("top_left");
                     }
+
+                    game.log.marches--;
+                    game.log.idleTroops -= currTroops;
+                    Logger.log("After Deplay" + currTroops + " Now Idle Troops: " + game.log.idleTroops);
+
                     return Event.SUCCESS;
                 }));
 
@@ -276,46 +286,67 @@ public class WorldMapEvents {
                     game.log.oops = false;
 
                     game.dispatch.staticDelay(1);
+
                     for (int redo =0 ; redo < 5; redo ++) {
-                        if(game.log.currTroops > 0){
+                        if(game.log.getCurrentTroops() > 0){
                             game.dispatch("quickSelect");
                         }else{
                             break;
                         }
                     }
 
-                    game.dispatch(Event.builder().setTargetName("click beast").setLoc(576, 797).setDelay(1.5));
-                    game.dispatch.staticDelay(1.5);
-                    game.dispatch.enterText(String.valueOf(99999));
-                    game.dispatch.staticDelay(1.5);
-                    game.dispatch(Event.builder().setTargetName("click shaman").setLoc(576, 925).setDelay(1.5));
-                    game.dispatch.staticDelay(1.5);
-                    game.dispatch.enterText(String.valueOf(99999));
-                    game.dispatch.staticDelay(1.5);
-                    int sendWarriorsCount = game.account.getTroops() - game.log.currTroops - game.account.getNumberFeaturer().getNumberSetting().get("Min Troop");
+                    RawImage image = game.dispatch.getRaw();
 
-                    Logger.log(game.account.getTroops()+" / " + game.log.currTroops+", Send "+sendWarriorsCount+" warriors");
-                    if (sendWarriorsCount > 0) {
-                        game.dispatch(Event.builder().setLoc(566, 670));
+                    //, new int[]{  98, 747, -146 }, new int[]{  98, 870, -146 }) ,  new int[]{  98, 994, -146 }
+                    if( game.dispatch.isPixelMatch(image, new int[]{  98, 994, -146 })){
+                        game.dispatch(Event.builder().setTargetName("click shaman").setLoc(576, 925).setDelay(1.5));
                         game.dispatch.staticDelay(1.5);
-                        game.dispatch.enterText(String.valueOf(sendWarriorsCount));
+                        game.dispatch.enterText(String.valueOf(99999));
+                        game.dispatch.staticDelay(1.5);
                     }
+                    if( game.dispatch.isPixelMatch(image, new int[]{  98, 870, -146 })){
+                        game.dispatch(Event.builder().setTargetName("click beast").setLoc(576, 797).setDelay(1.5));
+                        game.dispatch.staticDelay(1.5);
+                        game.dispatch.enterText(String.valueOf(99999));
+                        game.dispatch.staticDelay(1.5);
+                    }
+                    if( game.dispatch.isPixelMatch(image,  new int[]{  98, 747, -146 })){
+                        //for the first
+                        int currTroops = game.log.getCurrentTroops();
+                        int sendWarriorsCount = game.account.getTroops() - currTroops - game.account.getNumberFeaturer().getNumberSetting().get("Min Troop");
 
-                    //click out;
-                    game.dispatch(Event.builder().setLoc(521, 1200).setDelay(1));
-                    //click send
-                    game.dispatch(Event.builder().setLoc(521, 1200));
-                    game.dispatch.staticDelay(1.5);
-                    game.dispatch(Event.builder().setLoc(381, 650));
-                    Logger.log("oops "+game.log.oops);
-                    if(!game.log.oops ){
-                        int leftTroops = game.account.getTroops() - game.log.currTroops;
-                        Logger.log("Left Troops: "+leftTroops);
-                        game.account.setTroops(leftTroops);
-                        game.account.setLastRound(LocalDateTime.now());
+                        Logger.log(game.account.getTroops()+" / " + currTroops+", Send "+sendWarriorsCount+" warriors");
+                        if (sendWarriorsCount > 0) {
+                            game.dispatch(Event.builder().setLoc(566, 670));
+                            game.dispatch.staticDelay(1.5);
+                            game.dispatch.enterText(String.valueOf(sendWarriorsCount));
+                        }
+
+                        game.dispatch(Event.builder().setLoc(682, 669).setDelay(1));
+
+                        int currentTroop =  game.log.getCurrentTroops();
+
+                        //click out;
+                        game.dispatch(Event.builder().setLoc(521, 1200).setDelay(1));
+
+                        //click send
+                        game.dispatch(Event.builder().setLoc(521, 1200));
+                        game.dispatch.staticDelay(1.5);
+                        game.dispatch(Event.builder().setLoc(381, 650));
+                        game.dispatch.staticDelay(1.5);
+                        game.dispatch(Event.builder().setLoc(450, 720));
+                        Logger.log("oops "+game.log.oops);
+                        if(!game.log.oops ){
+                            int leftTroops = game.account.getTroops() - currentTroop;
+                            Logger.log("After minus "+currentTroop+" Troops, Left Troops: "+leftTroops);
+                            game.account.setTroops(leftTroops);
+                            game.account.setLastRound(LocalDateTime.now());
+                            game.updateAccount();
+                        }
+                    }else{
+                        game.account.setTroops(game.account.getNumberFeaturer().getNumberSetting().get("Min Troop") - 1);
                         game.updateAccount();
                     }
-
 
                     return Event.SUCCESS;
                 }));
@@ -326,15 +357,14 @@ public class WorldMapEvents {
                 .setListener(((event, game) -> {
                     game.log.currTroops = 0;
                     game.dispatch.delay(1.25);
-                    game.dispatch(Event.builder().setLoc(367, 1180).setDelay(1.25));
+                    game.dispatch(Event.builder().setLoc(156, 1180).setDelay(1.25));
                     game.dispatch(Event.builder().setLoc(600, 200));
-
 
                     for(int i=0;i<3;i++){
                         game.dispatch.staticDelay(2.5);
-                        game.dispatch(Event.builder().setLoc(471, 634).setDelay(1.25));
+                        game.dispatch(Event.builder().setLoc(471, 832).setDelay(1.25));
                         if(game.log.btnName.contains("buttons_5:btn_5")){
-                            game.dispatch(Event.builder().setLoc(471, 634).setDelay(1.25));
+                            game.dispatch(Event.builder().setLoc(471, 832).setDelay(1.25));
                             break;
                         }
                     }

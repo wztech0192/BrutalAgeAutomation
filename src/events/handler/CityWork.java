@@ -91,8 +91,10 @@ public class CityWork {
             if (game.account.getBuildingLvl("stronghold") >= 6 &&
                     game.log.marches > 0 &&
                     game.log.idleTroops > 0 &&
+                    (!game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple") || !game.account.closeToTemplate()  )&&
                     (game.account.getFeatureToggler().get("Gathering (6+)")  || game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Auto Repair"))
             ) {
+
                 game.startEvent(GameStatus.world_map);
             } else {
                 game.startEvent(GameStatus.initiate);
@@ -106,7 +108,6 @@ public class CityWork {
             if (game.account.getBuildingLvl("stronghold") >= 9 && game.log.marches > 0 && transportRound > 0
                     && game.account.doInRound(transportRound)) {
                 game.dispatch("transport");
-                game.dispatch("squirrel");
             }
         }
     }
@@ -128,7 +129,7 @@ public class CityWork {
                         nextBuildingTarget(game.account, game.account.getSecondaryHammer()),
                         game.account.getSecondaryHammer().getBuildingName())) {
 
-                    if( game.account.getBuildingLvl("stronghold") >= 10 &&  game.account.getBuildingLvl("stronghold") < 14 ){
+                    if( game.account.getBuildingLvl("stronghold") >= 10 &&  game.account.getBuildingLvl("stronghold") < 14 && game.account.getBuildingLvl("research") < 15 ){
                         hammerBuild(game, game.account.getPrimaryHammer(), "stronghold", game.account.getSecondaryHammer().getBuildingName());
                     }
                     // game.account.getPrimaryHammer().setHammer(LocalDateTime.now().plusMinutes(30));
@@ -191,6 +192,11 @@ public class CityWork {
         } else if (buildingCondition(account, "help_wagon", 25, hammer)) {
             return "help_wagon";
         }
+
+        if (buildingCondition(account, "research", 15, hammer)) {
+            return "research";
+        }
+
 
         int lowestLvl = 50;
         String lowest = "";
@@ -448,7 +454,9 @@ public class CityWork {
             bulkLevelUpBuilding(game, "war_hall", 3);
         }
 
-        game.dispatch("get_quest_gift");
+        if(game.account.getBuildingLvl("stronghold")< 15){
+            game.dispatch("get_quest_gift");
+        }
         game.updateAccount();
 
     }

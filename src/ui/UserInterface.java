@@ -7,6 +7,7 @@ import store.Account;
 import store.AccountUpdateListener;
 import store.BuildHammer;
 import store.Store;
+import util.FilePath;
 import util.Global;
 import util.Logger;
 
@@ -18,7 +19,9 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -462,6 +465,7 @@ public class UserInterface extends JPanel {
                 if(acc != null){
                     int index = store.getAccountGroup().getAccounts().indexOf(acc);
                     topPane.setBorder(BorderFactory.createTitledBorder("Current: " + acc.getSubId()));
+                    table.setRowSelectionInterval(index, index);
                     String[] newData = acc.getColumnData();
                     for (int i = 0; i < model.getColumnCount(); i++) {
                         model.setValueAt(newData[i], index, i);
@@ -586,10 +590,37 @@ public class UserInterface extends JPanel {
 
         createPanes(table, model);
 
+        final JPanel northPanel = new JPanel(new GridLayout(1,5));
         final JButton resetAll = new JButton("Reset All");
-        final JPanel northPanel = new JPanel(new GridLayout(2,1));
-        northPanel.add(resetAll, BorderLayout.NORTH);
+        final JButton goPrevious = new JButton("Previous");
+        final JButton goNext = new JButton("Next");
+        final JButton openErrors = new JButton("Open Errors");
+
+        northPanel.add(goPrevious);
+        northPanel.add(goNext);
+        northPanel.add(resetAll);
+        northPanel.add(openErrors);
         northPanel.add(new BulkSettingDialog(store, owner, table));
+
+        openErrors.addActionListener(e -> {
+                EventDispatcher.execFast("explorer.exe " + FilePath.ERROR_PATH.replace('/','\\'));
+        });
+        goNext.addActionListener(e -> {
+            int index = store.getAccountGroup().getAccounts().indexOf(store.getAccountGroup().getNextAccount());
+            store.getAccountGroup().setIndex(index);
+            store.setForceStop(true);
+            table.addRowSelectionInterval(index, index);
+        });
+
+        goPrevious.addActionListener(e -> {
+            int index = store.getAccountGroup().getIndex() - 1;
+            if(index < 0){
+                index = store.getAccountGroup().getAccounts().size() - 1;
+            }
+            store.getAccountGroup().setIndex(index);
+            store.setForceStop(true);
+            table.addRowSelectionInterval(index, index);
+        });
 
         resetAll.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to reset all?",null, JOptionPane.OK_CANCEL_OPTION);

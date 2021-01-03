@@ -44,6 +44,7 @@ public class LogProcess {
     public LocalDateTime lastValidChatTime = LocalDateTime.now();
     public boolean shouldTrain;
     public boolean shouldHeal;
+    public boolean clickProphet;
     public int marches;
     public double talentScroll = 0;
     public boolean oops = false;
@@ -80,6 +81,14 @@ public class LogProcess {
 
     public LogProcess(GameInstance game) {
         this.game = game;
+    }
+
+    public int getCurrentTroops(){
+        //ducktape fix
+        if(false){
+            return this.currTroops;
+        }
+        return game.dispatch.getCurrentTroop();
     }
 
     public void startLog() {
@@ -127,6 +136,10 @@ public class LogProcess {
             touchPoint[0] = Integer.parseInt((m.group(2)));
             touchPoint[1] = Integer.parseInt((m.group(3)));
             System.out.println("Now Click " + btnName + " in " + touchPoint[0] + ", " + touchPoint[1]);
+
+            if(btnName.contains(("building:prophet"))){
+                clickProphet = true;
+            }
 
             //Testing
 
@@ -350,7 +363,7 @@ public class LogProcess {
         transportRss = new int[5];
         buildingCompleteLevel = 0;
         buidlingCompleteTime = LocalDateTime.now();
-        trainingCompleteTime = LocalDateTime.now();
+        trainingCompleteTime = LocalDateTime.now().minusMinutes(-1);
         touchPoint = new int[2];
         city = new Point();
         worldScale = 0;

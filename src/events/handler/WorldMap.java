@@ -164,9 +164,7 @@ public class WorldMap {
             if (game.dispatch("attack_monster_test")) {
                 Logger.log("good, attack the monster");
                 game.dispatch("attack_monster");
-                game.log.marches--;
-                game.log.idleTroops -= game.log.currTroops;
-                Logger.log("After Deplay" + game.log.currTroops + " Now Idle Troops: " + game.log.idleTroops);
+
             }else {
                 Logger.log("** No match because not found");
                 //hide box
@@ -233,9 +231,8 @@ public class WorldMap {
                             prevSets.add(sets);
                             Logger.log("good, attack the monster");
                             game.dispatch("attack_monster");
-                            game.log.marches--;
-                            game.log.idleTroops -= game.log.currTroops;
-                            Logger.log("After Deplay" + game.log.currTroops + " Now Idle Troops: " + game.log.idleTroops);
+
+
                             if (game.log.marches <= 0 || game.log.idleTroops <= 0) {
                                 lvl = 0;
                                 break;
@@ -280,9 +277,8 @@ public class WorldMap {
                         if (monsterLvl >= searchOptions.minLvl && monsterLvl <= searchOptions.maxLvl) {
                             Logger.log("good, attack the monster");
                             game.dispatch("attack_monster");
-                            game.log.marches--;
-                            game.log.idleTroops -= game.log.currTroops;
-                            Logger.log("After Deplay" + game.log.currTroops + " Now Idle Troops: " + game.log.idleTroops);
+
+
                             if (game.log.marches <= 0 || game.log.idleTroops <= 0) {
                                 break;
                             }

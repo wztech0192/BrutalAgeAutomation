@@ -9,6 +9,9 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+
+
+
 public class Main {
 
 
@@ -17,6 +20,19 @@ public class Main {
     }
 
     public static void main(String[] args) {
+      /*
+        Wechaty bot = Wechaty.instance("your_token")
+                .onScan((qrcode, statusScanStatus, data) -> System.out.println(QrcodeUtils.getQr(qrcode)))
+                .onLogin(user -> System.out.println(user))
+                .onMessage(message -> {
+                    Room room = message.room();
+                    String text = message.text();
+                    if (StringUtils.equals(text, "#ding")) {
+                        if (room != null) {
+                            room.say("dong");
+                        }
+                    }
+                }).start(true);*/
 
         if(Global.config.getOwnerName().equalsIgnoreCase("")){
             System.exit(0);

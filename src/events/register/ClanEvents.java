@@ -56,25 +56,38 @@ public class ClanEvents {
 
                    Logger.log("*** Can Transport: "+game.log.maxTransportNum);
                     Logger.log("*** Max Transport: "+game.log.limitTransportNum);
+
+                    int minFoodWood = game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood");
                     if(game.log.maxTransportNum >= game.log.limitTransportNum) {
                         for (int i = 0; i <5; i++) {
-                            if((i != 0 && i != 1 ) || game.transportFoodValue(i) >= game.store.metadata.getNumberFeaturer().getNumberSetting().get("Min Food Wood")) {
-                                /*
-                                * 0 wood  -0
-                                    1 rock  -3
-                                    2 ivory -4
-                                    3 meat -1
-                                    4 mana -2
-                                * */
-                                int swipePos = 311 + (i * 100);
-                                game.dispatch.exec(String.format("input swipe 539 %d 579 %d", swipePos, swipePos));
-                                game.dispatch.staticDelay(0.50);
-                                Logger.log("*** Transport: " + game.log.selectedTransportNum + "/" + game.log.limitTransportNum);
-                                if (game.log.selectedTransportNum >= (game.log.limitTransportNum * 0.80)) {
-                                    game.dispatch("start_transport");
-                                    game.log.marches--;
-                                    return Event.SUCCESS;
+                            /*  0 wood  -0
+                                1 rock  -3
+                                2 ivory -4
+                                3 meat -1
+                                4 mana -2
+                            * */
+                            int rssPos = 300 + (i * 100);
+
+                            if(i == 0 || i == 1 ){
+                                int transportable = game.transportFoodValue(i) - minFoodWood;
+                                if(transportable <= 0){
+                                    continue;
+                                }else{
+                                    game.dispatch(Event.builder().setLoc(631, rssPos).setDelay(1));
+                                    game.dispatch.enterText(String.valueOf(transportable));
+                                    game.dispatch(Event.builder().setLoc(631, rssPos + 20).setDelay(1));
+
                                 }
+                            }else{
+                                game.dispatch.exec(String.format("input swipe 539 %d 579 %d", rssPos, rssPos));
+                            }
+
+                            game.dispatch.staticDelay(0.50);
+                            Logger.log("*** Transport: " + game.log.selectedTransportNum + "/" + game.log.limitTransportNum);
+                            if (game.log.selectedTransportNum >= (game.log.limitTransportNum * 0.80)) {
+                                game.dispatch("start_transport");
+                                game.log.marches--;
+                                return Event.SUCCESS;
                             }
                         }
                     }else{

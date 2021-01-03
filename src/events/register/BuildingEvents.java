@@ -196,9 +196,6 @@ public class BuildingEvents {
                 .setLoc(-1289, -895, 245, 480)
                 .setChain(
                         Event.builder()
-                                .setLoc(588, 1181)
-                                .setDelay(1.5),
-                        Event.builder()
                                 .setLoc(356, 1185)
                                 .setDelay(1.5),
                         _map.get("top_left")
@@ -450,8 +447,7 @@ public class BuildingEvents {
                 .setTargetName("building:flag")
                 .isBuilding()
                 .isAccess()
-                .setLoc(-871, -998, 233, 556)
-                .setChain(_map.get("tap_building"));
+                .setLoc(-871, -998, 233, 556);
 
         for (Map.Entry<String, Event> entry : EventMap.getMap().entrySet()) {
             if (entry.getValue().isUpgrade) {
