@@ -169,7 +169,6 @@ public class LogProcess {
 
         switch (game.status.get()) {
             case tutorial:
-                handleTutorial(str);
                 break;
             case chatting:
                 handleChat(str);
@@ -256,22 +255,16 @@ public class LogProcess {
                     game.startEvent(GameStatus.when_start);
                 } else {
                     Logger.log("Start change server...");
-                    game.startEvent(GameStatus.change_server);
-
+                    game.startEvent(GameStatus.tutorial);
                 }
             }
-        }
-        if (str.contains("ShowDialogBox")) {
-            game.dispatch.delay(1);
-            game.status.set(GameStatus.tutorial);
-            game.dispatch("tutorial_dialog");
         }
     }
 
     private void handlePosModeStart() {
         if (!game.posTarget.containsKey("temp")) {
             if (!game.posTarget.containsKey("changed_server")) {
-                game.startEvent(GameStatus.change_server, "change_server");
+                game.startEvent(GameStatus.tutorial, "initiate");
             } else if (game.posTarget.containsKey("exist")) {
                 game.startEvent(GameStatus.world_map, "positioning");
             } else {
@@ -279,25 +272,6 @@ public class LogProcess {
             }
         } else {
             game.startEvent(GameStatus.when_start, "configuring");
-        }
-    }
-
-    private void handleTutorial(String str) throws Exception {
-        if (str.contains("ShowDialogBox3")) {
-            game.dispatch.delay(1);
-            game.dispatch(EventMap.get("tutorial_dialog"));
-            game.dispatch.delay(2);
-            game.dispatch.zoomout();
-            game.dispatch.delay(3);
-            game.dispatch.zoomout();
-            game.dispatch.staticDelay(10);
-            Logger.log("restart");
-            game.dispatch.stopGame();
-            game.dispatch.delay(3);
-            game.dispatch.startGame();
-            game.startEvent(GameStatus.starting);
-        } else if (str.contains("ShowDialogBox")) {
-            game.dispatch("tutorial_dialog");
         }
     }
 

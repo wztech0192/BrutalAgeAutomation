@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @XmlRootElement(name = "Account")
 public class Account {
 
-    public static String[] Columns = { "ID", "Name", "Error", "Stronghold",  "Troops", "Wounded",  "Priorities", "Last Round"};
+    public static String[] Columns = { "ID", "Name", "Error", "SH", "Hiding", "Troops", "Wounded",  "Priorities", "Last Round"};
 
     //"Wood", "Ivory", "Mana", "Rock", "Meat"
     public String[] getColumnData(){
@@ -37,6 +37,7 @@ public class Account {
                 getName(),
                 String.valueOf(getError()),
                 String.valueOf(getBuildingLvl("stronghold")),
+                isHiding() ? String.valueOf(12 - Duration.between(getHideTime(), LocalDateTime.now()).toHours()) : "",
                 String.valueOf(getTroops()),
                 getWounded(),
                 priorityString.toString(),
@@ -75,8 +76,9 @@ public class Account {
     private LocalDateTime lastGiftTime;
     private LocalDateTime lastRound;
     private LocalDateTime templateStartDate;
+    private LocalDateTime hideTime;
 
-    private int serverID = 519;
+    private int serverID = 532;
     private int horde = 0;
     private String clan = "";
     private int level = 1;
@@ -100,17 +102,8 @@ public class Account {
         defaultBuildings.put("tower",1);
         defaultBuildings.put("golden_tree",0);
 
-        defaultBuildings.put("well1",0);
-        defaultBuildings.put("well2",0);
-        defaultBuildings.put("well3",0);
-        defaultBuildings.put("well4",0);
-        defaultBuildings.put("well5",0);
-
-        defaultBuildings.put("warhub1",0);
-        defaultBuildings.put("warhub2",0);
-        defaultBuildings.put("warhub3",0);
-        defaultBuildings.put("warhub4",0);
-        defaultBuildings.put("warhub5",0);
+        defaultBuildings.put("well",0);
+        defaultBuildings.put("warhub",0);
 
         defaultBuildings.put("defense_hall",0);
         defaultBuildings.put("war_hall",0);
@@ -179,10 +172,13 @@ public class Account {
 
 
     public int getBuildingLvl(String building) {
-        if(!buildings.containsKey(building)){
-            return 0;
+
+        if(!buildings.containsKey("warhub")){
+            buildings.put("warhub", buildings.getOrDefault("warhub1", 0));
+            buildings.put("well", buildings.getOrDefault("well1", 0));
         }
-        return buildings.get(building);
+
+        return buildings.getOrDefault(building, 0);
     }
 
     public void levelUpBuilding(GameInstance game, String building){
@@ -361,8 +357,18 @@ public class Account {
     }
 
     public LocalDateTime getTemplateStartDate() {
-        return templateStartDate;
+        return templateStartDate != null ? templateStartDate : LocalDateTime.now() ;
     }
+
+    @XmlJavaTypeAdapter(value = LocalDateTimeAdapter.class)
+    public void setHideTime(LocalDateTime hideTime) {
+        this.hideTime = hideTime;
+    }
+
+    public LocalDateTime getHideTime() {
+        return hideTime;
+    }
+
 
     public LocalDateTime getLastGiftTime() {
         return lastGiftTime;
@@ -391,7 +397,7 @@ public class Account {
 
     public void validateBuildings(){
         for(Map.Entry<String, Integer> entry: getBuildings().entrySet()){
-            if(entry.getValue() > 15){
+            if(entry.getValue() > 25){
                 entry.setValue(4);
             }
         }
@@ -502,7 +508,7 @@ public class Account {
         }
         long duration = Duration.between(getTemplateStartDate(), LocalDateTime.now()).toMinutes();
         Logger.log("***** Template started for "+duration+" minutes!");
-        return duration >= 0 && duration <= 90;
+        return duration >= 0 && duration <= (60 * 3);
     }
 
     public boolean closeToTemplate() {
@@ -515,5 +521,16 @@ public class Account {
         boolean result =  duration >= -130 && duration <= 0;
         Logger.log("***** Is close to temple? "+result);
         return result;
+    }
+
+    public boolean isHiding() {
+        if(getHideTime() == null){
+            return false;
+        }
+        if(Duration.between(getHideTime(), LocalDateTime.now()).toHours() >= 12){
+            setHideTime(null);
+            return false;
+        }
+        return true;
     }
 }

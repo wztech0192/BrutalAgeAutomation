@@ -300,6 +300,7 @@ public class WorldMap {
 
 
     public static void firePosMode(GameInstance game) throws Exception {
+
         game.dispatch.staticDelay(2);
         for (int redo = 0; redo <= 15; redo++) {
             if (game.log.isInCity) {
@@ -312,27 +313,62 @@ public class WorldMap {
         }
 
         game.dispatch.delay(2);
-        game.dispatch.changeHorde(Integer.parseInt((String) game.posTarget.get("horde")));
-        game.dispatch.delay(1);
+
+
+        boolean lvl2Hut = (boolean)game.posTarget.get("level2Hut");
+        if(lvl2Hut){
+            game.dispatch("upgrade_outpost");
+        }
 
         int buiX = Integer.parseInt((String) game.posTarget.get("buiX"));
         int buiY = Integer.parseInt((String) game.posTarget.get("buiY"));
         int telX = Integer.parseInt((String) game.posTarget.get("telX"));
         int telY = Integer.parseInt((String) game.posTarget.get("telY"));
 
+        /*
+        //build empty outpost
+        int[] tapLoc = new int[]{
+                427, 549,
+                226, 453,
+                416, 467,
+                248, 577
+        };
+
+        game.dispatch("upgrade_outpost");
+
+        Event tapEvent = Event.builder().setDelay(2);
+        for (int i = 0; i < tapLoc.length; i += 2) {
+            game.dispatch(tapEvent.setLoc(tapLoc[i], tapLoc[i + 1]));
+            if (game.dispatch("tap_build")) {
+                break;
+            }
+        }
+        game.dispatch.staticDelay(3);
+
+        //speed up building
+        game.dispatch(Event.builder().setLoc(310, 183));
+        game.dispatch.staticDelay(3);
+        //speed up building use gem
+        game.dispatch(Event.builder().setLoc(566, 192).setDelay(1.5));
+        */
+
         if (telX != 0 && telY != 0) {
             game.dispatch.changePosition(telX, telY);
             game.dispatch("teleport");
         }
 
+        /*if (buiX != 0 && buiY != 0) {
+            game.dispatch.changePosition(buiX, buiY);
+            game.dispatch("teleport_2");
+        }*/
+
         if (buiX != 0 && buiY != 0) {
             game.dispatch.changePosition(buiX, buiY);
             game.dispatch("tap_build");
         }
-        game.dispatch.delay(1.5);
+        //game.dispatch.delay(1.5);
 
-
-        try{
+       /* try{
 
             //save account
             String id = game.store.createShortID();
@@ -350,7 +386,7 @@ public class WorldMap {
             Logger.log(e.getMessage());
         }
 
-        game.dispatch("change_name");
+        game.dispatch("change_name");*/
         game.startEvent(GameStatus.initiate, "complete");
     }
 }

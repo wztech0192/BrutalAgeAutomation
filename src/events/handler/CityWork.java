@@ -63,14 +63,15 @@ public class CityWork {
                         }
                     }
 
-                    if(game.account.getFeatureToggler().get("!Speed Train!")){
-                        for(int i=0;i<10;i++){
-                            if(!game.dispatch("speed_warrior") || !game.dispatch("warrior")){
+                    if(game.account.getFeatureToggler().get("!Speed Train!") || (game.account.getBuildingLvl("stronghold") >= 13 && game.account.getTroops() < 20000)){
+                        for(int i=0;i<6;i++){
+                            if(!game.dispatch("speed_warrior")){
                                 break;
                             }
                         }
                         game.account.getFeatureToggler().set("!Speed Train!", false);
                     }
+
                 }else{
                     Logger.log("Need "+trainingCompleteMinute+" minutes to complete training!");
                 }
@@ -128,7 +129,6 @@ public class CityWork {
                         game.account.getPrimaryHammer(),
                         nextBuildingTarget(game.account, game.account.getSecondaryHammer()),
                         game.account.getSecondaryHammer().getBuildingName())) {
-
                     if( game.account.getBuildingLvl("stronghold") >= 10 &&  game.account.getBuildingLvl("stronghold") < 14 && game.account.getBuildingLvl("research") < 15 ){
                         hammerBuild(game, game.account.getPrimaryHammer(), "stronghold", game.account.getSecondaryHammer().getBuildingName());
                     }
@@ -163,22 +163,11 @@ public class CityWork {
 
     private static String nextBuildingTarget(Account account, BuildHammer hammer) {
 
-        String highestWell = "well1";
-        String highestWarhub = "warhub1";
 
-        for (int i = 2; i <= 5; i++) {
-            if (account.getBuildingLvl(highestWell) < account.getBuildingLvl("well" + i)) {
-                highestWell = "well" + i;
-            }
-            if (account.getBuildingLvl(highestWarhub) < account.getBuildingLvl("warhub" + i)) {
-                highestWarhub = "warhub" + i;
-            }
-        }
-
-        if (buildingCondition(account, highestWarhub, 5, hammer)) {
-            return highestWarhub;
-        } else if (buildingCondition(account, highestWell, 6, hammer)) {
-            return highestWell;
+        if (buildingCondition(account, "warhub", 5, hammer)) {
+            return "warhub";
+        } else if (buildingCondition(account, "well", 6, hammer)) {
+            return "well";
         } else if (buildingCondition(account, "war_camp", 5, hammer)) {
             return "war_camp";
         } else if (buildingCondition(account, "research", 7, hammer)) {
@@ -192,35 +181,22 @@ public class CityWork {
         } else if (buildingCondition(account, "help_wagon", 25, hammer)) {
             return "help_wagon";
         }
-
-        if (buildingCondition(account, "research", 15, hammer)) {
+        else  if (buildingCondition(account, "portal", 25, hammer)) {
+            return "portal";
+        }
+        else  if (buildingCondition(account, "research", 15, hammer)) {
             return "research";
         }
+        else  if (buildingCondition(account, "war_camp", 25, hammer)) {
+            return "war_camp";
+        }
+       /* else  if (buildingCondition(account, "well", 25, hammer)) {
+            return "well";
+        }*/
+        else  if (buildingCondition(account, "warhub", 25, hammer)) {
+            return "warhub";
+        }
 
-
-        int lowestLvl = 50;
-        String lowest = "";
-        if (buildingCondition(account, "war_camp", 15, hammer)) {
-            lowest = "war_camp";
-            lowestLvl = account.getBuildingLvl("war_camp");
-        }
-        for (int i = 1; i <= 5; i++) {
-            if (buildingCondition(account, "well" + i, 15, hammer)) {
-                if (account.getBuildingLvl("well" + i) < lowestLvl) {
-                    lowest = "well" + i;
-                    lowestLvl = account.getBuildingLvl("well" + i);
-                }
-            }
-            if (buildingCondition(account, "warhub" + i, 7, hammer)) {
-                if (account.getBuildingLvl("warhub" + i) < lowestLvl) {
-                    lowest = "warhub" + i;
-                    lowestLvl = account.getBuildingLvl("warhub" + i);
-                }
-            }
-        }
-        if(!lowest.equalsIgnoreCase("")){
-            return lowest;
-        }
 
         if (account.getBuildingLvl("stronghold") >= 10) {
             if (buildingCondition(account, "defense_hall", 10, hammer)) {
@@ -233,7 +209,7 @@ public class CityWork {
             }
         }
 
-        return lowest;
+        return "";
     }
 
 
@@ -247,7 +223,6 @@ public class CityWork {
 
     private static void fireInitPhase(GameInstance game) throws Exception {
         game.dispatch("fire");
-
 
         bulkLevelUpBuilding(game, "stronghold", 3);
 
@@ -322,7 +297,7 @@ public class CityWork {
                         return false;
                     }else{
                         if (building.equalsIgnoreCase("stronghold")) {
-                            if (game.account.getBuildingLvl("stronghold") == 5) {
+                            if (game.account.getBuildingLvl("stronghold") == 4) {
                                 game.dispatch("confirm_stronghold_6");
                             } else if (
                                     game.account.getBuildingLvl("stronghold") == 6 ||
@@ -383,15 +358,6 @@ public class CityWork {
     }
 
 
-    private static boolean buildingAction(GameInstance game, String building, String btn, int buyTime) throws Exception {
-        game.dispatch(building);
-
-        for(int i=0;i<buyTime;i++){
-            game.dispatch(btn);
-        }
-        return game.dispatch("top_left");
-    }
-
     private static void bulkLevelUpBuilding(GameInstance game, String building, int lvl) throws Exception {
 
         if(game.account.getBuildingLvl(building) == 0){
@@ -403,7 +369,7 @@ public class CityWork {
 
         while (game.account.getBuildingLvl(building) < lvl) {
             int levelTime = lvl - game.account.getBuildingLvl(building);
-            if (buildingAction(game, building, "upgrade_building_buy", levelTime)) {
+            if (buildingAction(game, building, "upgrade_building_buy", levelTime, true)) {
                 for(int i=0;i<levelTime; i++){
                     game.account.levelUpBuilding(game, building);
                 }
@@ -422,7 +388,7 @@ public class CityWork {
             bulkLevelUpBuilding(game, "help_wagon", 2);
 
         bulkLevelUpBuilding(game, "war_camp", 2);
-        bulkLevelUpBuilding(game, "healing_spring", 2);
+        bulkLevelUpBuilding(game, "heacaling_spring", 2);
         bulkLevelUpBuilding(game, "research", 2);
         bulkLevelUpBuilding(game, "warehouse", 3);
 
@@ -434,13 +400,9 @@ public class CityWork {
         }
 
         int wantedLevel = game.account.getBuildingLvl("stronghold") >= 5 ? 4 : 3;
-        for (int i = 1; i <= 5; i++) {
-            bulkLevelUpBuilding(game, "well" + i, wantedLevel);
-        }
+        bulkLevelUpBuilding(game, "well" , wantedLevel);
+        bulkLevelUpBuilding(game, "warhub", wantedLevel);
 
-        for (int i = 1; i <= 5; i++) {
-            bulkLevelUpBuilding(game, "warhub" + i, wantedLevel);
-        }
 
         if (game.account.getBuildingLvl("stronghold") >= 10) {
             bulkLevelUpBuilding(game, "defense_hall", 3);
@@ -461,30 +423,138 @@ public class CityWork {
 
     }
 
+    private static boolean buildingAction(GameInstance game, String building, String btn, int buyTime, boolean topLeft) throws Exception {
+        game.dispatch(building);
+
+        for(int i=0;i<buyTime;i++){
+            game.dispatch(btn);
+        }
+        if(topLeft) return game.dispatch("top_left");
+        return true;
+    }
+
     public static void firePosMode(GameInstance game) throws Exception {
+        boolean lvl2Hut = (boolean)game.posTarget.get("level2Hut");
 
-        game.dispatch.delay(2);
+        game.dispatch.delay(1);
+        game.dispatch.changeHorde(Integer.parseInt((String) game.posTarget.get("horde")));
+        game.dispatch.delay(1);
 
-        game.posTarget.put("stronghold", true);
-            buildingAction(game, "stronghold", "upgrade_building_buy", 2);
+        if(lvl2Hut){
+            buildingAction(game, "gift", "upgrade_building_buy", 1, false);
+            buildingAction(game, "crystal", "upgrade_building_buy", 1, false);
+            buildingAction(game, "mission", "upgrade_building_buy", 1, false);
 
-        game.posTarget.put("portal", true);
-            buildingAction(game, "portal", "upgrade_building_buy", 2);
+            game.posTarget.put("stronghold", true);
+            buildingAction(game, "stronghold", "upgrade_building_buy", 2, true);
+            game.dispatch("confirm_stronghold_6");
+            //upgrade stronghold
+            game.dispatch(Event.builder().setLoc(526, 1170).setDelay(1));
+            game.dispatch.staticDelay(1.5);
 
-        game.dispatch("dragon_tutorial");
+            //tutorial click
+            game.dispatch(Event.builder().setLoc(360, 720).setDelay(1));
+            game.dispatch(Event.builder().setLoc(360, 720).setDelay(1));
 
-     /*   buildingAction(game, "warehouse", "upgrade_building_buy", 1);
-        game.posTarget.put("warehouse", true);
-            buildingAction(game, "warehouse", "upgrade_building_buy", 2);
-*/
+            //click stronghold
+            game.dispatch(Event.builder().setLoc(350, 600).setDelay(1));
 
-        game.dispatch("get_quest_gift_single");
+            //click speedup
+            game.dispatch(Event.builder().setLoc(568, 405).setDelay(1));
+            game.dispatch(Event.builder().setLoc(568, 360).setDelay(1));
+            game.dispatch.staticDelay(1);
+            game.dispatch(Event.builder().setLoc(568, 360).setDelay(1));
+            game.dispatch.cityZoom();
+            buildingAction(game, "warhub", "upgrade_building_buy", 1, false);
+
+            game.posTarget.put("portal", true);
+            buildingAction(game, "portal", "upgrade_building_buy", 2, true);
+
+            game.posTarget.put("war_camp", true);
+            buildingAction(game, "war_camp", "upgrade_building_buy", 2, true);
+
+            game.dispatch("rider");
+            game.dispatch("shaman");
+
+
+            Event collectEvent = Event.builder().setLoc(18, 1107).setListener((event, game1) -> {
+                game.dispatch.staticDelay(2);
+                do{
+                    //collect
+                    game.dispatch(Event.builder().setLoc(532, 493).setDelay(2));
+                }while(game.log.btnName.contains("collect"));
+
+                return Event.SUCCESS;
+            });
+
+            //click task
+            game.dispatch(collectEvent);
+
+            game.dispatch.staticDelay(2);
+            //open search monster
+            game.dispatch(Event.builder().setLoc(46, 1010).setDelay(1));
+            game.dispatch(Event.builder().setLoc(46, 1010));
+            game.dispatch.staticDelay(1);
+            //click search monster
+            game.dispatch(Event.builder().setLoc(332, 557).setDelay(1));
+            game.dispatch(Event.builder().setLoc(332, 557).setDelay(1.5));
+            //click search
+            game.dispatch(Event.builder().setLoc( 356, 937));
+            game.dispatch.staticDelay(2);
+            //click hunt monster
+            game.dispatch(Event.builder().setLoc( 356, 647).setDelay(1.5));
+            //click go
+            game.dispatch(Event.builder().setLoc(487, 1198).setDelay(1.5));
+            //click back
+            game.dispatch(Event.builder().setLoc(45, 1212).setDelay(1));
+            game.dispatch(Event.builder().setLoc(45, 1212).setDelay(1));
+            game.dispatch(Event.builder().setLoc(399, 868).setDelay(1.5));
+            game.dispatch(Event.builder().setLoc(399, 868).setDelay(1));
+            game.dispatch.staticDelay(1.5);
+
+            //click collect
+            game.dispatch(collectEvent);
+            //complete collect
+            game.dispatch(Event.builder().setLoc(368, 1012).setDelay(1));
+            game.dispatch(Event.builder().setLoc(368, 1012).setDelay(1));
+            game.dispatch(Event.builder().setLoc(368, 1012).setDelay(1));
+            game.dispatch(Event.builder().setLoc(368, 1012));
+            game.dispatch.staticDelay(2);
+            game.dispatch(collectEvent);
+            //complete collect
+            game.dispatch(Event.builder().setLoc(368, 1012).setDelay(1.5));
+            game.dispatch(Event.builder().setLoc(532, 493).setDelay(1.5));
+            game.dispatch(Event.builder().setLoc(532, 493).setDelay(1.5));
+            game.dispatch(Event.builder().setLoc(532, 493).setDelay(1.5));
+            game.dispatch(Event.builder().setLoc(532, 493).setDelay(1));
+            game.dispatch(Event.builder().setLoc(532, 493).setDelay(1));
+            game.dispatch.staticDelay(1.5);
+            game.dispatch.cityZoom();
+
+            if(game.dispatch("open_my_item")){
+                game.dispatch("use_all_gem");
+            }
+
+            buildingAction(game, "research", "upgrade_building_buy", 1, false);
+            game.posTarget.put("research", true);
+            buildingAction(game, "research", "upgrade_building_buy", 4, true);
+
+            game.dispatch("research_access");
+            game.dispatch("levelOutpost");
+        }else{
+            buildingAction(game, "gift", "upgrade_building_buy", 1, false);
+            game.posTarget.put("stronghold", true);
+            buildingAction(game, "stronghold", "upgrade_building_buy", 1, true);
+
+            game.dispatch.staticDelay(1.5);
+            game.dispatch(Event.builder().setDelay(1).setLoc(281, 200));
+
+            game.posTarget.put("portal", true);
+            buildingAction(game, "portal", "upgrade_building_buy", 2, true);
+
+        }
+
         game.dispatch.staticDelay(0.5);
-        game.dispatch("get_quest_gift_single");
-        game.dispatch.staticDelay(0.5);
-        game.dispatch("get_quest_gift_single");
-        game.dispatch.staticDelay(0.5);
-
         if (game.posTarget.containsKey("temp")) {
 
             game.store.metadata.getSavedPosAcc().add((String) game.posTarget.get("temp"));
@@ -495,11 +565,7 @@ public class CityWork {
         } else {
             game.startEvent(GameStatus.world_map, "positioning");
         }
-
     }
-
-
-
 
     public static void fireBotMode(GameInstance game) throws  Exception {
          if(game.dispatch("open_chat")){

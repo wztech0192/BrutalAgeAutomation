@@ -25,9 +25,8 @@ public class WhenStart {
         for (int redo = 0; redo < 5; redo++) {
             game.dispatch("login_test");
 
-            game.dispatch.staticDelay(1.25);
+            game.dispatch.staticDelay(1);
 
-            game.dispatch("login_test");
 
             game.dispatch("login_zoom");
             game.dispatch.staticDelay(1);
@@ -53,8 +52,19 @@ public class WhenStart {
             }
         }
 
+        if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Hide Mode")){
+            if(!game.account.isHiding()){
+                game.dispatch("hide");
+            }
+        }else{
+            if(game.account.isHiding()){
+                game.dispatch("unhide");
+            }
+        }
 
-        if (game.account.isDuringTemplate()  && game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+        if ((game.account.isDuringTemplate() ||game.account.closeToTemplate()) && game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
+
+            game.dispatch("unhide");
 
             if (!game.account.isJoinClan()) {
 
@@ -76,7 +86,13 @@ public class WhenStart {
             return;
         }
 
-        game.dispatch("get_rss_info");
+        if(game.account.getBuildingLvl("stronghold") >= 13){
+            if(game.account.doInRound(3)){
+                game.dispatch("get_rss_info");
+            }
+        }else{
+            game.dispatch("get_rss_info");
+        }
 
 
         if(game.account.getBuildingLvl("stronghold")>=13 && game.account.getResource("meat") < 500000){
@@ -95,9 +111,9 @@ public class WhenStart {
         }
 
 
-        if (!game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan") && game.account.getBuildingLvl("stronghold") >= 6) {
+        /*if (!game.store.metadata.getFeatureToggler().getGlobalFeatures().get("No Clan") && game.account.getBuildingLvl("stronghold") >= 6) {
             game.dispatch("help");
-        }
+        }*/
 
         if (!game.account.isFinishInit()) {
             game.account.setPreviousLevel(1);
@@ -196,6 +212,7 @@ public class WhenStart {
 
         if (game.account.getLastGiftTime() == null || Duration.between(game.account.getLastGiftTime(), LocalDateTime.now()).toHours() > 24) {
             game.dispatch("daily_reward");
+            game.dispatch("dolmen");
             if (game.account.getBuildingLvl("golden_tree") > 3) {
                 if (game.account.getFeatureToggler().get("Use Golden Tree")) {
                     if (!game.account.getPrimaryHammer().getBuildingName().equals("golden_tree") &&
@@ -208,7 +225,12 @@ public class WhenStart {
             game.account.setLastGiftTime(LocalDateTime.now());
         }
 
-        game.startEvent(GameStatus.city_work);
+
+        if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Hide Mode")){
+            game.startEvent(GameStatus.initiate);
+        }else{
+            game.startEvent(GameStatus.city_work);
+        }
 
     }
 
@@ -225,10 +247,6 @@ public class WhenStart {
         game.dispatch.staticDelay(1.25);
 
         for (int redo = 0; redo < 5; redo++) {
-            game.dispatch("login_test");
-
-            game.dispatch.staticDelay(1.25);
-
             game.dispatch("login_test");
 
             game.dispatch("login_zoom");

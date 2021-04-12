@@ -25,6 +25,7 @@ public class NumberPane extends JPanel {
             addLabelTextField(entry.getKey(), tf, this);
         }
 
+
         long minutes = !store.getAccountGroup().getAccounts().isEmpty()
                 ? Duration.between(LocalDateTime.now(), store.getAccountGroup().getAccount(0).getTemplateStartDate()).toMinutes()
                 : 0;

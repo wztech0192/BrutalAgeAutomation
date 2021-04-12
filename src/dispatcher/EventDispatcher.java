@@ -749,19 +749,30 @@ public class EventDispatcher implements IShellOutputReceiver {
     }
 
     public void changeHorde(int horde) throws Exception {
+
+
         if (horde > 0) {
+
+
+            int[] positions = { 2, 4, 5, 3, 2};
+
+            int position = positions[horde-1];
+
             sendEvent("top_left");
-            exec("input tap 500 1120");
-            delay(1.5);
-            for (int i = 0; i < horde; i++) {
-                exec("input swipe 180 668 390 677 300");
-                delay(1.5);
+            sendEvent(Event.builder().setLoc(500, 1120).setDelay(1.5));
+            //click dialog away
+            sendEvent(Event.builder().setLoc(400, 1200).setDelay(1));
+            for (int i = 1; i < position; i++) {
+                sendEvent(Event.builder().setLoc(685, 619).setDelay(1.5));
             }
-            exec("input tap 365 1006");
-            delay(1);
-            exec("input tap 356 714");
-            delay(1);
-            sendEvent("top_left");
+            switch(position){
+                case 1:
+                    sendEvent(Event.builder().setLoc(370, 1060).setDelay(1));
+                    break;
+                default:
+                    sendEvent(Event.builder().setLoc(370, 1010).setDelay(1));
+                    break;
+            }
             sendEvent("top_left");
         }
     }

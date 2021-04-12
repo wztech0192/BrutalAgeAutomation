@@ -23,11 +23,8 @@ import java.util.List;
 
 
 public class Store extends WebSocketAdapter {
-    public Metadata metadata;
     private static final String SERVER = "ws://142.11.215.231:41998";
-    private WebSocket ws;
-    private boolean pause;
-    private AccountGroup accountGroup;
+    public Metadata metadata;
     public IDevice device;
     public LinkedList<JsonObject> positionQueue;
     public String accountPath;
@@ -35,68 +32,66 @@ public class Store extends WebSocketAdapter {
     public boolean isClose;
     public String tag;
     public JsonObject currentPosItem = null;
+    private WebSocket ws;
+    private boolean pause;
+    private AccountGroup accountGroup;
     private boolean botMode;
 
-    public Store(String tag, AndroidDebugBridge bridge){
+    public Store(String tag, AndroidDebugBridge bridge) {
         this.tag = tag;
         unmarshellMetadata();
     }
 
 
-    public void init(IDevice device){
+    public void init(IDevice device) {
         this.positionQueue = new LinkedList<>();
         this.device = device;
         this.accountPath = metadata.getAccountPath();
         accountGroup = new AccountGroup(unmarshellAcounts());
     }
 
-    public boolean isPositionMode(){
+    public boolean isPositionMode() {
         return ws != null;
     }
 
-    public void unmarshellMetadata(){
+    public void unmarshellMetadata() {
         try {
-            metadata = util.Marshaller.unmarshal(Metadata.class, FilePath.METADATA_PATH+"_"+tag);
-        }
-        catch (JAXBException e) {
-            metadata =  new Metadata();
-            util.Marshaller.marshell(metadata, FilePath.METADATA_PATH+"_"+tag);
+            metadata = util.Marshaller.unmarshal(Metadata.class, FilePath.METADATA_PATH + "_" + tag);
+        } catch (JAXBException e) {
+            metadata = new Metadata();
+            util.Marshaller.marshell(metadata, FilePath.METADATA_PATH + "_" + tag);
         }
     }
 
-    public ArrayList<Account> unmarshellAcounts(){
+    public ArrayList<Account> unmarshellAcounts() {
         ArrayList<Account> accounts = new ArrayList<>();
-        try{
+        try {
             File[] files = new File(accountPath).listFiles();
-            if(files != null) {
+            if (files != null) {
                 for (File file : files) {
-                    if(file.getName().contains("wzz")) {
+                    if (file.getName().contains("wzz")) {
                         System.out.println("load account: " + file.getName());
-                        accounts.add(util.Marshaller.unmarshal(Account.class, file.getAbsolutePath()+"/setting"));
+                        accounts.add(util.Marshaller.unmarshal(Account.class, file.getAbsolutePath() + "/setting"));
                     }
                 }
             }
-        }
-        catch (JAXBException e) {
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
         return accounts;
-    }
-
-
-
-    public void setPause(boolean pause) {
-        this.pause = pause;
     }
 
     public boolean isPause() {
         return this.pause;
     }
 
+    public void setPause(boolean pause) {
+        this.pause = pause;
+    }
 
-    public void updatePosSavedAcc(){
+    public void updatePosSavedAcc() {
         JsonObject json = new JsonObject();
-        json.put("max",Global.config.getMaxStorePos());
+        json.put("max", Global.config.getMaxStorePos());
         json.put("current", metadata.getSavedPosAcc().size());
         sendDataBack("acc", json);
     }
@@ -108,9 +103,9 @@ public class Store extends WebSocketAdapter {
             ws = new WebSocketFactory().setConnectionTimeout(10000).createSocket(SERVER).addListener(this)
                     .addExtension(WebSocketExtension.PERMESSAGE_DEFLATE).connect();
             JsonObject payload = new JsonObject();
-            payload.put("max",Global.config.getMaxStorePos());
+            payload.put("max", Global.config.getMaxStorePos());
             payload.put("current", metadata.getSavedPosAcc().size());
-            payload.put("executorID", Global.config.getOwnerName()+"-"+metadata.getSelectedEmulator());
+            payload.put("executorID", Global.config.getOwnerName() + "-" + metadata.getSelectedEmulator());
             sendDataBack("receiver", payload);
             System.out.println("Connect to server...");
         } catch (WebSocketException | IOException e) {
@@ -118,16 +113,15 @@ public class Store extends WebSocketAdapter {
         }
     }
 
-    public void closeRemoteWS(){
+    public void closeRemoteWS() {
         Logger.log("Close remote ws");
         ws.sendClose();
         ws = null;
     }
 
-    public void sendPing(){
+    public void sendPing() {
         ws.sendPing();
     }
-
 
 
     public void sendDataBack(String type, JsonObject payload) {
@@ -148,14 +142,14 @@ public class Store extends WebSocketAdapter {
 
             switch ((String) data.get("type")) {
 
-                case "add_clear":{
+                case "add_clear": {
                     JsonObject payload = (JsonObject) data.get("payload");
                     int x = Integer.parseInt((String) payload.get("x"));
                     int y = Integer.parseInt((String) payload.get("y"));
                     Chat.enqueueClearList(new Point(x, y));
                     break;
                 }
-                case "remove_clear":{
+                case "remove_clear": {
                     JsonObject payload = (JsonObject) data.get("payload");
                     int x = Integer.parseInt((String) payload.get("x"));
                     int y = Integer.parseInt((String) payload.get("y"));
@@ -168,37 +162,41 @@ public class Store extends WebSocketAdapter {
                     positionQueue.add(payload);
                     break;
                 case "cancel":
-                    Iterator<JsonObject> it = positionQueue.iterator();
 
-                    if(currentPosItem != null && ((String)currentPosItem.get("id")).equalsIgnoreCase((String) data.get("payload") )){
-                    System.out.println("Cancel current");
-                        currentPosItem.put("status", "cancel");
-                        sendDataBack("update",currentPosItem);
-                        setForceStop(true);
-                    }else{
-                        JsonObject target;
-                        JsonObject removedTarget = null;
-                        while(it.hasNext()){
-                            target = it.next();
-                            if(((String)target.get("id")).equalsIgnoreCase((String) data.get("payload"))){
-                                removedTarget = target;
-                                it.remove();
-                                break;
+                        Iterator<JsonObject> it = positionQueue.iterator();
+
+                        if (currentPosItem != null && ((String) currentPosItem.get("id")).equalsIgnoreCase((String) data.get("payload"))) {
+                            System.out.println("Cancel current");
+                            currentPosItem.put("status", "cancel");
+                            sendDataBack("update", currentPosItem);
+                            setForceStop(true);
+                        } else {
+
+                            JsonObject target;
+                            JsonObject removedTarget = null;
+                            while (it.hasNext()) {
+                                target = it.next();
+                                String id = (String) target.get("id");
+                                if (id.equalsIgnoreCase((String) data.get("payload"))) {
+                                    removedTarget = target;
+                                    it.remove();
+                                    break;
+                                }
                             }
-                        }
-                        if(removedTarget != null){
-                            System.out.println("Cancel queue");
-                            removedTarget.put("status", "cancel");
-                            sendDataBack("update",removedTarget);
+                            if (removedTarget != null) {
+                                System.out.println("Cancel queue");
+                                removedTarget.put("status", "cancel");
+                                sendDataBack("update", removedTarget);
+
+                            }
 
                         }
-                    }
 
                     System.out.println(positionQueue.size());
                     break;
             }
 
-        } catch (JsonException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -223,19 +221,19 @@ public class Store extends WebSocketAdapter {
 
 
     public void updateAllAccounts() {
-        for(Account acc: accountGroup.getAccounts()){
-                updateAccount(acc);
+        for (Account acc : accountGroup.getAccounts()) {
+            updateAccount(acc);
         }
     }
 
     public String updateAccount(Account acc, String path) {
-        if(!acc.getId().equalsIgnoreCase("")) {
-            System.out.println("update "+acc.getId());
+        if (!acc.getId().equalsIgnoreCase("")) {
+            System.out.println("update " + acc.getId());
             File file = new File(path);
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.mkdir();
             }
-            util.Marshaller.marshell(acc, file.getAbsolutePath()+"/setting");
+            util.Marshaller.marshell(acc, file.getAbsolutePath() + "/setting");
 
             return file.getAbsolutePath();
         }
@@ -247,21 +245,21 @@ public class Store extends WebSocketAdapter {
     }
 
     public void updateAccount(int i) {
-        if(i >= accountGroup.getAccounts().size()) {
+        if (i >= accountGroup.getAccounts().size()) {
             Account acc = accountGroup.getAccount(i);
             updateAccount(acc);
         }
     }
 
 
-    public AccountGroup getAccountGroup(){
+    public AccountGroup getAccountGroup() {
         return accountGroup;
     }
 
     public String createNewID() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String currentDatedTime = sdf.format(new Date());
-        return "wzz"+currentDatedTime;
+        return "wzz" + currentDatedTime;
     }
 
     public String createShortID() {
@@ -270,18 +268,17 @@ public class Store extends WebSocketAdapter {
         return currentDatedTime;
     }
 
+    public int getDelay() {
+        return this.metadata.getDelay();
+    }
 
     public void setDelay(int delay) {
         this.metadata.setDelay(delay);
         marshellMetadata();
     }
 
-    public int getDelay() {
-        return this.metadata.getDelay();
-    }
-
     public void marshellMetadata() {
-        util.Marshaller.marshell(metadata, FilePath.METADATA_PATH+"_"+tag);
+        util.Marshaller.marshell(metadata, FilePath.METADATA_PATH + "_" + tag);
     }
 
     public void deleteAccount(int i) {
@@ -290,8 +287,7 @@ public class Store extends WebSocketAdapter {
             File accFile = new File(accountPath + acc.getId());
             FileUtils.deleteDirectory(accFile);
             getAccountGroup().getAccounts().remove(i);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -309,7 +305,7 @@ public class Store extends WebSocketAdapter {
 
     public void close() {
         isClose = true;
-        if(ws != null) {
+        if (ws != null) {
             ws.sendClose();
             ws = null;
         }
@@ -318,18 +314,17 @@ public class Store extends WebSocketAdapter {
     }
 
     public boolean restartEmulator() {
-        EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getSelectedEmulator()+" -quit", null);
+        EventDispatcher.exec(Global.config.getNoxPath() + "/Nox.exe -clone:" + metadata.getSelectedEmulator() + " -quit", null);
         try {
             Logger.log("Start emulator in 5 second");
             Thread.sleep(5000);
 
-            EventDispatcher.exec(Global.config.getNoxPath()+"/Nox.exe -clone:"+metadata.getSelectedEmulator(), null);
+            EventDispatcher.exec(Global.config.getNoxPath() + "/Nox.exe -clone:" + metadata.getSelectedEmulator(), null);
             Thread.sleep(25000);
 
             return true;
 
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -349,8 +344,7 @@ public class Store extends WebSocketAdapter {
             for (File file : folder.listFiles()) {
                 file.delete();
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

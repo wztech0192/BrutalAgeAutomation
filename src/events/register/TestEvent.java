@@ -126,15 +126,21 @@ public class TestEvent {
                 .setListener((event, game) -> {
 
                     if(game.log.btnName.contains("make:btn_2")){
-                        game.dispatch.staticDelay(1.5);
+                        game.dispatch.delay(1.5);
                         game.dispatch(Event.builder().setLoc(74,242).setDelay(1.5));
                         game.dispatch("top_left");
                         game.dispatch("test_click");
                     }
 
-                    if (!game.log.btnName.contains("hud:") &&
-                            !game.dispatch("test_click") &&
-                            !game.dispatch("template_close")) {
+                    for(int i=0 ;i<3; i++){
+                        if(game.log.btnName.contains("main:bg")){
+                            game.dispatch(Event.builder().setLoc(362, 1183).setDelay(1));
+                        }else{
+                            break;
+                        }
+                    }
+
+                    if (!game.log.btnName.contains("hud:") && !game.dispatch("template_close")) {
                         return Event.SUCCESS;
                     }
                     return Event.SUCCESS;

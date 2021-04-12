@@ -91,6 +91,9 @@ public class GameInstance {
                         case starting:
                             Starting.fire(this);
                             break;
+                        case tutorial:
+                            Tutorial.fire(this);
+                            break;
                         case change_server:
                             ChangeServer.fire(this);
                             break;
@@ -160,6 +163,9 @@ public class GameInstance {
         switch (status.get()) {
             case starting:
                 Starting.fire(this);
+                break;
+            case tutorial:
+                Tutorial.fire(this);
                 break;
             case change_server:
                 ChangeServer.fire(this);

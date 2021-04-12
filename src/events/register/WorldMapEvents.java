@@ -99,6 +99,21 @@ public class WorldMapEvents {
                     return Event.SUCCESS;
                 }));
 
+        Event.builder(_map, "teleport_2")
+                .setDelay(1.5)
+                .setLoc(459, 655)
+                .setListener(((event, game) -> {
+                    game.dispatch("tel_confirm");
+                    game.dispatch(Event.builder().setDelay(1.5).setLoc(631, 433));
+                    game.dispatch(Event.builder().setDelay(1.5).setLoc(611, 1158));
+                    if (game.log.btnName.contains("btn_buyUse")) {
+                        game.dispatch(Event.builder().setDelay(1).setLoc(67, 322));
+                    } else if (game.log.btnName.contains("bottom_panel:btn_right")) {
+                        game.dispatch("top_left");
+                    }
+                    return Event.SUCCESS;
+                }));
+
         Event.builder(_map, "tap_build")
                 .setDelay(1.5)
                 .setLoc(160, 635)
@@ -299,16 +314,16 @@ public class WorldMapEvents {
 
                     //, new int[]{  98, 747, -146 }, new int[]{  98, 870, -146 }) ,  new int[]{  98, 994, -146 }
                     if( game.dispatch.isPixelMatch(image, new int[]{  98, 994, -146 })){
-                        game.dispatch(Event.builder().setTargetName("click shaman").setLoc(576, 925).setDelay(1.5));
-                        game.dispatch.staticDelay(1.5);
+                        game.dispatch(Event.builder().setTargetName("click shaman").setLoc(576, 925));
+                        game.dispatch.staticDelay(1);
                         game.dispatch.enterText(String.valueOf(99999));
-                        game.dispatch.staticDelay(1.5);
+                        game.dispatch.staticDelay(1);
                     }
                     if( game.dispatch.isPixelMatch(image, new int[]{  98, 870, -146 })){
-                        game.dispatch(Event.builder().setTargetName("click beast").setLoc(576, 797).setDelay(1.5));
-                        game.dispatch.staticDelay(1.5);
+                        game.dispatch(Event.builder().setTargetName("click beast").setLoc(576, 797));
+                        game.dispatch.staticDelay(1);
                         game.dispatch.enterText(String.valueOf(99999));
-                        game.dispatch.staticDelay(1.5);
+                        game.dispatch.staticDelay(1);
                     }
                     if( game.dispatch.isPixelMatch(image,  new int[]{  98, 747, -146 })){
                         //for the first
@@ -318,7 +333,7 @@ public class WorldMapEvents {
                         Logger.log(game.account.getTroops()+" / " + currTroops+", Send "+sendWarriorsCount+" warriors");
                         if (sendWarriorsCount > 0) {
                             game.dispatch(Event.builder().setLoc(566, 670));
-                            game.dispatch.staticDelay(1.5);
+                            game.dispatch.staticDelay(1);
                             game.dispatch.enterText(String.valueOf(sendWarriorsCount));
                         }
 
@@ -331,9 +346,9 @@ public class WorldMapEvents {
 
                         //click send
                         game.dispatch(Event.builder().setLoc(521, 1200));
-                        game.dispatch.staticDelay(1.5);
+                        game.dispatch.staticDelay(1);
                         game.dispatch(Event.builder().setLoc(381, 650));
-                        game.dispatch.staticDelay(1.5);
+                        game.dispatch.staticDelay(1);
                         game.dispatch(Event.builder().setLoc(450, 720));
                         Logger.log("oops "+game.log.oops);
                         if(!game.log.oops ){
@@ -356,12 +371,12 @@ public class WorldMapEvents {
                 .setLoc(659, 321)
                 .setListener(((event, game) -> {
                     game.log.currTroops = 0;
-                    game.dispatch.delay(1.25);
+                    game.dispatch.delay(1);
                     game.dispatch(Event.builder().setLoc(156, 1180).setDelay(1.25));
                     game.dispatch(Event.builder().setLoc(600, 200));
 
                     for(int i=0;i<3;i++){
-                        game.dispatch.staticDelay(2.5);
+                        game.dispatch.staticDelay(2);
                         game.dispatch(Event.builder().setLoc(471, 832).setDelay(1.25));
                         if(game.log.btnName.contains("buttons_5:btn_5")){
                             game.dispatch(Event.builder().setLoc(471, 832).setDelay(1.25));

@@ -21,9 +21,9 @@ public class GetGiftEvents {
                 }));
 
 
-        Event.builder(_map, "help")
+      /*  Event.builder(_map, "help")
                 .setDelay(1)
-                .setLoc(675, 742);
+                .setLoc(675, 742);*/
 
         Event.builder(_map, "get_all_mail")
                 .setTargetName("side_1:btn_mail")
@@ -112,17 +112,36 @@ public class GetGiftEvents {
 
         Event.builder(_map, "use_all")
                 .setTargetName("reward:btn_reward")
-                .setDelay(1.25)
+                .setDelay(1)
                 .setLoc(453, 581, 550, 581, 300)
                 .setChain(
                         Event.builder()
-                                .setDelay(1.25)
+                                .setDelay(1)
                                 .setLoc(360, 700)
                 );
 
+        Event.builder(_map, "use_all_fast")
+                .setTargetName("reward:btn_reward")
+                .setDelay(1)
+                .setLoc(600, 300)
+                .setListener(
+                        (event, game) -> {
+                            if (game.log.btnName.contains("btn_use")) {
+                                game.dispatch(Event.builder()
+                                        .setDelay(1)
+                                        .setLoc(360, 700));
+                                return null;
+                            }
+                            else if(game.log.btnName.contains("main:ui_mb")){
+                                game.dispatch(Event.builder().setLoc(370, 636).setDelay(1));
+                            }
+                            return event;
+                        }
+                );
+
         Event.builder(_map, "use_resource")
                 .setTargetName("reward:btn_reward")
-                .setDelay(1.25)
+                .setDelay(1)
                 .setLoc(600, 300)
                 .setListener(
                         (event, game) -> {
@@ -137,10 +156,10 @@ public class GetGiftEvents {
                         }
                 );
 
-        Event.builder(_map, "use_resource")
+        Event.builder(_map, "use_gem_high_level")
                 .setTargetName("reward:btn_reward")
                 .setDelay(1.25)
-                .setLoc(600, 300)
+                .setLoc(600, 740)
                 .setListener(
                         (event, game) -> {
                             if (game.log.btnName.contains("btn_use")) {
@@ -154,20 +173,13 @@ public class GetGiftEvents {
                         }
                 );
 
-        Event.builder(_map, "use_gem_brutal_season")
-                .setTargetName("reward:btn_reward")
+        Event.builder(_map, "use_all_gem")
                 .setDelay(1.25)
-                .setLoc(600, 450)
                 .setListener(
                         (event, game) -> {
-                            if (game.log.btnName.contains("btn_use")) {
-                                game.dispatch("use_all");
-                                return null;
-                            }
-                            else if(game.log.btnName.contains("main:ui_mb")){
-                                game.dispatch(Event.builder().setLoc(370, 636).setDelay(1));
-                            }
-                            return event;
+                            while (game.dispatch("use_resource")) ;
+                            game.dispatch("top_left");
+                            return null;
                         }
                 );
 
@@ -175,14 +187,13 @@ public class GetGiftEvents {
                 .setDelay(1.25)
                 .setListener(
                         (event, game) -> {
-                            if(game.account.getBuildingLvl("stronghold") > 4 &&
-                                    game.store.metadata.getFeatureToggler().getGlobalFeatures().getOrDefault("Brutal Season", false)){
-                                while (game.dispatch("use_gem_brutal_season")) ;
+                            if(game.account != null && game.account.getBuildingLvl("stronghold") > 14 ){
+                                while (game.dispatch("use_gem_high_level")) ;
                             }else{
                                 while (game.dispatch("use_resource")) ;
                             }
                             game.dispatch(Event.builder().setLoc(600, 300, 140, 300, 500).setDelay(1.25));
-                            while (game.dispatch("use_resource")) ;
+                            while (game.dispatch("use_all_fast")) ;
                             game.dispatch("top_left");
                             return null;
                         }

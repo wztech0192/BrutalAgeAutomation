@@ -46,6 +46,7 @@ public class FeatureToggler {
             globalFeatures.put("No Clan", false);
             globalFeatures.put("Agatha Search", true);
             globalFeatures.put("Brutal Season", false);
+            globalFeatures.put("Hide Mode", false);
          }
         return globalFeatures;
     }

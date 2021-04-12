@@ -6,6 +6,7 @@ import game.GameInstance;
 import store.Account;
 import util.Logger;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class BuildingEvents {
@@ -67,53 +68,7 @@ public class BuildingEvents {
                     return Event.SUCCESS;
                 }));
 
-        Event.builder(_map, "close_speedup").setLoc(72, 301).setDelay(1.5);
 
-        Event.builder(_map, "use_train_speedup")
-                .setDelay(1.5).setListener(((event, game) -> {
-
-            game.dispatch(Event.builder().setLoc(563, 361).setDelay(1.5));
-            game.dispatch(Event.builder().setLoc(534, 900).setDelay(1.5));
-
-            if (game.log.btnName.contains("btn_use")) {
-                game.dispatch.staticDelay(1.5);
-                game.dispatch("tap_building");
-                if (!game.log.btnName.contains("panel")) {
-                    return Event.SUCCESS;
-                }
-            } else {
-                game.dispatch(Event.builder().setLoc(77, 298).setDelay(1));
-            }
-            game.dispatch("top_left");
-            return event;
-        }));
-
-        Event.builder(_map, "use_speedup")
-                .setDelay(1.5)
-                .setListener(((event, game) -> {
-
-                    game.dispatch(Event.builder().setLoc(563, 361).setDelay(1.5));
-                    game.dispatch(Event.builder().setLoc(534, 900).setDelay(1.5));
-
-                    if (game.log.btnName.contains("btn_use")) {
-
-                        for (int i = 0; i < 10; i++) {
-                            game.dispatch(Event.builder().setLoc(580, 200, 580, 250, 200).setDelay(1));
-                            if (game.log.btnName.contains("topbar1")) {
-                                break;
-                            }
-                        }
-                        if (game.log.btnName.contains("btn_free")) {
-                            game.dispatch(Event.builder().setLoc(580, 200).setDelay(1));
-                            return Event.SUCCESS;
-                        }
-                    } else {
-                        game.dispatch(Event.builder().setLoc(77, 298).setDelay(1));
-                    }
-
-                    game.dispatch("top_left");
-                    return event;
-                }));
         registerBuilding(_map);
 
     }
@@ -137,11 +92,21 @@ public class BuildingEvents {
                     game.log.testPopup = false;
                     game.dispatch.delay(1.5);
                     game.dispatch(Event.builder().setLoc(65, 642).setDelay(2));
-                    Event hitMonster = Event.builder().setLoc(340, 681).setDelay(1);
-                    int redo = 12;
+                    Event hitMonster = Event.builder().setLoc(340, 681).setDelay(0.25);
+                    int redo = 7;
                     do {
                         game.dispatch(hitMonster);
-                    } while (game.log.btnName.contains("monster_stage:hitzone") && redo-- > 0);
+
+                        if(game.log.btnName.contains("popup:bg")){
+                            game.dispatch.staticDelay(1);
+                            //get box
+                            game.dispatch(Event.builder().setLoc(375, 496).setDelay(1));
+                            //click away
+                            game.dispatch(Event.builder().setLoc(375, 496));
+                            game.dispatch.staticDelay(1.5);
+                            game.dispatch(hitMonster);
+                        }
+                    } while ((game.log.btnName.contains("monster_stage:hitzone")) && redo-- > 0);
 
                     if (game.log.btnName.contains("btn_confirm")) {
                         game.dispatch("top_left");
@@ -200,12 +165,17 @@ public class BuildingEvents {
                                 .setDelay(1.5),
                         _map.get("top_left")
                 );
-        ;
 
         Event.builder(_map, "research")
                 .setTargetName("loc_5")
                 .isBuilding(true)
                 .setLoc(-978, -717, 500, 480);
+
+        Event.builder(_map, "research_access")
+                .setTargetName("loc_5")
+                .isBuilding()
+                .isAccess()
+                .setLoc(-978, -717, 245, 480);
 
 
         Event.builder(_map, "warehouse")
@@ -277,7 +247,7 @@ public class BuildingEvents {
                 .isBuilding()
                 .setListener((event, game) -> {
                     game.dispatch.staticDelay(1.0);
-                    game.dispatch(Event.builder().setLoc(373, 370).setDelay(1.5));
+                    game.dispatch(Event.builder().setLoc(150, 531).setDelay(1.5));
                     game.dispatch(
                             Event.builder().setDelay(2)
                                     .setLoc(396, 998));
@@ -328,11 +298,25 @@ public class BuildingEvents {
                 .setLoc(-991, -1379)
                 .setListener(((event, game) -> {
                     game.dispatch("tap_building");
+
+
                     game.dispatch(Event.builder().setLoc(643, 753));
                     if (game.log.btnName.contains("btn_speed")) {
-                        return game.dispatch("use_train_speedup") ? Event.SUCCESS : event;
+                        game.dispatch.delay(1.5);
+                        game.dispatch("use_speedup");
+                        game.dispatch.delay(1.5);
+                        game.dispatch("tap_building");
+                        if(game.log.btnName.contains("building_popup_16")){
+                            return Event.SUCCESS;
+                        }
+                    }else{
+                        //switch to t1
+                        game.dispatch(Event.builder().setLoc(309, 328, 483, 328, 500));
+                        game.dispatch(Event.builder().setLoc(309, 328, 483, 328, 500));
+                        if(game.dispatch("train")){
+                            return Event.SUCCESS;
+                        }
                     }
-                    game.dispatch("top_left");
                     return event;
                 }));
 
@@ -385,6 +369,34 @@ public class BuildingEvents {
                 .isBuilding(true)
                 .setLoc(-1446, -2041, 334, 500);
 
+        Event.builder(_map, "gift")
+                .isBuilding(true)
+                .setLoc(-1706,-888, 334, 500);
+
+        Event.builder(_map, "crystal")
+                .isBuilding(true)
+                .setLoc(-2139,-709, 334, 500);
+
+        Event.builder(_map, "mission")
+                .isBuilding(true)
+                .setLoc(-2175,-1238, 334, 500);
+
+        Event.builder(_map, "well5")
+                .setTargetName("loc_23")
+                .isBuilding(true)
+                .setLoc(-1446, -2041, 334, 500);
+
+
+        Event.builder(_map, "warhub")
+                .setTargetName("loc_24")
+                .isBuilding(true)
+                .setLoc(-1808,-1665, 360, 510);
+
+        Event.builder(_map, "well")
+                .setTargetName("loc_19")
+                .isBuilding(true)
+                .setLoc(-2065,-1745, 360, 510);
+
         Event.builder(_map, "warhub1")
                 .setTargetName("loc_24")
                 .isBuilding(true)
@@ -428,7 +440,7 @@ public class BuildingEvents {
                     game.dispatch(use);
                     game.dispatch(use);
                     if (!game.account.isFinishInit()) {
-                        game.dispatch.staticDelay(2.5);
+                        game.dispatch.delay(1.5);
                         game.dispatch(Event.builder().setLoc(156, 768).setDelay(1));
                     }
                     return Event.SUCCESS;
@@ -448,6 +460,60 @@ public class BuildingEvents {
                 .isBuilding()
                 .isAccess()
                 .setLoc(-871, -998, 233, 556);
+
+        Event.builder(_map, "dolmen")
+                .setTargetName("loc_35")
+                .isBuilding()
+                .setLoc(-1188,-1829)
+                .setListener((event, game)->{
+                    game.dispatch.delay(1.5);
+                    Event resurrect = Event.builder().setLoc(339, 1174).setDelay(1.5);
+                    game.dispatch(resurrect);
+                    game.dispatch(resurrect);
+                    game.dispatch("top_left");
+                    game.dispatch("top_left");
+                    return Event.SUCCESS;
+                });
+
+        Event.builder(_map, "hide")
+                .setTargetName("loc_34")
+                .isBuilding()
+                .setLoc(-1558,-1788)
+                .setListener((event, game)->{
+                    game.account.setHideTime(LocalDateTime.now());
+                    game.updateAccount();
+                    game.dispatch.delay(1);
+                    //click 12 hours
+                    game.dispatch(Event.builder().setLoc(500, 640).setDelay(1.5));
+
+                    if(game.log.btnName.contains("btn_time4")){
+                        //click go
+                        game.dispatch(Event.builder().setLoc(510, 1200).setDelay(1.5));
+                    }else{
+                        //close
+                        game.dispatch(Event.builder().setLoc(72, 235).setDelay(1.5));
+                    }
+
+                    return Event.SUCCESS;
+                });
+
+        Event.builder(_map, "unhide")
+                .setTargetName("loc_34")
+                .isBuilding()
+                .setLoc(-1558,-1788)
+                .setListener((event, game)->{
+                    game.account.setHideTime(null);
+                    game.updateAccount();
+                    game.dispatch.delay(1);
+                    //click recall
+                    game.dispatch(Event.builder().setLoc(370, 1000).setDelay(1.5));
+
+                    if(!game.log.btnName.contains("btn_back")){
+                        //close
+                        game.dispatch(Event.builder().setLoc(76, 302).setDelay(1.5));
+                    }
+                    return Event.SUCCESS;
+                });
 
         for (Map.Entry<String, Event> entry : EventMap.getMap().entrySet()) {
             if (entry.getValue().isUpgrade) {

@@ -68,7 +68,7 @@ public class ClanEvents {
                             * */
                             int rssPos = 300 + (i * 100);
 
-                            if(i == 0 || i == 1 ){
+                           /* if(i == 0 || i == 1 ){
                                 int transportable = game.transportFoodValue(i) - minFoodWood;
                                 if(transportable <= 0){
                                     continue;
@@ -80,8 +80,8 @@ public class ClanEvents {
                                 }
                             }else{
                                 game.dispatch.exec(String.format("input swipe 539 %d 579 %d", rssPos, rssPos));
-                            }
-
+                            }*/
+                            game.dispatch.exec(String.format("input swipe 539 %d 579 %d", rssPos, rssPos));
                             game.dispatch.staticDelay(0.50);
                             Logger.log("*** Transport: " + game.log.selectedTransportNum + "/" + game.log.limitTransportNum);
                             if (game.log.selectedTransportNum >= (game.log.limitTransportNum * 0.80)) {
@@ -141,22 +141,21 @@ public class ClanEvents {
                     return Event.SUCCESS;
                 }));
 
-
         Event.builder(_map, "quit_clan")
                 .setDelay(1.5)
                 .setListener(((event, game) -> {
-
-                    game.dispatch(Event.builder().setLoc(370, 1175,370, 560, 500 ));
+                    game.dispatch(Event.builder().setLoc(370, 1175,370, 151, 500 ));
                     for(int i=0; i<3; i++){
                         if(!game.log.btnName.contains("listBoxItem")){
                             game.dispatch("top_left");
-                            game.dispatch(Event.builder().setLoc(370, 1175,370, 560, 500 ));
+                            game.dispatch(Event.builder().setLoc(370, 1175,370, 151, 500 ));
                         }else{
                             break;
                         }
                     }
-                    game.dispatch.staticDelay(1.5);
-                    game.dispatch(Event.builder().setLoc(370, 1100).setDelay(1.25));
+
+                    game.dispatch.staticDelay(1.8);
+                    game.dispatch(Event.builder().setLoc(370, 1080).setDelay(1.25));
                     game.dispatch(Event.builder().setLoc(370, 704).setDelay(1.25));
                     game.dispatch(Event.builder().setLoc(355, 880).setDelay(1.25));
 
@@ -211,7 +210,5 @@ public class ClanEvents {
                     }
                     return Event.SUCCESS;
                 }));
-
-
     }
 }

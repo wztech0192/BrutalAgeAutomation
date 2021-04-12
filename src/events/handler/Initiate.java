@@ -4,12 +4,14 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import dispatcher.EventDispatcher;
 import game.GameInstance;
 import game.GameStatus;
+import net.sf.cglib.core.Local;
 import store.Account;
 import util.Global;
 import util.Logger;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -48,22 +50,21 @@ public class Initiate {
             if(game.store.getAccountGroup().getAccounts().size() > 0){
 
                 Account account = game.store.getAccountGroup().getNextAccount();
+                Account tempAcount = account;
+                boolean roundCheck = false;
 
                 if (account.isDuringTemplate() && game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Feed Temple")) {
-
-                    if(game.account == null){
-                        game.account = game.store.getAccountGroup().getLastAccount();
-                    }
 
                     boolean feedOver = false;
                     while(true){
                         if ( account.getTroops() >= account.getNumberFeaturer().getNumberSetting().get("Min Troop") + 1000) {
                             break;
-                        }else if(game.account == account){
+                        }else if(tempAcount == account && roundCheck){
                             feedOver = true;
                             break;
                         }
                         else{
+                            roundCheck = true;
                             account = game.store.getAccountGroup().getNextAccount();
                         }
                     }
@@ -74,17 +75,44 @@ public class Initiate {
                         game.store.marshellMetadata();
                     }
                 }
-                game.account = account;
+                else if(game.store.metadata.getFeatureToggler().getGlobalFeatures().get("Hide Mode")){
+                    if(game.account == null){
+                        game.account = game.store.getAccountGroup().getLastAccount();
+                    }
+                    while(true){
 
-                Logger.log("Get Account Index: " + game.store.getAccountGroup().getIndex());
-                String tempID = game.account.getId();
-                game.dispatch.delay(1);
-                Logger.log("---------------- start " + tempID);
-                game.dispatch.changeAccount(tempID, true);
+                        long hideTimeLeft = account.getHideTime() == null ? -1 : 12-Duration.between(account.getHideTime(), LocalDateTime.now()).toHours();
 
-                Chat.setLastRoundTime();
-                game.updateAccount();
-                break;
+                        //check if hide time left is 0, or every 2 hours
+                        if (hideTimeLeft <= 0 || (hideTimeLeft != 12 && hideTimeLeft % 2 == 0)) {
+                            //check every two hours
+                            break;
+                        }else if(tempAcount == account && roundCheck){
+                            account = null;
+                            break;
+                        }
+                        else{
+                            roundCheck = true;
+                            account = game.store.getAccountGroup().getNextAccount();
+                        }
+                    }
+                }
+
+
+                if(account != null){
+                    game.account = account;
+
+                    Logger.log("Get Account Index: " + game.store.getAccountGroup().getIndex());
+                    String tempID = game.account.getId();
+                    game.dispatch.delay(1);
+                    Logger.log("---------------- start " + tempID);
+                    game.dispatch.changeAccount(tempID, true);
+
+                    Chat.setLastRoundTime();
+                    game.updateAccount();
+                    break;
+                }
+
             }
             System.out.println("waiting for new event....");
             game.dispatch.resetExecuteTime();

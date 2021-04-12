@@ -16,9 +16,10 @@ public class Metadata {
     private NumberFeaturer numberFeaturer;
     private LinkedList<String> SavedPosAcc = new LinkedList<>();
     private String clan = "";
-    private int server = 519;
+    private int server = 532;
     private int horde = 0;
     private boolean isUseNox = true;
+
 
     public Metadata(){
         featureToggler = new FeatureToggler();

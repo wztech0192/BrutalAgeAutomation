@@ -10,8 +10,19 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Dictionary;
+import java.util.HashMap;
 
 public class ChangeServer {
+
+    public static HashMap<Integer, Integer> serverIndexMap = new HashMap<>();
+    static {
+        serverIndexMap.put(532, 112);
+        serverIndexMap.put(535, 110);
+        serverIndexMap.put(557, 100);
+        serverIndexMap.put(540, 107);
+    }
+    public static int startingPoint = 649;
 
     public static void fire(GameInstance game) throws Exception {
 
@@ -24,13 +35,13 @@ public class ChangeServer {
 
         game.dispatch.staticDelay(1.2);
 
-        int serverID = TestEvent.getNumber(game.dispatch.doOSR(52, 305, 98, 339), true);
+        int serverID = TestEvent.getNumber(game.dispatch.doOSR(52, 1128, 98, 1167), true);
 
-        System.out.println("Server " +serverID);
+        //System.out.println("Server " +serverID);
 
         int targetServerID = game.posTarget != null ? Integer.parseInt((String)game.posTarget.get("server"))  : game.account.getServerID();
 
-        int targetServerIndex = serverID - targetServerID;
+        int targetServerIndex = (serverID - startingPoint) + serverIndexMap.get(targetServerID);
         //int targetServerIndex = 568 - 528 - 1;
         System.out.println("Target server index is " + targetServerIndex);
         int redoCount = 0;
@@ -47,7 +58,7 @@ public class ChangeServer {
                 }
 
                 game.dispatch.swipeServer(diff);
-                game.dispatch.delay(1);
+                //game.dispatch.delay(1);
                 prevDiff = diff;
                 diff = targetServerIndex - game.log.parseServerIndex();
                 if (diff == 0) {

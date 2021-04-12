@@ -1,9 +1,12 @@
 package util;
 
 import com.android.ddmlib.*;
+import com.github.cliftonlabs.json_simple.JsonObject;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import dispatcher.EventDispatcher;
 import events.EventMap;
+import events.common.Event;
+import events.handler.CityWork;
 import game.GameException;
 import game.GameInstance;
 import game.GameStatus;
@@ -65,8 +68,29 @@ public class MyDebugger {
                     else {
                         switch (cmd) {
                             case "test":
-                                //-14736076
-                                game.dispatch.isPixelMatch(new int[]{  98, 870, -146 }, new int[]{  98, 747, -146 }, new int[]{  98, 994, -146 });
+                                game.dispatch(Event.builder().setLoc(46, 1010));
+                                game.dispatch.staticDelay(2);
+                                //click search monster
+                                game.dispatch(Event.builder().setLoc(332, 557));
+                                game.dispatch.staticDelay(2);
+                                //click search
+                                game.dispatch(Event.builder().setLoc( 356, 937));
+                                game.dispatch.staticDelay(2);
+                                //click hunt monster
+                                game.dispatch(Event.builder().setLoc( 356, 647).setDelay(1));
+                                //click go
+                                game.dispatch(Event.builder().setLoc(487, 1198).setDelay(1));
+                                //click back
+                                game.dispatch(Event.builder().setLoc(45, 1212).setDelay(1));
+                                game.dispatch(Event.builder().setLoc(45, 1212).setDelay(1));
+                                game.dispatch.staticDelay(2);
+                                game.dispatch(Event.builder().setLoc(399, 868).setDelay(1));
+                                break;
+                            case "pos_mode":
+                                game.posTarget = new JsonObject();
+                                game.posTarget.put("level2Hut", true);
+                                game.posTarget.put("horde", "1");
+                                CityWork.firePosMode(game);
                                 break;
                             case "chat":
                                 game.dispatch.exec("adb shell cat /data/data/com.tap4fun.brutalage_test/files/tap4fun/be/Documents/chatdb", s->{
